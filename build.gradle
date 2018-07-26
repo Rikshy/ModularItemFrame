@@ -1,0 +1,81 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url = "http://files.minecraftforge.net/maven" }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+apply plugin: 'net.minecraftforge.gradle.forge'
+//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+
+
+version = "$mod_version.$patch_version"
+group = "de.shyrik"
+archivesBaseName = "jcf-$mc_version"
+
+sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+compileJava {
+    sourceCompatibility = targetCompatibility = '1.8'
+}
+
+minecraft {
+    version = "$forge_version"
+    runDir = "run"
+
+    mappings = "$mcp_version"
+    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+
+    replace '@GRADLE:VERSION@', "$mod_version"
+    replace 'required-before:librarianlib', 'required-before:librarianlib@' + liblib_version
+
+    replaceIn 'JustCraftingFrames.java'
+}
+
+repositories {
+    mavenCentral()
+    maven { url = "http://maven.bluexin.be/repository/snapshots/" }
+    maven { url = "http://dvs1.progwml6.com/files/maven" }
+    maven { url = "http://maven.tterrag.com/" }
+    maven { url = "http://maven.blamejared.com" }
+    maven { url = 'http://maven.mcmoddev.com' }
+}
+
+dependencies {
+    compile "com.teamwizardry.librarianlib:librarianlib-1.12.2:$liblib_version-SNAPSHOT:deobf"
+
+    deobfCompile "mezz.jei:jei_1.12.2:$jei_version:api"
+    //compile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-$ct_version"
+    compile "net.darkhax.tesla:Tesla-1.12.2:$tesla_version"
+
+    runtime "mezz.jei:jei_1.12.2:$jei_version"
+
+}
+
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    // copy everything else except the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+idea {
+    module {
+        inheritOutputDirs = false
+        outputDir = compileJava.destinationDir
+        testOutputDir = compileTestJava.destinationDir
+    }
+}

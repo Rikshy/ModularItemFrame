@@ -1,0 +1,16 @@
+[
+{
+  "modid": "justcraftingframes",
+  "name": "JustCraftingFrames",
+  "description": "just crafting frames",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Shyrik"],
+  "credits": "The Forge and FML guys, for making this happen",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
