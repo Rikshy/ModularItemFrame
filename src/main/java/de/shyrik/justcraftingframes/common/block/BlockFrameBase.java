@@ -1,9 +1,12 @@
 package de.shyrik.justcraftingframes.common.block;
 
 import com.teamwizardry.librarianlib.features.base.block.tile.BlockModContainer;
+import de.shyrik.justcraftingframes.client.render.FrameRenderer;
+import de.shyrik.justcraftingframes.common.tile.TileFrameBase;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
@@ -11,6 +14,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -32,19 +38,29 @@ public abstract class BlockFrameBase extends BlockModContainer {
         setHardness(2.0F);
         setResistance(4.0F);
         setSoundType(SoundType.WOOD);
+
+        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void initModel() {
+        ClientRegistry.bindTileEntitySpecialRenderer(TileFrameBase.class, new FrameRenderer());
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isFullBlock(IBlockState state) {
         return false;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isFullCube(IBlockState state){
         return false;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
@@ -56,6 +72,7 @@ public abstract class BlockFrameBase extends BlockModContainer {
 
     @Override
     @Nonnull
+    @SuppressWarnings("deprecation")
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
         EnumFacing facing = state.getValue(FACING);
 
@@ -77,17 +94,34 @@ public abstract class BlockFrameBase extends BlockModContainer {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public AxisAlignedBB getCollisionBoundingBox(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
         return getBoundingBox(state, world, pos);
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
+    public @Nonnull IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+        //IBlockState state = super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer);
+        //EnumFacing realFacing = Arrays.asList(EnumFacing.HORIZONTALS).contains(facing) ? facing.getOpposite() : placer.getHorizontalFacing();
+
+        //return state.withProperty(FACING, realFacing);
+        if (placer.rotationPitch > 45) return this.getStateFromMeta(meta).withProperty(FACING, EnumFacing.UP);
+        if (placer.rotationPitch < -45) return this.getStateFromMeta(meta).withProperty(FACING, EnumFacing.DOWN);
+
+        return this.getStateFromMeta(meta).withProperty(FACING, placer.getAdjustedHorizontalFacing().getOpposite());
+    }
 
     @Override
-    public @Nonnull IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        IBlockState state = super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer);
-        EnumFacing realFacing = Arrays.asList(EnumFacing.HORIZONTALS).contains(facing) ? facing.getOpposite() : placer.getHorizontalFacing();
+    @Nonnull
+    @SuppressWarnings("deprecation")
+    public IBlockState getStateFromMeta(int meta) {
+        return getDefaultState().withProperty(FACING, EnumFacing.getFront(meta & 7));
+    }
 
-        return state.withProperty(FACING, realFacing);
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(FACING).getIndex();
     }
 
     @Override
@@ -99,5 +133,11 @@ public abstract class BlockFrameBase extends BlockModContainer {
             dropBlockAsItem((World) worldIn, pos, state, 0);
             ((World) worldIn).setBlockToAir(pos);
         }
+    }
+
+    @Override
+    @Nonnull
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, FACING);
     }
 }

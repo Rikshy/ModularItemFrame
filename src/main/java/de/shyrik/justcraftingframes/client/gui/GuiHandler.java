@@ -18,7 +18,7 @@ public class GuiHandler implements IGuiHandler {
     @Override
     @SideOnly(Side.CLIENT)
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        if (ID == CRAFTING_FRAME) return new GuiCraftingFrame();
+        if (ID == CRAFTING_FRAME) return new GuiCraftingFrame(player);
 
         return null;
     }
