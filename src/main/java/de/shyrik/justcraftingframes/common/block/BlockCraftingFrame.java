@@ -44,7 +44,7 @@ public class BlockCraftingFrame extends BlockFrameBase {
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (worldIn.isRemote) {
             ItemStack heldItem = playerIn.getHeldItem(hand);
-            if (heldItem != ItemStack.EMPTY && playerIn.isSneaking()) {
+            if (heldItem != ItemStack.EMPTY) {
                 TileCraftingFrame te = getTE(worldIn, pos);
                 te.setDisplayedItem(heldItem);
 
