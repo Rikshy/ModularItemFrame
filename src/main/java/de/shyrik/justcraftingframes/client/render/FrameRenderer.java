@@ -48,7 +48,7 @@ public class FrameRenderer extends TileEntitySpecialRenderer<TileFrameBase> {
             case UP:
                 GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
         }
-        GlStateManager.translate(0.0F, 0.0F, -0.65F);
+        GlStateManager.translate(0.0F, 0.0F, -0.625F);
     }
 
     private void renderItem(ItemStack stack) {
@@ -63,6 +63,8 @@ public class FrameRenderer extends TileEntitySpecialRenderer<TileFrameBase> {
             RenderHelper.enableStandardItemLighting();
             if (itemRenderer.shouldRenderItemIn3D(stack)) {
                 GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+            } else {
+                GlStateManager.scale(0.6F, 0.6F, 0.6F);
             }
             itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED);
             RenderHelper.disableStandardItemLighting();
