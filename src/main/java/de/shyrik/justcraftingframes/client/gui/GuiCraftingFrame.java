@@ -2,6 +2,7 @@ package de.shyrik.justcraftingframes.client.gui;
 
 import com.teamwizardry.librarianlib.features.container.InventoryWrapper;
 import com.teamwizardry.librarianlib.features.container.builtin.BaseWrappers;
+import com.teamwizardry.librarianlib.features.container.internal.SlotBase;
 import com.teamwizardry.librarianlib.features.gui.GuiBase;
 import com.teamwizardry.librarianlib.features.gui.components.ComponentSprite;
 import com.teamwizardry.librarianlib.features.gui.components.ComponentVoid;
@@ -13,10 +14,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GuiCraftingFrame extends GuiBase {
 
-    static final Sprite FRAME_SPRITE = new Sprite(new ResourceLocation(JustCraftingFrames.MOD_ID, "textures/gui/crafting_frame.png"));
+    private static final Sprite FRAME_SPRITE = new Sprite(new ResourceLocation(JustCraftingFrames.MOD_ID, "textures/gui/crafting_frame.png"));
 
+    private List<SlotBase> playerSlots = new ArrayList();
     private ComponentSprite tableComponent;
     private EntityPlayer player;
 
