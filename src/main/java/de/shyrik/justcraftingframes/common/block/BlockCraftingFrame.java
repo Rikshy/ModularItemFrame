@@ -4,7 +4,6 @@ import de.shyrik.justcraftingframes.JustCraftingFrames;
 import de.shyrik.justcraftingframes.client.gui.GuiHandler;
 import de.shyrik.justcraftingframes.common.tile.TileCraftingFrame;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -42,8 +41,7 @@ public class BlockCraftingFrame extends BlockFrameBase {
                 te.setDisplayedItem(heldItem);
 
                 te.markDirty();
-            }
-            else {
+            } else {
                 playerIn.openGui(JustCraftingFrames.instance, GuiHandler.CRAFTING_FRAME, worldIn, pos.getX(), pos.getY(), pos.getZ());
             }
         }

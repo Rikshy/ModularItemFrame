@@ -115,6 +115,11 @@ public abstract class BlockFrameBase extends BlockModContainer {
     }
 
     @Override
+    public boolean canPlaceBlockOnSide(@Nonnull World worldIn, @Nonnull BlockPos pos, EnumFacing side) {
+        return !worldIn.isAirBlock(pos.offset(side.getOpposite()));
+    }
+
+    @Override
     public int getMetaFromState(IBlockState state) {
         return state.getValue(FACING).getIndex();
     }

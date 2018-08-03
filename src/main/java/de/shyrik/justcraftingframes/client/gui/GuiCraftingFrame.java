@@ -1,54 +1,39 @@
 package de.shyrik.justcraftingframes.client.gui;
 
-import com.teamwizardry.librarianlib.features.container.InventoryWrapper;
-import com.teamwizardry.librarianlib.features.container.builtin.BaseWrappers;
-import com.teamwizardry.librarianlib.features.container.internal.SlotBase;
-import com.teamwizardry.librarianlib.features.gui.GuiBase;
-import com.teamwizardry.librarianlib.features.gui.components.ComponentSprite;
-import com.teamwizardry.librarianlib.features.gui.components.ComponentVoid;
-import com.teamwizardry.librarianlib.features.guicontainer.ComponentSlot;
-import com.teamwizardry.librarianlib.features.guicontainer.builtin.BaseLayouts;
-import com.teamwizardry.librarianlib.features.sprite.Sprite;
 import de.shyrik.justcraftingframes.JustCraftingFrames;
-import net.minecraft.entity.player.EntityPlayer;
+import de.shyrik.justcraftingframes.common.container.ContainerCraftingFrame;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.items.wrapper.InvWrapper;
 
-import java.util.ArrayList;
-import java.util.List;
+public class GuiCraftingFrame extends GuiContainer {
 
-public class GuiCraftingFrame extends GuiBase {
+	/**
+	 * The ResourceLocation containing the chest GUI texture.
+	 */
+	private static final ResourceLocation CF_GUI_TEXTURE = new ResourceLocation(JustCraftingFrames.MOD_ID,"textures/gui/crafting_frame.png");
 
-    private static final Sprite FRAME_SPRITE = new Sprite(new ResourceLocation(JustCraftingFrames.MOD_ID, "textures/gui/crafting_frame.png"));
+	public GuiCraftingFrame(final ContainerCraftingFrame container) {
+		super(container);
 
-    private List<SlotBase> playerSlots = new ArrayList();
-    private ComponentSprite tableComponent;
-    private EntityPlayer player;
+		allowUserInput = false;
+	}
 
-    public GuiCraftingFrame(EntityPlayer player) {
-        super(175, 165);
-        this.player = player;
+	/**
+	 * Draws the background layer of this container (behind the items).
+	 *
+	 * @param partialTicks How far into the current tick the game is, with 0.0 being the start of the tick and 1.0 being the end.
+	 * @param mouseX       Mouse x coordinate
+	 * @param mouseY       Mouse y coordinate
+	 */
+	@Override
+	protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
+		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-        tableComponent = new ComponentSprite(FRAME_SPRITE, 0, 0, 175, 165);
-        getMainComponents().add(tableComponent);
+		this.mc.getTextureManager().bindTexture(CF_GUI_TEXTURE);
 
-
-        ComponentVoid pInventWrap = new ComponentVoid(7,83);
-        BaseWrappers.InventoryWrapperPlayer iwp = BaseWrappers.INSTANCE.player(player);
-        ComponentVoid pInvent = new ComponentVoid(0, 0);
-        for ( int row = 0; row < 2; row++) {
-            for ( int col = 0; col < 8; col++) {
-                pInvent.add(new ComponentSlot(iwp.getMain().get(row * 9 + col), col * 18, row * 18));
-            }
-        }
-        ComponentVoid hotbar = new ComponentVoid(0, 58);
-        for ( int col = 0; col < 8; col++) {
-            hotbar.add(new ComponentSlot(iwp.getHotbar().get(col), col * 18, 0));
-        }
-        pInvent.add(hotbar);
-        pInvent.clipping.setClipToBounds(true);
-        pInventWrap.add(pInvent);
-
-        getMainComponents().add(pInventWrap);
-    }
+		final int x = (width - xSize) / 2;
+		final int y = (height - ySize) / 2;
+		drawTexturedModalRect(x, y, 0, 0, xSize, ySize);
+	}
 }
