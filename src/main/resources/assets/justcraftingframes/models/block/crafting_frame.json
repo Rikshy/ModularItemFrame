@@ -1,4 +1,5 @@
 {
+    "credit": "Made by Shyrik, utilizing Blockbench.",
     "textures": {
         "particle": "minecraft:blocks/planks_birch",
         "frame": "minecraft:blocks/planks_birch",
