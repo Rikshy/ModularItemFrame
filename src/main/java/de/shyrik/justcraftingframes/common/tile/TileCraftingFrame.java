@@ -35,7 +35,8 @@ public class TileCraftingFrame extends TileFrameBase implements IContainerCallba
     }
 
     public void craft(EntityPlayer player, boolean fullStack) {
-        final IItemHandlerModifiable workingInv = getWorkingInventories(player);
+        final IItemHandlerModifiable playerInventory = (IItemHandlerModifiable) player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+        final IItemHandlerModifiable workingInv = getWorkingInventories(playerInventory);
 
         if (recipe == null)
             reloadRecipe(player);
@@ -45,7 +46,7 @@ public class TileCraftingFrame extends TileFrameBase implements IContainerCallba
 
         int craftAmount = fullStack ? Math.min(Utils.countPossibleCrafts(workingInv, recipe.getIngredients()), 64) : 1;
         do {
-            ItemStack remain = Utils.giveStack(workingInv, recipe.getRecipeOutput());
+            ItemStack remain = Utils.giveStack(playerInventory, recipe.getRecipeOutput()); //use playerinventory here!
             if (!remain.isEmpty()) Utils.ejectStack(world, pos, remain);
 
             for (Ingredient ingredient : recipe.getIngredients()) {
@@ -56,14 +57,13 @@ public class TileCraftingFrame extends TileFrameBase implements IContainerCallba
         } while (--craftAmount > 0);
     }
 
-    private IItemHandlerModifiable getWorkingInventories(EntityPlayer player) {
+    private IItemHandlerModifiable getWorkingInventories(IItemHandlerModifiable playerInventory) {
         EnumFacing facing = world.getBlockState(pos).getValue(BlockFrameBase.FACING);
         TileEntity neighbor = world.getTileEntity(pos.offset(facing));
         IItemHandlerModifiable neighborInventory = null;
         if (neighbor != null) {
             neighborInventory = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
         }
-        IItemHandlerModifiable playerInventory = (IItemHandlerModifiable) player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 
         if(neighborInventory != null) {
             if (!ConfigValues.StillUsePlayerInv) return neighborInventory;
