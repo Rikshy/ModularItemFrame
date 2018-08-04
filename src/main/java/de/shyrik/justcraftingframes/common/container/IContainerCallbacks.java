@@ -4,7 +4,6 @@ package de.shyrik.justcraftingframes.common.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.Slot;
 
 public interface IContainerCallbacks {
 	/**
