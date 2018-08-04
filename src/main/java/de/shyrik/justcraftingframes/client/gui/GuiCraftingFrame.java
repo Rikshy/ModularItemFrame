@@ -16,7 +16,7 @@ public class GuiCraftingFrame extends GuiContainer {
 	public GuiCraftingFrame(final ContainerCraftingFrame container) {
 		super(container);
 
-		allowUserInput = false;
+		allowUserInput = true;
 	}
 
 	/**

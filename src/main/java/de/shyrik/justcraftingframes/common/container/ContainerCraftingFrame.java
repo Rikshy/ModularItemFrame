@@ -39,7 +39,7 @@ public class ContainerCraftingFrame extends Container {
 		//this.addSlotToContainer(new SlotCrafting(playerInventory.player, this.craftMatrix, this.craftResult, 0, 124, 35));
 		for (int row = 0; row < FRAME_SLOTS_PER_ROW; ++row) {
 			for (int col = 0; col < FRAME_SLOTS_PER_ROW; ++col) {
-				addSlotToContainer(new SlotItemHandler(frameInventory, col + row * FRAME_SLOTS_PER_ROW, 30 + col * 18, 17 + row * 18));
+				addSlotToContainer(new GhostSlot(frameInventory, col + row * FRAME_SLOTS_PER_ROW, 30 + col * 18, 17 + row * 18));
 			}
 		}
 
@@ -96,15 +96,15 @@ public class ContainerCraftingFrame extends Container {
 		callbacks.onContainerClosed(playerIn);
 	}
 
-	/*@Override
+	@Override
 	@Nonnull
 	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player) {
-		if (slotId < 9) {
+		if (slotId >= 0 &&  getSlot(slotId) instanceof GhostSlot) {
 			ItemStack stack = ItemStack.EMPTY;
 
-			if (clickTypeIn == ClickType.QUICK_CRAFT || (dragType == 0) || (dragType == 1)) {
+			if (clickTypeIn == ClickType.PICKUP || clickTypeIn == ClickType.QUICK_MOVE/* || (dragType == 0) || (dragType == 1)*/) {
 				Slot stackSlot = getSlot(slotId);
-				ItemStack stackHeld = player.inventory.getCurrentItem();
+				ItemStack stackHeld = player.inventory.getItemStack();
 
 				stack = stackHeld;
 				if (stackHeld.isEmpty()) {
@@ -119,7 +119,7 @@ public class ContainerCraftingFrame extends Container {
 			return stack;
 		}
 		return super.slotClick(slotId, dragType, clickTypeIn, player);
-	}*/
+	}
 
 
 	public interface IContainerCallbacks {

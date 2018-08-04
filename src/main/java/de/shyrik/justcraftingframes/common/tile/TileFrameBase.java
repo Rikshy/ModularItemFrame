@@ -19,22 +19,4 @@ public class TileFrameBase extends TileMod {
     public ItemStack getDisplayedItem() {
         return displayedItem;
     }
-
-    @Override
-    public void readFromNBT(@Nonnull NBTTagCompound compound) {
-        super.readFromNBT(compound);
-        ItemStackHelper.loadAllItems(compound, this.itemStacks);
-    }
-
-    @Nonnull
-    @Override
-    public NBTTagCompound writeToNBT(@Nonnull NBTTagCompound compound) {
-        super.writeToNBT(compound);
-        if (!displayedItem.isEmpty()) {
-            NBTTagCompound displayCompound = new NBTTagCompound();
-            displayedItem.writeToNBT(displayCompound);
-        }
-        ItemStackHelper.saveAllItems(compound, itemStacks);
-        return compound;
-    }
 }

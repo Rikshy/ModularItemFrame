@@ -11,7 +11,6 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
-import javax.swing.plaf.basic.BasicComboBoxUI;
 
 @TileRegister("crafting_frame")
 public class TileCraftingFrame extends TileFrameBase implements ContainerCraftingFrame.IContainerCallbacks {
@@ -26,15 +25,17 @@ public class TileCraftingFrame extends TileFrameBase implements ContainerCraftin
         @Override
         @Nonnull
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-            if (!stack.isEmpty()) {
-                ItemStack copy = stack.copy();
-                copy.setCount(1);
+            if (!simulate) {
+                if (!stack.isEmpty()) {
+                    ItemStack copy = stack.copy();
+                    copy.setCount(1);
 
-                validateSlotIndex(slot);
+                    validateSlotIndex(slot);
 
-                this.stacks.set(slot, copy);
-                onContentsChanged(slot);
-                TileCraftingFrame.super.markDirty();
+                    this.stacks.set(slot, copy);
+                    onContentsChanged(slot);
+                    TileCraftingFrame.super.markDirty();
+                }
             }
             return stack;
         }
@@ -42,13 +43,20 @@ public class TileCraftingFrame extends TileFrameBase implements ContainerCraftin
         @Override
         @Nonnull
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            ItemStack existing = this.stacks.get(slot);
-            if (!existing.isEmpty()) {
-                this.stacks.set(slot, ItemStack.EMPTY);
-                onContentsChanged(slot);
-                TileCraftingFrame.super.markDirty();
+            if (!simulate) {
+                ItemStack existing = this.stacks.get(slot);
+                if (!existing.isEmpty()) {
+                    this.stacks.set(slot, ItemStack.EMPTY);
+                    onContentsChanged(slot);
+                    TileCraftingFrame.super.markDirty();
+                }
             }
             return ItemStack.EMPTY;
+        }
+
+        @Override
+        protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
+            return 1;
         }
     };
 

@@ -34,16 +34,16 @@ public class BlockCraftingFrame extends BlockFrameBase {
 
     @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (worldIn.isRemote) {
+        if (!worldIn.isRemote) {
+            TileCraftingFrame te = getTE(worldIn, pos);
             ItemStack heldItem = playerIn.getHeldItem(hand);
             if (!heldItem.isEmpty()) {
-                TileCraftingFrame te = getTE(worldIn, pos);
                 te.setDisplayedItem(heldItem);
 
-                te.markDirty();
             } else {
                 playerIn.openGui(JustCraftingFrames.instance, GuiHandler.CRAFTING_FRAME, worldIn, pos.getX(), pos.getY(), pos.getZ());
             }
+            te.markDirty();
         }
         return true;
     }
