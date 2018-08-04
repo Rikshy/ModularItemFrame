@@ -2,9 +2,8 @@ package de.shyrik.justcraftingframes.common.block;
 
 import de.shyrik.justcraftingframes.JustCraftingFrames;
 import de.shyrik.justcraftingframes.client.gui.GuiHandler;
-import de.shyrik.justcraftingframes.client.render.FrameRenderer;
+import de.shyrik.justcraftingframes.client.render.FrameItemRenderer;
 import de.shyrik.justcraftingframes.common.tile.TileCraftingFrame;
-import de.shyrik.justcraftingframes.common.tile.TileFrameBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,7 +29,7 @@ public class BlockCraftingFrame extends BlockFrameBase {
 
     @SideOnly(Side.CLIENT)
     public void initModel() {
-        ClientRegistry.bindTileEntitySpecialRenderer(TileCraftingFrame.class, new FrameRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileCraftingFrame.class, new FrameItemRenderer());
     }
 
     @Nullable
@@ -55,7 +54,7 @@ public class BlockCraftingFrame extends BlockFrameBase {
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (!worldIn.isRemote) {
             TileCraftingFrame te = getTE(worldIn, pos);
-            if (!te.hasValidRecipe())
+            if (!te.hasValidRecipe(playerIn))
                 playerIn.openGui(JustCraftingFrames.instance, GuiHandler.CRAFTING_FRAME, worldIn, pos.getX(), pos.getY(), pos.getZ());
             else {
                 if (playerIn.isSneaking())

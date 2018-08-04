@@ -1,6 +1,7 @@
 package de.shyrik.justcraftingframes.common.tile;
 
 import com.teamwizardry.librarianlib.features.autoregister.TileRegister;
+import com.teamwizardry.librarianlib.features.base.block.tile.TileMod;
 import de.shyrik.justcraftingframes.ConfigValues;
 import de.shyrik.justcraftingframes.common.Utils;
 import de.shyrik.justcraftingframes.common.block.BlockFrameBase;
@@ -26,9 +27,10 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import javax.annotation.Nonnull;
 
 @TileRegister("crafting_frame")
-public class TileCraftingFrame extends TileFrameBase implements IContainerCallbacks {
+public class TileCraftingFrame extends TileMod implements IContainerCallbacks {
 
     private IRecipe recipe;
+    public ItemStack displayedItem = ItemStack.EMPTY;
     public ItemStackHandler inventory = new ItemStackHandler(9);
 
     public ContainerCraftingFrame createContainer(final EntityPlayer player) {
@@ -79,7 +81,8 @@ public class TileCraftingFrame extends TileFrameBase implements IContainerCallba
         return playerInventory;
     }
 
-    public boolean hasValidRecipe() {
+    public boolean hasValidRecipe(@Nonnull EntityPlayer player) {
+        if ( recipe == null) reloadRecipe(player);
         return recipe != null && !recipe.getRecipeOutput().isEmpty();
     }
 

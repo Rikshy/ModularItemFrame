@@ -1,7 +1,7 @@
 package de.shyrik.justcraftingframes.client.render;
 
 import de.shyrik.justcraftingframes.common.block.BlockFrameBase;
-import de.shyrik.justcraftingframes.common.tile.TileFrameBase;
+import de.shyrik.justcraftingframes.common.tile.TileCraftingFrame;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -11,23 +11,23 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
-public class FrameRenderer extends TileEntitySpecialRenderer<TileFrameBase> {
+public class FrameItemRenderer extends TileEntitySpecialRenderer<TileCraftingFrame> {
 
     @Override
-    public void render(TileFrameBase te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void render(TileCraftingFrame te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.pushMatrix();
         GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
         GlStateManager.scale(0.8F, 0.8F, 0.8F);
         GlStateManager.pushMatrix();
 
         rotateOnFacing(te);
-        renderItem(te.getDisplayedItem());
+        renderItem(te.displayedItem);
 
         GlStateManager.popMatrix();
         GlStateManager.popMatrix();
     }
 
-    private void rotateOnFacing(TileFrameBase te) {
+    private void rotateOnFacing(TileCraftingFrame te) {
         EnumFacing facing = te.getWorld().getBlockState(te.getPos()).getValue(BlockFrameBase.FACING);
 
         switch (facing) {
