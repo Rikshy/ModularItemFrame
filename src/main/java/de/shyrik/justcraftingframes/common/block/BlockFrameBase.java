@@ -24,7 +24,7 @@ public abstract class BlockFrameBase extends BlockModContainer {
     private static final AxisAlignedBB UP_AABB = new AxisAlignedBB(0.125D, 1.0D, 0.125D, 0.875D, 0.9375D, 0.875D);
     private static final AxisAlignedBB DOWN_AABB = new AxisAlignedBB(0.125D, 0.0D, 0.125D, 0.875D, 0.0625D, 0.875D);
     private static final AxisAlignedBB NORTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 0.0D, 0.875D, 0.875D, 0.0625D);
-    private static final AxisAlignedBB SOUTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 1.0D, 0.875D, 0.875D, 2.9375D);
+    private static final AxisAlignedBB SOUTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 1.25D, 0.875D, 0.875D, 0.9375D);
     private static final AxisAlignedBB EAST_AABB = new AxisAlignedBB(0.9375D, 0.125D, 0.125D, 1.0D, 0.875D, 0.875D);
     private static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.0D, 0.125D, 0.125D, 0.0625D, 0.875D, 0.875D);
 
