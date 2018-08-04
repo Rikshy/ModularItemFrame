@@ -1,7 +1,7 @@
 package de.shyrik.justcraftingframes.client;
 
 import de.shyrik.justcraftingframes.common.CommonProxy;
-import de.shyrik.justcraftingframes.init.Blocks;
+import de.shyrik.justcraftingframes.init.ModBlocks;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -12,7 +12,7 @@ public class ClientProxy extends CommonProxy {
     public void preInit(FMLPreInitializationEvent event){
         super.preInit(event);
 
-        Blocks.initModels();
+        ModBlocks.initModels();
     }
 
     @Override
