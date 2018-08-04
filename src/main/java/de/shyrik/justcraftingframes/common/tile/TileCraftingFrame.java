@@ -1,7 +1,9 @@
 package de.shyrik.justcraftingframes.common.tile;
 
 import com.teamwizardry.librarianlib.features.autoregister.TileRegister;
+import de.shyrik.justcraftingframes.ConfigValues;
 import de.shyrik.justcraftingframes.common.Utils;
+import de.shyrik.justcraftingframes.common.block.BlockFrameBase;
 import de.shyrik.justcraftingframes.common.container.ContainerCraftingFrame;
 import de.shyrik.justcraftingframes.common.container.FrameCrafting;
 import de.shyrik.justcraftingframes.common.container.IContainerCallbacks;
@@ -11,10 +13,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
+import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
 
@@ -31,25 +35,41 @@ public class TileCraftingFrame extends TileFrameBase implements IContainerCallba
     }
 
     public void craft(EntityPlayer player, boolean fullStack) {
-        final IItemHandlerModifiable playerInventory = (IItemHandlerModifiable)player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+        final IItemHandlerModifiable workingInv = getWorkingInventories(player);
 
         if (recipe == null)
             reloadRecipe(player);
 
-        if (playerInventory == null || recipe == null || recipe.getRecipeOutput().isEmpty() || !Utils.canCraft(playerInventory, recipe.getIngredients()))
+        if (workingInv == null || recipe == null || recipe.getRecipeOutput().isEmpty() || !Utils.canCraft(workingInv, recipe.getIngredients()))
             return;
 
-        int craftAmount = fullStack ? Math.min(Utils.countPossibleCrafts(playerInventory, recipe.getIngredients()), 64) : 1;
+        int craftAmount = fullStack ? Math.min(Utils.countPossibleCrafts(workingInv, recipe.getIngredients()), 64) : 1;
         do {
-            ItemStack remain = Utils.giveStack(playerInventory, recipe.getRecipeOutput());
+            ItemStack remain = Utils.giveStack(workingInv, recipe.getRecipeOutput());
             if (!remain.isEmpty()) Utils.ejectStack(world, pos, remain);
 
             for (Ingredient ingredient : recipe.getIngredients()) {
                 if (ingredient.getMatchingStacks().length > 0) {
-                    Utils.removeFromInventory(playerInventory, ingredient.getMatchingStacks());
+                    Utils.removeFromInventory(workingInv, ingredient.getMatchingStacks());
                 }
             }
         } while (--craftAmount > 0);
+    }
+
+    private IItemHandlerModifiable getWorkingInventories(EntityPlayer player) {
+        EnumFacing facing = world.getBlockState(pos).getValue(BlockFrameBase.FACING);
+        TileEntity neighbor = world.getTileEntity(pos.offset(facing));
+        IItemHandlerModifiable neighborInventory = null;
+        if (neighbor != null) {
+            neighborInventory = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+        }
+        IItemHandlerModifiable playerInventory = (IItemHandlerModifiable) player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+
+        if(neighborInventory != null) {
+            if (!ConfigValues.StillUsePlayerInv) return neighborInventory;
+            else return new CombinedInvWrapper(neighborInventory, playerInventory);
+        }
+        return playerInventory;
     }
 
     public boolean hasValidRecipe() {
