@@ -1,7 +1,6 @@
 package de.shyrik.justcraftingframes.init;
 
 import de.shyrik.justcraftingframes.JustCraftingFrames;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -13,6 +12,6 @@ public class ModRecipes {
 				"SSS",
 				"SCS",
 				"SSS",
-				'S', "stickWood", 'C', Blocks.CRAFTING_TABLE);
+				'S', "stickWood", 'C', "workbench");
 	}
 }

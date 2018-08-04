@@ -4,7 +4,6 @@ import com.teamwizardry.librarianlib.features.base.block.tile.BlockModContainer;
 import de.shyrik.justcraftingframes.client.render.FrameRenderer;
 import de.shyrik.justcraftingframes.common.tile.TileFrameBase;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDoor;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
