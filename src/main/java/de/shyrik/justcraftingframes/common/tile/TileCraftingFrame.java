@@ -15,6 +15,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
@@ -35,6 +36,9 @@ public class TileCraftingFrame extends TileFrameBase implements IContainerCallba
     }
 
     public void craft(EntityPlayer player, boolean fullStack) {
+        if (player instanceof FakePlayer && !ConfigValues.AllowFakePlayers)
+            return;
+
         final IItemHandlerModifiable playerInventory = (IItemHandlerModifiable) player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
         final IItemHandlerModifiable workingInv = getWorkingInventories(playerInventory);
 
