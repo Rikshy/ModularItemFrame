@@ -3,6 +3,8 @@ package de.shyrik.justcraftingframes.common.block;
 import com.teamwizardry.librarianlib.features.base.block.tile.BlockModContainer;
 import de.shyrik.justcraftingframes.client.render.FrameRenderer;
 import de.shyrik.justcraftingframes.common.tile.TileFrameBase;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockDoor;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -28,7 +30,7 @@ public abstract class BlockFrameBase extends BlockModContainer {
     private static final AxisAlignedBB UP_AABB = new AxisAlignedBB(0.125D, 1.0D, 0.125D, 0.875D, 0.9375D, 0.875D);
     private static final AxisAlignedBB DOWN_AABB = new AxisAlignedBB(0.125D, 0.0D, 0.125D, 0.875D, 0.0625D, 0.875D);
     private static final AxisAlignedBB NORTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 0.0D, 0.875D, 0.875D, 0.0625D);
-    private static final AxisAlignedBB SOUTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 1.0D, 0.875D, 0.875D, 0.9375D);
+    private static final AxisAlignedBB SOUTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 1.0D, 0.875D, 0.875D, 2.9375D);
     private static final AxisAlignedBB EAST_AABB = new AxisAlignedBB(0.9375D, 0.125D, 0.125D, 1.0D, 0.875D, 0.875D);
     private static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.0D, 0.125D, 0.125D, 0.0625D, 0.875D, 0.875D);
 
@@ -73,9 +75,7 @@ public abstract class BlockFrameBase extends BlockModContainer {
     @Nonnull
     @SuppressWarnings("deprecation")
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        EnumFacing facing = state.getValue(FACING);
-
-        switch (facing) {
+        switch (state.getValue(FACING)) {
             case UP:
                 return UP_AABB;
             case DOWN:
@@ -125,13 +125,13 @@ public abstract class BlockFrameBase extends BlockModContainer {
     }
 
     @Override
-    public void onNeighborChange(IBlockAccess worldIn, BlockPos pos, BlockPos neighbor) {
-        IBlockState state = worldIn.getBlockState(pos);
+    @SuppressWarnings("deprecation")
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         BlockPos attachedPos = pos.offset(state.getValue(FACING));
 
         if (worldIn.isAirBlock(attachedPos)) {
-            dropBlockAsItem((World) worldIn, pos, state, 0);
-            ((World) worldIn).setBlockToAir(pos);
+            dropBlockAsItem(worldIn, pos, state, 0);
+            worldIn.setBlockToAir(pos);
         }
     }
 
