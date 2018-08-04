@@ -77,7 +77,7 @@ public class Utils {
 					}
 				}
 			}
-			count++;
+			if(canCraft)count++;
 		}
 		return count;
 	}
