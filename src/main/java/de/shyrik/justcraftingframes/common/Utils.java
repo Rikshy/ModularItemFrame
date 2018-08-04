@@ -107,7 +107,7 @@ public class Utils {
 	}
 
 	public static int getItemEqualSlot(IItemHandler inventory, ItemStack stack) {
-		for (int i = 0; i < inventory.getSlots(); ++i) if (ItemStack.areItemsEqual(inventory.getStackInSlot(i), stack)) return i;
+		for (int i = 0; i < inventory.getSlots(); ++i) if (inventory.getStackInSlot(i).getCount() < inventory.getStackInSlot(i).getMaxStackSize() && ItemStack.areItemsEqual(inventory.getStackInSlot(i), stack)) return i;
 		return -1;
 	}
 
