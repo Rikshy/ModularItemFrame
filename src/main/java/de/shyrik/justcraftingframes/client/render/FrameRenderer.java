@@ -17,7 +17,7 @@ public class FrameRenderer extends TileEntitySpecialRenderer<TileFrameBase> {
     public void render(TileFrameBase te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.pushMatrix();
         GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
-        GlStateManager.scale(0.75F, 0.75F, 0.75F);
+        GlStateManager.scale(0.8F, 0.8F, 0.8F);
         GlStateManager.pushMatrix();
 
         rotateOnFacing(te);
@@ -48,7 +48,7 @@ public class FrameRenderer extends TileEntitySpecialRenderer<TileFrameBase> {
             case UP:
                 GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
         }
-        GlStateManager.translate(0.0F, 0.0F, -0.625F);
+        GlStateManager.translate(0.0F, 0.0F, -0.5125F);
     }
 
     private void renderItem(ItemStack stack) {
@@ -64,7 +64,7 @@ public class FrameRenderer extends TileEntitySpecialRenderer<TileFrameBase> {
             if (itemRenderer.shouldRenderItemIn3D(stack)) {
                 GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
             } else {
-                GlStateManager.scale(0.6F, 0.6F, 0.6F);
+                GlStateManager.scale(0.9F, 0.9F, 0.9F);
             }
             itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED);
             RenderHelper.disableStandardItemLighting();
