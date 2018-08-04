@@ -28,11 +28,11 @@ public class BlockNullifyFrame extends BlockFrameBase {
 	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {
 			ItemStack held = playerIn.getHeldItem(hand);
-			if(!playerIn.isSneaking()) {
-				lastStack = held;
+			if(!playerIn.isSneaking() && !held.isEmpty()) {
+				lastStack = held.copy();
 				held.setCount(0);
 				worldIn.playSound(null, pos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.4F, 0.7F);
-			} else if (held.isEmpty() && !lastStack.isEmpty()) {
+			} else if (playerIn.isSneaking() && held.isEmpty() && !lastStack.isEmpty()) {
 				playerIn.setHeldItem(hand, lastStack);
 				lastStack = ItemStack.EMPTY;
 				worldIn.playSound(null, pos, SoundEvents.ENTITY_ENDERPEARL_THROW, SoundCategory.BLOCKS, 0.4F, 0.7F);
