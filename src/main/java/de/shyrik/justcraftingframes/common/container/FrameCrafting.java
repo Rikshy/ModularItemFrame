@@ -34,7 +34,7 @@ public class FrameCrafting extends InventoryCrafting {
 	@Nonnull
 	@Override
 	public ItemStack getStackInSlot(int index) {
-		return index >= this.getSizeInventory() ? ItemStack.EMPTY : this.parent.getStackInSlot(index);
+		return index >= getSizeInventory() ? ItemStack.EMPTY : parent.getStackInSlot(index);
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class FrameCrafting extends InventoryCrafting {
 
 	@Override
 	public void setInventorySlotContents(int index, @Nonnull ItemStack stack) {
-		this.parent.setStackInSlot(index, stack);
+		parent.setStackInSlot(index, stack);
 		onCraftMatrixChanged();
 	}
 

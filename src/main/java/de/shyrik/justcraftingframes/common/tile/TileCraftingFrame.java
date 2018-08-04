@@ -97,7 +97,7 @@ public class TileCraftingFrame extends TileMod implements IContainerCallbacks {
 
     @Override
     public boolean isUsableByPlayer(EntityPlayer player) {
-        return this.world.getTileEntity(this.pos) == this && player.getDistanceSq(this.pos.getX() + 0.5, this.pos.getY() + 0.5, this.pos.getZ() + 0.5) <= 64;
+        return this.world.getTileEntity(pos) == this && player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
     }
 
     @Override
@@ -113,13 +113,13 @@ public class TileCraftingFrame extends TileMod implements IContainerCallbacks {
 
     @Override
     public void readCustomNBT(@Nonnull NBTTagCompound compound) {
-        this.inventory.deserializeNBT(compound.getCompoundTag("inv"));
-        if (compound.hasKey("display")) displayedItem = new ItemStack(compound.getCompoundTag("display"));
+        inventory.deserializeNBT(compound.getCompoundTag("inv"));
+        displayedItem = new ItemStack(compound.getCompoundTag("display"));
     }
 
     @Override
     public void writeCustomNBT(@Nonnull NBTTagCompound compound, boolean sync) {
         compound.setTag("display", displayedItem.serializeNBT());
-        compound.setTag("inv", this.inventory.serializeNBT());
+        compound.setTag("inv", inventory.serializeNBT());
     }
 }

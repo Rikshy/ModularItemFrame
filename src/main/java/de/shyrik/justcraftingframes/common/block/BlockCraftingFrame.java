@@ -38,7 +38,7 @@ public class BlockCraftingFrame extends BlockFrameBase {
         return new TileCraftingFrame();
     }
 
-    public TileCraftingFrame getTE(@Nonnull World world, @Nonnull BlockPos pos) {
+    private TileCraftingFrame getTE(@Nonnull World world, @Nonnull BlockPos pos) {
         return (TileCraftingFrame)world.getTileEntity(pos);
     }
 

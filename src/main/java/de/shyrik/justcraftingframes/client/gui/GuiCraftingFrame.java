@@ -26,9 +26,9 @@ public class GuiCraftingFrame extends GuiContainer {
 	@Override
 	protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
 		Slot slot = this.getSlotAtPosition(mouseX, mouseY);
-		ItemStack itemstack = this.mc.player.inventory.getItemStack();
+		ItemStack itemstack = mc.player.inventory.getItemStack();
 
-		if (slot instanceof GhostSlot && Container.canAddItemToSlot(slot, itemstack, true) && slot.isItemValid(itemstack) && this.inventorySlots.canDragIntoSlot(slot)) {
+		if (slot instanceof GhostSlot && Container.canAddItemToSlot(slot, itemstack, true) && slot.isItemValid(itemstack) && inventorySlots.canDragIntoSlot(slot)) {
 			dragSplittingSlots.add(slot);
 			dragSplitting = true;
 		} else {
@@ -58,7 +58,7 @@ public class GuiCraftingFrame extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 
-		this.mc.getTextureManager().bindTexture(CF_GUI_TEXTURE);
+		mc.getTextureManager().bindTexture(CF_GUI_TEXTURE);
 
 		final int x = (width - xSize) / 2;
 		final int y = (height - ySize) / 2;
