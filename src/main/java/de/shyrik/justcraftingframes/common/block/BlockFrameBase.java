@@ -90,10 +90,7 @@ public abstract class BlockFrameBase extends BlockModContainer {
     @Override
     @SuppressWarnings("deprecation")
     public @Nonnull IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        if (placer.rotationPitch > 45) return this.getStateFromMeta(meta).withProperty(FACING, EnumFacing.DOWN);
-        if (placer.rotationPitch < -45) return this.getStateFromMeta(meta).withProperty(FACING, EnumFacing.UP);
-
-        return this.getStateFromMeta(meta).withProperty(FACING, placer.getAdjustedHorizontalFacing());
+        return this.getStateFromMeta(meta).withProperty(FACING, facing.getOpposite());
     }
 
     @Override
