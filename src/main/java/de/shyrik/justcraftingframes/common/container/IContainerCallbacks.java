@@ -34,5 +34,5 @@ public interface IContainerCallbacks {
 	 *
 	 * @param result The crafting result
 	 */
-	void onContainerSlotChanged(InventoryCraftResult result);
+	void onContainerCraftingResultChanged(InventoryCraftResult result);
 }

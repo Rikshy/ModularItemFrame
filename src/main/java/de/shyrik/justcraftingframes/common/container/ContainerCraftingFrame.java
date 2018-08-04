@@ -48,17 +48,18 @@ public class ContainerCraftingFrame extends Container {
 			}
 		}
 
-		for (int row = 0; row < INV_ROWS; ++row) {
+		if (playerInventory != null) {
+			for (int row = 0; row < INV_ROWS; ++row) {
+				for (int col = 0; col < SLOTS_PER_ROW; ++col) {
+					addSlotToContainer(new SlotItemHandler(playerInventory, col + row * SLOTS_PER_ROW + SLOTS_PER_ROW, 8 + col * 18, 84 + row * 18));
+				}
+			}
+
 			for (int col = 0; col < SLOTS_PER_ROW; ++col) {
-				addSlotToContainer(new SlotItemHandler(playerInventory, col + row * SLOTS_PER_ROW + SLOTS_PER_ROW, 8 + col * 18, 84 + row * 18));
+				addSlotToContainer(new SlotItemHandler(playerInventory, col, 8 + col * 18, 142));
 			}
 		}
-
-		for (int col = 0; col < SLOTS_PER_ROW; ++col) {
-			addSlotToContainer(new SlotItemHandler(playerInventory, col, 8 + col * 18, 142));
-		}
 	}
-
 
 	@Override
 	@Nonnull
@@ -107,7 +108,7 @@ public class ContainerCraftingFrame extends Container {
 	@Override
 	public void onCraftMatrixChanged(IInventory inventoryIn) {
 		this.slotChangedCraftingGrid(player.world, player, matrix, craftResult);
-		callbacks.onContainerSlotChanged(craftResult);
+		callbacks.onContainerCraftingResultChanged(craftResult);
 	}
 
 	@Override
