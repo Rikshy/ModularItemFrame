@@ -55,6 +55,33 @@ public class Utils {
 		return true;
 	}
 
+	public static int countPossibleCrafts(IItemHandler inventory, NonNullList<Ingredient> ingredients) {
+		IItemHandler copy = Utils.copyItemHandler(inventory);
+		boolean canCraft = true;
+		int count = 0;
+		while(canCraft) {
+			for (Ingredient ingredient : ingredients) {
+				if (ingredient.getMatchingStacks().length > 0) {
+					boolean found = false;
+					for (int slot = 0; slot < copy.getSlots(); slot++) {
+						ItemStack stack = copy.extractItem(slot, 1, true);
+						if (!stack.isEmpty() && areItemsEqualIgnoreDurability(ingredient.getMatchingStacks(), stack)) {
+							copy.extractItem(slot, 1, false);
+							found = true;
+							break;
+						}
+					}
+					if (!found) {
+						canCraft = false;
+						break;
+					}
+				}
+			}
+			count++;
+		}
+		return count;
+	}
+
 	public static void removeFromInventory(IItemHandlerModifiable inventory, ItemStack[] toRemove) {
 		for (int invSlot = 0; invSlot < inventory.getSlots(); invSlot++) {
 			ItemStack stack = inventory.extractItem(invSlot, 1, true);

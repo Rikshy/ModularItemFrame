@@ -6,7 +6,6 @@ import de.shyrik.justcraftingframes.common.container.ContainerCraftingFrame;
 import de.shyrik.justcraftingframes.common.container.FrameCrafting;
 import de.shyrik.justcraftingframes.common.container.IContainerCallbacks;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -40,19 +39,21 @@ public class TileCraftingFrame extends TileFrameBase implements IContainerCallba
         if (playerInventory == null || recipe == null || recipe.getRecipeOutput().isEmpty() || !Utils.canCraft(playerInventory, recipe.getIngredients()))
             return;
 
-        ItemStack remain = Utils.giveStack(playerInventory, recipe.getRecipeOutput());
-        if (!remain.isEmpty())
-            Utils.ejectStack(world, pos, remain);
+        int craftAmount = fullStack ? Math.min(Utils.countPossibleCrafts(playerInventory, recipe.getIngredients()), 64) : 1;
+        do {
+            ItemStack remain = Utils.giveStack(playerInventory, recipe.getRecipeOutput());
+            if (!remain.isEmpty()) Utils.ejectStack(world, pos, remain);
 
-        for (Ingredient ingredient : recipe.getIngredients()) {
-            if (ingredient.getMatchingStacks().length > 0) {
-                Utils.removeFromInventory(playerInventory, ingredient.getMatchingStacks());
+            for (Ingredient ingredient : recipe.getIngredients()) {
+                if (ingredient.getMatchingStacks().length > 0) {
+                    Utils.removeFromInventory(playerInventory, ingredient.getMatchingStacks());
+                }
             }
-        }
+        } while (--craftAmount > 0);
     }
 
     public boolean hasValidRecipe() {
-        return !recipe.getRecipeOutput().isEmpty();
+        return recipe != null && !recipe.getRecipeOutput().isEmpty();
     }
 
     @Override
