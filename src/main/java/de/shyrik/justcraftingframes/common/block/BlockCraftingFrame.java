@@ -2,7 +2,9 @@ package de.shyrik.justcraftingframes.common.block;
 
 import de.shyrik.justcraftingframes.JustCraftingFrames;
 import de.shyrik.justcraftingframes.client.gui.GuiHandler;
+import de.shyrik.justcraftingframes.client.render.FrameRenderer;
 import de.shyrik.justcraftingframes.common.tile.TileCraftingFrame;
+import de.shyrik.justcraftingframes.common.tile.TileFrameBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +14,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,8 +24,13 @@ import javax.annotation.Nonnull;
 
 public class BlockCraftingFrame extends BlockFrameBase {
 
-    public BlockCraftingFrame(@NotNull String name) {
-        super(name);
+    public BlockCraftingFrame() {
+        super("crafting_frame");
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void initModel() {
+        ClientRegistry.bindTileEntitySpecialRenderer(TileCraftingFrame.class, new FrameRenderer());
     }
 
     @Nullable

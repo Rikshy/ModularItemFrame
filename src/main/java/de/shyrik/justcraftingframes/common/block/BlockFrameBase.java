@@ -42,11 +42,6 @@ public abstract class BlockFrameBase extends BlockModContainer {
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
-    @SideOnly(Side.CLIENT)
-    public void initModel() {
-        ClientRegistry.bindTileEntitySpecialRenderer(TileFrameBase.class, new FrameRenderer());
-    }
-
     @Override
     @SuppressWarnings("deprecation")
     public boolean isFullBlock(IBlockState state) {
