@@ -2,8 +2,12 @@ package de.shyrik.justcraftingframes.client.gui;
 
 import de.shyrik.justcraftingframes.JustCraftingFrames;
 import de.shyrik.justcraftingframes.common.container.ContainerCraftingFrame;
+import de.shyrik.justcraftingframes.common.container.GhostSlot;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiCraftingFrame extends GuiContainer {
@@ -17,6 +21,30 @@ public class GuiCraftingFrame extends GuiContainer {
 		super(container);
 
 		allowUserInput = true;
+	}
+
+	@Override
+	protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
+		Slot slot = this.getSlotAtPosition(mouseX, mouseY);
+		ItemStack itemstack = this.mc.player.inventory.getItemStack();
+
+		if (slot instanceof GhostSlot && Container.canAddItemToSlot(slot, itemstack, true) && slot.isItemValid(itemstack) && this.inventorySlots.canDragIntoSlot(slot)) {
+			dragSplittingSlots.add(slot);
+			dragSplitting = true;
+		} else {
+			super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
+		}
+	}
+
+	private Slot getSlotAtPosition(int x, int y) {
+		for (int i = 0; i < inventorySlots.inventorySlots.size(); ++i) {
+			Slot slot = inventorySlots.inventorySlots.get(i);
+
+			if (isPointInRegion(slot.xPos, slot.yPos, 16, 16, x, y) && slot.isEnabled()) {
+				return slot;
+			}
+		}
+		return null;
 	}
 
 	/**

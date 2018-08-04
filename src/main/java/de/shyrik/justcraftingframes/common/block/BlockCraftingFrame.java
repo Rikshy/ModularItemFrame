@@ -38,9 +38,8 @@ public class BlockCraftingFrame extends BlockFrameBase {
             TileCraftingFrame te = getTE(worldIn, pos);
             ItemStack heldItem = playerIn.getHeldItem(hand);
             if (!heldItem.isEmpty()) {
-                te.setDisplayedItem(heldItem);
 
-            } else {
+            } else if (playerIn.isSneaking()) {
                 playerIn.openGui(JustCraftingFrames.instance, GuiHandler.CRAFTING_FRAME, worldIn, pos.getX(), pos.getY(), pos.getZ());
             }
             te.markDirty();

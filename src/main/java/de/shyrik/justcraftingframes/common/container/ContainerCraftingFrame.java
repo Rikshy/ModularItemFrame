@@ -1,11 +1,8 @@
 package de.shyrik.justcraftingframes.common.container;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -24,22 +21,30 @@ public class ContainerCraftingFrame extends Container {
 	 * The player inventory.
 	 */
 	private IItemHandlerModifiable playerInventory;
-	/**
-	 * The chest inventory.
-	 */
-	private IItemHandlerModifiable frameInventory;
+	private FrameCrafting matrix;
+	private InventoryCraftResult craftResult = new InventoryCraftResult();
+	private EntityPlayer player;
 
 	public ContainerCraftingFrame(IItemHandlerModifiable playerInventory, IItemHandlerModifiable frameInventory, EntityPlayer player, IContainerCallbacks containerCallbacks) {
 		this.playerInventory = playerInventory;
-		this.frameInventory = frameInventory;
-
+		this.player = player;
 		this.callbacks = containerCallbacks;
+
+		matrix = new FrameCrafting(this, frameInventory, 3, 3);
+		matrix.onCraftMatrixChanged();
+
 		callbacks.onContainerOpened(player);
 
-		//this.addSlotToContainer(new SlotCrafting(playerInventory.player, this.craftMatrix, this.craftResult, 0, 124, 35));
+		this.addSlotToContainer(new SlotCrafting(player, this.matrix, this.craftResult, 0, 124, 35) {
+			@Override
+			public boolean canTakeStack(EntityPlayer playerIn)
+			{
+				return false;
+			}
+		});
 		for (int row = 0; row < FRAME_SLOTS_PER_ROW; ++row) {
 			for (int col = 0; col < FRAME_SLOTS_PER_ROW; ++col) {
-				addSlotToContainer(new GhostSlot(frameInventory, col + row * FRAME_SLOTS_PER_ROW, 30 + col * 18, 17 + row * 18));
+				addSlotToContainer(new GhostSlot(matrix, col + row * FRAME_SLOTS_PER_ROW, 30 + col * 18, 17 + row * 18));
 			}
 		}
 
@@ -85,7 +90,7 @@ public class ContainerCraftingFrame extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(final EntityPlayer playerIn) {
+	public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
 		return callbacks.isUsableByPlayer(playerIn);
 	}
 
@@ -96,53 +101,35 @@ public class ContainerCraftingFrame extends Container {
 		callbacks.onContainerClosed(playerIn);
 	}
 
+	/**
+	 * Callback for when the matrix matrix is changed.
+	 */
+	@Override
+	public void onCraftMatrixChanged(IInventory inventoryIn) {
+		this.slotChangedCraftingGrid(player.world, player, matrix, craftResult);
+		callbacks.onContainerSlotChanged(craftResult);
+	}
+
 	@Override
 	@Nonnull
 	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, EntityPlayer player) {
-		if (slotId >= 0 &&  getSlot(slotId) instanceof GhostSlot) {
-			ItemStack stack = ItemStack.EMPTY;
+		if (slotId >= 0 && getSlot(slotId) instanceof GhostSlot) {
 
-			if (clickTypeIn == ClickType.PICKUP || clickTypeIn == ClickType.QUICK_MOVE/* || (dragType == 0) || (dragType == 1)*/) {
-				Slot stackSlot = getSlot(slotId);
-				ItemStack stackHeld = player.inventory.getItemStack();
+			Slot stackSlot = getSlot(slotId);
+			ItemStack stackHeld = player.inventory.getItemStack();
 
-				stack = stackHeld;
-				if (stackHeld.isEmpty()) {
-					stackSlot.putStack(ItemStack.EMPTY);
-				} else {
-					ItemStack s = stackHeld.copy();
-					s.setCount(1);
-					stackSlot.putStack(s);
-				}
+			if (stackHeld.isEmpty()) {
+				stackSlot.putStack(ItemStack.EMPTY);
+			} else {
+				ItemStack s = stackHeld.copy();
+				s.setCount(1);
+				stackSlot.putStack(s);
 			}
+			stackSlot.onSlotChanged();
+			detectAndSendChanges();
 
-			return stack;
+			return stackHeld;
 		}
 		return super.slotClick(slotId, dragType, clickTypeIn, player);
-	}
-
-
-	public interface IContainerCallbacks {
-		/**
-		 * Called when the {@link Container} is opened by a player.
-		 *
-		 * @param player The player
-		 */
-		void onContainerOpened(EntityPlayer player);
-
-		/**
-		 * Called when the {@link Container} is closed by a player.
-		 *
-		 * @param player The player
-		 */
-		void onContainerClosed(EntityPlayer player);
-
-		/**
-		 * Is this usable by the specified player?
-		 *
-		 * @param player The player
-		 * @return Is this usable by the specified player?
-		 */
-		boolean isUsableByPlayer(EntityPlayer player);
 	}
 }
