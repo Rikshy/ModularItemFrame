@@ -4,6 +4,7 @@ import de.shyrik.justcraftingframes.JustCraftingFrames;
 import de.shyrik.justcraftingframes.client.gui.GuiHandler;
 import de.shyrik.justcraftingframes.common.tile.TileCraftingFrame;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -33,14 +34,24 @@ public class BlockCraftingFrame extends BlockFrameBase {
     }
 
     @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+        if(!worldIn.isRemote && placer instanceof EntityPlayer) {
+            ((EntityPlayer) placer).openGui(JustCraftingFrames.instance, GuiHandler.CRAFTING_FRAME, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            getTE(worldIn, pos).markDirty();
+        }
+    }
+
+    @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (!worldIn.isRemote) {
             TileCraftingFrame te = getTE(worldIn, pos);
-            ItemStack heldItem = playerIn.getHeldItem(hand);
-            if (!heldItem.isEmpty()) {
-
-            } else if (playerIn.isSneaking()) {
+            if (!te.hasValidRecipe())
                 playerIn.openGui(JustCraftingFrames.instance, GuiHandler.CRAFTING_FRAME, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            else {
+                if (playerIn.isSneaking())
+                    te.craft(playerIn, true);
+                else
+                    te.craft(playerIn, false);
             }
             te.markDirty();
         }
