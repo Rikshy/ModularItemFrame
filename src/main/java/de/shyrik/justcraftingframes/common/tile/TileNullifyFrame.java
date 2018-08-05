@@ -1,27 +1,34 @@
 package de.shyrik.justcraftingframes.common.tile;
 
 import com.teamwizardry.librarianlib.features.autoregister.TileRegister;
-import com.teamwizardry.librarianlib.features.base.block.tile.TileModTickable;
 import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.justcraftingframes.ConfigValues;
 import de.shyrik.justcraftingframes.common.block.BlockFrameBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 
 @TileRegister("nullify_frame")
-public class TileNullifyFrame extends TileModTickable {
+public class TileNullifyFrame extends TileFluidBaseFrame implements ITickable {
 
 	@Save
 	public ItemStack lastStack = ItemStack.EMPTY;
+
+	public TileNullifyFrame() {
+		super(1000);
+		tank.setFluid(FluidUtil.getFluidContained(new ItemStack(Items.LAVA_BUCKET)));
+	}
 
 	public void nullify(@Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
 		ItemStack held = player.getHeldItem(hand);
@@ -37,7 +44,7 @@ public class TileNullifyFrame extends TileModTickable {
 	}
 
 	@Override
-	public void tick() {
+	public void update() {
 		if(ConfigValues.CanNulliFrameSuckFromInvent && !world.isRemote) {
 			if (world.getTotalWorldTime() % 20 != 0)
 				return;

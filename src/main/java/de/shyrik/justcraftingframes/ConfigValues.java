@@ -1,5 +1,6 @@
 package de.shyrik.justcraftingframes;
 
+import com.teamwizardry.librarianlib.features.config.ConfigIntRange;
 import com.teamwizardry.librarianlib.features.config.ConfigProperty;
 
 public final class ConfigValues {
@@ -15,4 +16,8 @@ public final class ConfigValues {
 
 	@ConfigProperty(category = "general", comment = "Can the Nullify frame suck items from attached inventory - making it a trash can")
 	public static boolean CanNulliFrameSuckFromInvent = false;
+
+	@ConfigIntRange(min = 1000, max = 32000)
+	@ConfigProperty(category = "general", comment = "Fluid Capacity of the tank frame (mB)")
+	public static int TankFrameCapacity = 4000;
 }

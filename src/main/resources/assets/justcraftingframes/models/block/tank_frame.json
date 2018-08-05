@@ -5,7 +5,7 @@
 		"frame": "minecraft:blocks/planks_birch",
 		"inner": "minecraft:blocks/stone",
 		"particle": "minecraft:blocks/planks_birch",
-		"craft": "justcraftingframes:blocks/item_frame_bg"
+		"craft": "justcraftingframes:blocks/tank_frame_bg"
 	},
 	"elements": [
 		{
