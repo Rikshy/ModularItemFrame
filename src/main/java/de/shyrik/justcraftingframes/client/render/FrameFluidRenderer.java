@@ -2,7 +2,6 @@ package de.shyrik.justcraftingframes.client.render;
 
 import de.shyrik.justcraftingframes.common.block.BlockNullifyFrame;
 import de.shyrik.justcraftingframes.common.tile.TileFluidBaseFrame;
-import de.shyrik.justcraftingframes.common.tile.TileNullifyFrame;
 import de.shyrik.justcraftingframes.common.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -23,7 +22,6 @@ public class FrameFluidRenderer extends TileEntitySpecialRenderer<TileFluidBaseF
 
 	@Override
 	public void render(TileFluidBaseFrame te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-
 		if (te != null && te.tank != null && te.tank.getFluid() != null && te.tank.getFluidAmount() > 0) {
 			GlStateManager.pushMatrix();
 			GlStateManager.enableBlend();
@@ -38,22 +36,22 @@ public class FrameFluidRenderer extends TileEntitySpecialRenderer<TileFluidBaseF
 
 			switch (getWorld().getBlockState(te.getPos()).getValue(BlockNullifyFrame.FACING)) {
 				case UP:
-					renderFluid(fluid, te.getPos(), 0.16d, amount * 0.92d, 0.16d, 0.0d, 0.0d, 0.0d, 0.67d, 0.05d, 0.67d, color, still, flowing);
+					renderFluid(fluid, te.getPos(), 0.16d, 0.92d, 0.16d, 0.0d, 0.0d, 0.0d, 0.67d, 0.05d, amount * 0.67d, color, still, flowing);
 					break;
 				case DOWN:
-					renderFluid(fluid, te.getPos(), 0.16d, 0.03d, 0.16d, 0.0d, 0.0d, 0.0d, 0.67d, 0.05d, 0.67d, color, still, flowing);
+					renderFluid(fluid, te.getPos(), 0.16d, 0.03d, 0.16d, 0.0d, 0.0d, 0.0d, 0.67d, 0.05d,  amount * 0.67d, color, still, flowing);
 					break;
 				case NORTH: //done
-					renderFluid(fluid, te.getPos(), 0.16d, 0.16d, 0.03d, 0.0d, 0.0d, 0.0d, 0.67d, 0.67d, 0.05d, color, still, flowing);
+					renderFluid(fluid, te.getPos(), 0.16d, 0.16d, 0.03d, 0.0d, 0.0d, 0.0d, 0.67d, amount * 0.67d, 0.05d, color, still, flowing);
 					break;
 				case EAST:
-					renderFluid(fluid, te.getPos(), amount * 0.92d, 0.16d, 0.16d, 0.0d, 0.0d, 0.0d, 0.05d, 0.67d, 0.67d, color, still, flowing);
+					renderFluid(fluid, te.getPos(), 0.92d, 0.16d, 0.16d, 0.0d, 0.0d, 0.0d, 0.05d, amount * 0.67d, 0.67d, color, still, flowing);
 					break;
 				case WEST: //done
-					renderFluid(fluid, te.getPos(), 0.03d, 0.16d, 0.16d, 0.0d, 0.0d, 0.0d, 0.05d, 0.67d, 0.67d, color, still, flowing);
+					renderFluid(fluid, te.getPos(), 0.03d, 0.16d, 0.16d, 0.0d, 0.0d, 0.0d, 0.05d, amount * 0.67d, 0.67d, color, still, flowing);
 					break;
 				case SOUTH: //done
-					renderFluid(fluid, te.getPos(), 0.16d, 0.16d, 0.92d, 0.0d, 0.0d, 0.0d, 0.67d, 0.67d, 0.05d, color, still, flowing);
+					renderFluid(fluid, te.getPos(), 0.16d, 0.16d, 0.92d, 0.0d, 0.0d, 0.0d, 0.67d, amount * 0.67d, 0.05d, color, still, flowing);
 					break;
 			}
 			GlStateManager.disableBlend();

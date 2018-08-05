@@ -9,11 +9,13 @@ public class ModBlocks {
     public static BlockCraftingFrame FRAME_CRAFTING;
     public static BlockNullifyFrame FRAME_NULLIFY;
     public static BlockItemFrame FRAME_ITEM;
+    public static BlockTankFrame FRAME_TANK;
 
     public static void init() {
         FRAME_CRAFTING = new BlockCraftingFrame();
         FRAME_NULLIFY = new BlockNullifyFrame();
         FRAME_ITEM = new BlockItemFrame();
+        FRAME_TANK = new BlockTankFrame();
     }
 
     @SideOnly(Side.CLIENT)
@@ -22,5 +24,6 @@ public class ModBlocks {
         if (ConfigValues.AnimateNulliFrame)
             FRAME_NULLIFY.initModel();
         FRAME_ITEM.initModel();
+        FRAME_TANK.initModel();
     }
 }

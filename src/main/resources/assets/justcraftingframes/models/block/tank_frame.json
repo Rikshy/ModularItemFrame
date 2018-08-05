@@ -3,7 +3,7 @@
 	"textures": {
 		"back": "minecraft:blocks/log_birch_top",
 		"frame": "minecraft:blocks/planks_birch",
-		"inner": "minecraft:blocks/stone",
+		"inner": "minecraft:blocks/obsidian",
 		"particle": "minecraft:blocks/planks_birch",
 		"craft": "justcraftingframes:blocks/tank_frame_bg"
 	},
