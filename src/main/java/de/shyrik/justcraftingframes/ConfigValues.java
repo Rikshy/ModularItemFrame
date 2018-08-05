@@ -12,4 +12,7 @@ public final class ConfigValues {
 
 	@ConfigProperty(category = "general", comment = "Animated Nullify Frame")
 	public static boolean AnimateNulliFrame = true;
+
+	@ConfigProperty(category = "general", comment = "Can the Nullify frame suck items from attached inventory - making it a trash can")
+	public static boolean CanNulliFrameSuckFromInvent = false;
 }
