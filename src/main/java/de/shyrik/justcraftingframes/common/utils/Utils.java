@@ -1,4 +1,4 @@
-package de.shyrik.justcraftingframes.common;
+package de.shyrik.justcraftingframes.common.utils;
 
 import de.shyrik.justcraftingframes.common.block.BlockFrameBase;
 import net.minecraft.entity.item.EntityItem;
