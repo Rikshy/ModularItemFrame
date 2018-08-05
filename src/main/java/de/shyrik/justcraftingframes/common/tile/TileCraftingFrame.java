@@ -1,9 +1,10 @@
 package de.shyrik.justcraftingframes.common.tile;
 
 import com.teamwizardry.librarianlib.features.autoregister.TileRegister;
-import com.teamwizardry.librarianlib.features.base.block.tile.TileMod;
+import com.teamwizardry.librarianlib.features.base.block.tile.module.ModuleInventory;
+import com.teamwizardry.librarianlib.features.saving.Module;
 import de.shyrik.justcraftingframes.ConfigValues;
-import de.shyrik.justcraftingframes.common.Utils;
+import de.shyrik.justcraftingframes.common.utils.Utils;
 import de.shyrik.justcraftingframes.common.block.BlockFrameBase;
 import de.shyrik.justcraftingframes.common.container.ContainerCraftingFrame;
 import de.shyrik.justcraftingframes.common.container.FrameCrafting;
@@ -14,7 +15,6 @@ import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
@@ -27,16 +27,23 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import javax.annotation.Nonnull;
 
 @TileRegister("crafting_frame")
-public class TileCraftingFrame extends TileMod implements IContainerCallbacks {
+public class TileCraftingFrame extends TileItemBaseFrame implements IContainerCallbacks {
 
     private IRecipe recipe;
-    public ItemStack displayedItem = ItemStack.EMPTY;
-    public ItemStackHandler inventory = new ItemStackHandler(9);
+
+    @Module
+    public ModuleInventory inventory = new ModuleInventory(new ItemStackHandler(9));
+
+    public TileCraftingFrame() {
+        inventory.disallowSides(EnumFacing.VALUES);
+        scale = 0.7F;
+        offset = 0.0F;
+    }
 
     public ContainerCraftingFrame createContainer(final EntityPlayer player) {
         final IItemHandlerModifiable playerInventory = (IItemHandlerModifiable)player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 
-        return new ContainerCraftingFrame(playerInventory, inventory, player, this);
+        return new ContainerCraftingFrame(playerInventory, inventory.getHandler(), player, this);
     }
 
     public void craft(EntityPlayer player, boolean fullStack) {
@@ -102,24 +109,12 @@ public class TileCraftingFrame extends TileMod implements IContainerCallbacks {
 
     @Override
     public void onContainerCraftingResultChanged(InventoryCraftResult result) {
-        displayedItem = result.getStackInSlot(0);
+        setDisplayItem(result.getStackInSlot(0));
         recipe = result.getRecipeUsed();
     }
 
     private void reloadRecipe(EntityPlayer player) {
-        FrameCrafting fc = new FrameCrafting(new ContainerCraftingFrame(null, inventory, player, this), inventory, 3, 3);
+        FrameCrafting fc = new FrameCrafting(new ContainerCraftingFrame(null, inventory.getHandler(), player, this), inventory.getHandler(), 3, 3);
         fc.onCraftMatrixChanged();
-    }
-
-    @Override
-    public void readCustomNBT(@Nonnull NBTTagCompound compound) {
-        inventory.deserializeNBT(compound.getCompoundTag("inv"));
-        displayedItem = new ItemStack(compound.getCompoundTag("display"));
-    }
-
-    @Override
-    public void writeCustomNBT(@Nonnull NBTTagCompound compound, boolean sync) {
-        compound.setTag("display", displayedItem.serializeNBT());
-        compound.setTag("inv", inventory.serializeNBT());
     }
 }

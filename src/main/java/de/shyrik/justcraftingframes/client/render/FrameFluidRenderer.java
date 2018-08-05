@@ -1,6 +1,5 @@
 package de.shyrik.justcraftingframes.client.render;
 
-import de.shyrik.justcraftingframes.common.Utils;
 import de.shyrik.justcraftingframes.common.block.BlockNullifyFrame;
 import de.shyrik.justcraftingframes.common.tile.TileNullifyFrame;
 import net.minecraft.client.Minecraft;
