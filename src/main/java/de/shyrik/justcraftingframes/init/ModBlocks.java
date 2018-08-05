@@ -1,5 +1,6 @@
 package de.shyrik.justcraftingframes.init;
 
+import de.shyrik.justcraftingframes.ConfigValues;
 import de.shyrik.justcraftingframes.common.block.BlockCraftingFrame;
 import de.shyrik.justcraftingframes.common.block.BlockNullifyFrame;
 import net.minecraftforge.fml.relauncher.Side;
@@ -17,5 +18,7 @@ public class ModBlocks {
     @SideOnly(Side.CLIENT)
     public static void initModels() {
         FRAME_CRAFTING.initModel();
+        if (ConfigValues.AnimateNulliFrame)
+            FRAME_NULLIFY.initModel();
     }
 }

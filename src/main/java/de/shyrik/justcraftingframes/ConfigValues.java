@@ -9,4 +9,7 @@ public final class ConfigValues {
 
 	@ConfigProperty(category = "general", comment = "Allow fake players to interact with frames")
 	public static boolean AllowFakePlayers = false;
+
+	@ConfigProperty(category = "general", comment = "Animated Nullify Frame")
+	public static boolean AnimateNulliFrame = true;
 }
