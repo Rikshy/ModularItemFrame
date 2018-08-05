@@ -1,2 +1,3 @@
 tile.justcraftingframes:crafting_frame.name=Crafting Frame
 tile.justcraftingframes:nullify_frame.name=Nullify Frame
+tile.justcraftingframes:item_frame.name=Item Frame
