@@ -2,9 +2,6 @@ package de.shyrik.justcraftingframes.client.render;
 
 import de.shyrik.justcraftingframes.common.block.BlockFrameBase;
 import de.shyrik.justcraftingframes.common.tile.TileItemBaseFrame;
-import net.minecraft.block.BlockBed;
-import net.minecraft.block.BlockDoubleWoodSlab;
-import net.minecraft.block.BlockHardenedClay;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -24,11 +21,10 @@ public class FrameItemRenderer extends TileEntitySpecialRenderer<TileItemBaseFra
         GlStateManager.pushMatrix();
 
         rotateOnFacing(te, te.rotation);
-        renderItem(te.getDisplayedItem());
+        renderItem(te.displayItem);
 
         GlStateManager.popMatrix();
         GlStateManager.popMatrix();
-        BlockBed
     }
 
     private void rotateOnFacing(TileItemBaseFrame te, int rotation) {

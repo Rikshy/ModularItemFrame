@@ -1,8 +1,7 @@
 package de.shyrik.justcraftingframes.common.tile;
 
 import com.teamwizardry.librarianlib.features.autoregister.TileRegister;
-import com.teamwizardry.librarianlib.features.base.block.tile.module.ModuleInventory;
-import com.teamwizardry.librarianlib.features.saving.Module;
+import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.justcraftingframes.ConfigValues;
 import de.shyrik.justcraftingframes.common.utils.Utils;
 import de.shyrik.justcraftingframes.common.block.BlockFrameBase;
@@ -31,19 +30,18 @@ public class TileCraftingFrame extends TileItemBaseFrame implements IContainerCa
 
     private IRecipe recipe;
 
-    @Module
-    public ModuleInventory inventory = new ModuleInventory(new ItemStackHandler(9));
+    @Save
+    public ItemStackHandler ghostInventory = new ItemStackHandler(9);
 
     public TileCraftingFrame() {
-        inventory.disallowSides(EnumFacing.VALUES);
         scale = 0.7F;
-        offset = 0.0F;
+        offset = -0.05F;
     }
 
     public ContainerCraftingFrame createContainer(final EntityPlayer player) {
         final IItemHandlerModifiable playerInventory = (IItemHandlerModifiable)player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 
-        return new ContainerCraftingFrame(playerInventory, inventory.getHandler(), player, this);
+        return new ContainerCraftingFrame(playerInventory, ghostInventory, player, this);
     }
 
     public void craft(EntityPlayer player, boolean fullStack) {
@@ -109,12 +107,12 @@ public class TileCraftingFrame extends TileItemBaseFrame implements IContainerCa
 
     @Override
     public void onContainerCraftingResultChanged(InventoryCraftResult result) {
-        setDisplayItem(result.getStackInSlot(0));
+        displayItem = result.getStackInSlot(0);
         recipe = result.getRecipeUsed();
     }
 
     private void reloadRecipe(EntityPlayer player) {
-        FrameCrafting fc = new FrameCrafting(new ContainerCraftingFrame(null, inventory.getHandler(), player, this), inventory.getHandler(), 3, 3);
+        FrameCrafting fc = new FrameCrafting(new ContainerCraftingFrame(null, ghostInventory, player, this), ghostInventory, 3, 3);
         fc.onCraftMatrixChanged();
     }
 }

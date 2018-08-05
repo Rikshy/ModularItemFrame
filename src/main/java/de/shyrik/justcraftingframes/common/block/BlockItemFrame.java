@@ -45,7 +45,7 @@ public class BlockItemFrame extends BlockFrameBase {
 			if(!playerIn.isSneaking()) {
 				ItemStack copy = playerIn.getHeldItem(hand).copy();
 				copy.setCount(1);
-				te.setDisplayItem(copy);
+				te.displayItem = copy;
 				te.markDirty();
 			}
 		}
