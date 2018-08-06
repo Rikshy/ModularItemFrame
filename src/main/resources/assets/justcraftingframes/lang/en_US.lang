@@ -2,3 +2,9 @@ tile.justcraftingframes:crafting_frame.name=Crafting Frame
 tile.justcraftingframes:nullify_frame.name=Nullify Frame
 tile.justcraftingframes:item_frame.name=Item Frame
 tile.justcraftingframes:tank_frame.name=Tank Frame
+tile.justcraftingframes:tele_frame.name=Ender Frame
+
+
+justcraftingframes.message.no_target=No target location set - use the screwdriver
+justcraftingframes.message.invalid_target=No Ender Frame at target location
+justcraftingframes.message.location_blocked=Target location is blocked

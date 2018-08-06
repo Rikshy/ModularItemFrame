@@ -1,0 +1,28 @@
+{
+
+	"variants": {
+		"facing=down": {
+			"model": "justcraftingframes:tele_frame",
+			"x": 90
+		},
+		"facing=up": {
+			"model": "justcraftingframes:tele_frame",
+			"x": 270
+		},
+		"facing=north": {
+			"model": "justcraftingframes:tele_frame"
+		},
+		"facing=south": {
+			"model": "justcraftingframes:tele_frame",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "justcraftingframes:tele_frame",
+			"y": 270
+		},
+		"facing=east": {
+			"model": "justcraftingframes:tele_frame",
+			"y": 90
+		}
+	}
+}

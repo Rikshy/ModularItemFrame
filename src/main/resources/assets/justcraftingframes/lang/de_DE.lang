@@ -2,3 +2,9 @@ tile.justcraftingframes:crafting_frame.name=Werk Rahmen
 tile.justcraftingframes:nullify_frame.name=Lösch Rahmen
 tile.justcraftingframes:item_frame.name=Item Rahmen
 tile.justcraftingframes:tank_frame.name=Tank Rahmen
+tile.justcraftingframes:tele_frame.name=Ender Rahmen
+
+
+justcraftingframes.message.no_target=Keine Zielposition gesetzt - benutze dafür den Schraubenzieher
+justcraftingframes.message.invalid_target=Kein Ender Rahmen an der Zielposition
+justcraftingframes.message.location_blocked=Zielposition ist blockiert

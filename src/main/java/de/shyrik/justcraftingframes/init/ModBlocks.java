@@ -10,12 +10,14 @@ public class ModBlocks {
     public static BlockNullifyFrame FRAME_NULLIFY;
     public static BlockItemFrame FRAME_ITEM;
     public static BlockTankFrame FRAME_TANK;
+    public static BlockTeleportFrame FRAME_TELE;
 
     public static void init() {
         FRAME_CRAFTING = new BlockCraftingFrame();
         FRAME_NULLIFY = new BlockNullifyFrame();
         FRAME_ITEM = new BlockItemFrame();
         FRAME_TANK = new BlockTankFrame();
+        FRAME_TELE = new BlockTeleportFrame();
     }
 
     @SideOnly(Side.CLIENT)
