@@ -124,6 +124,14 @@ public class Utils {
 		return -1;
 	}
 
+	public static boolean simpleAreItemsEqual(ItemStack stack, ItemStack stack2) {
+		return stack.getItem() == stack2.getItem();
+	}
+
+	public static boolean simpleAreStacksEqual(ItemStack stack, ItemStack stack2) {
+		return stack.getItem() == stack2.getItem() && stack.getItemDamage() == stack2.getItemDamage();
+	}
+
 	public static void ejectStack(World world, BlockPos pos, ItemStack stack) {
 		Vec3d position = new Vec3d(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 		Vec3d velocity = Vec3d.ZERO;

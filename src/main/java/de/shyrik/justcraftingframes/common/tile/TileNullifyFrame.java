@@ -4,6 +4,7 @@ import com.teamwizardry.librarianlib.features.autoregister.TileRegister;
 import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.justcraftingframes.ConfigValues;
 import de.shyrik.justcraftingframes.common.block.BlockFrameBase;
+import de.shyrik.justcraftingframes.common.utils.Utils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
@@ -33,7 +34,14 @@ public class TileNullifyFrame extends TileFluidBaseFrame implements ITickable {
 	public void nullify(@Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
 		ItemStack held = player.getHeldItem(hand);
 		if(!player.isSneaking() && !held.isEmpty()) {
-			lastStack = held.copy();
+			if (Utils.simpleAreStacksEqual(held, lastStack)) {
+				if(held.getCount() + lastStack.getCount() > lastStack.getMaxStackSize())
+					lastStack.setCount(lastStack.getMaxStackSize());
+				else
+					lastStack.setCount(lastStack.getCount() + held.getCount());
+			} else {
+				lastStack = held.copy();
+			}
 			held.setCount(0);
 			world.playSound(null, pos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.4F, 0.7F);
 		} else if (player.isSneaking() && held.isEmpty() && !lastStack.isEmpty()) {
