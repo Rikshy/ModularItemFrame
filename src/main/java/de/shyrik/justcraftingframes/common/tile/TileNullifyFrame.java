@@ -14,7 +14,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -34,15 +39,18 @@ public class TileNullifyFrame extends TileFluidBaseFrame implements ITickable {
 	public void nullify(@Nonnull EntityPlayer player, @Nonnull EnumHand hand) {
 		ItemStack held = player.getHeldItem(hand);
 		if(!player.isSneaking() && !held.isEmpty()) {
-			if (Utils.simpleAreStacksEqual(held, lastStack)) {
-				if(held.getCount() + lastStack.getCount() > lastStack.getMaxStackSize())
-					lastStack.setCount(lastStack.getMaxStackSize());
-				else
-					lastStack.setCount(lastStack.getCount() + held.getCount());
+			if (FluidUtil.getFluidHandler(held) != null) {
+				FluidTank dummyTank = new FluidTank(1000);
+				FluidUtil.interactWithFluidHandler(player, hand, dummyTank);
 			} else {
-				lastStack = held.copy();
+				if (Utils.simpleAreStacksEqual(held, lastStack)) {
+					if (held.getCount() + lastStack.getCount() > lastStack.getMaxStackSize()) lastStack.setCount(lastStack.getMaxStackSize());
+					else lastStack.setCount(lastStack.getCount() + held.getCount());
+				} else {
+					lastStack = held.copy();
+				}
+				held.setCount(0);
 			}
-			held.setCount(0);
 			world.playSound(null, pos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.4F, 0.7F);
 		} else if (player.isSneaking() && held.isEmpty() && !lastStack.isEmpty()) {
 			player.setHeldItem(hand, lastStack);
@@ -70,6 +78,15 @@ public class TileNullifyFrame extends TileFluidBaseFrame implements ITickable {
 						}
 					}
 				}
+				IFluidHandler fluidTrash = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
+				if (fluidTrash != null) {
+					fluidTrash.drain(100, true);
+				}
+
+				IEnergyStorage energyTrash = tile.getCapability(CapabilityEnergy.ENERGY, facing.getOpposite());
+				if (energyTrash != null && energyTrash.canExtract())
+					energyTrash.extractEnergy(100, false);
+				tile.markDirty();
 			}
 		}
 	}
