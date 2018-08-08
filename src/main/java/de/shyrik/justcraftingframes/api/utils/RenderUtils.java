@@ -1,7 +1,5 @@
 package de.shyrik.justcraftingframes.api.utils;
 
-import de.shyrik.justcraftingframes.common.block.BlockFrameBase;
-import de.shyrik.justcraftingframes.common.tile.TileItemBaseFrame;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;

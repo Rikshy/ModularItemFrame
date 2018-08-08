@@ -4,7 +4,7 @@ import com.teamwizardry.librarianlib.features.autoregister.TileRegister;
 import com.teamwizardry.librarianlib.features.base.block.tile.TileModTickable;
 import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.justcraftingframes.api.ModuleFrameBase;
-import de.shyrik.justcraftingframes.common.block.BlockFrameBase;
+import de.shyrik.justcraftingframes.common.block.BlockModularFrame;
 import de.shyrik.justcraftingframes.common.module.ModuleItem;
 import net.minecraft.util.EnumFacing;
 
@@ -14,14 +14,18 @@ public class TileModularFrame extends TileModTickable {
     @Save
     public int rotation = 0;
 
-    public ModuleFrameBase module = null;
+    //@Save
+    public ModuleFrameBase module;
+
+    public boolean reloadModel;
 
     public TileModularFrame() {
         module = new ModuleItem(this);
+        reloadModel = true;
     }
 
     public EnumFacing blockFacing() {
-        return world.getBlockState(pos).getValue(BlockFrameBase.FACING);
+        return world.getBlockState(pos).getValue(BlockModularFrame.FACING);
     }
 
     @Override

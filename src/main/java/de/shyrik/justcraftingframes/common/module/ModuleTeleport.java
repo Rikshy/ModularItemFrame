@@ -27,7 +27,7 @@ public class ModuleTeleport extends ModuleFrameBase {
 
     @Nonnull
     @Override
-    public ResourceLocation getBackgroundTexture() {
+    public ResourceLocation getModelLocation() {
         return new ResourceLocation(JustCraftingFrames.MOD_ID, "item_frame_bg");
     }
 

@@ -1,9 +1,9 @@
 package de.shyrik.justcraftingframes.api.utils;
 
-import de.shyrik.justcraftingframes.common.block.BlockFrameBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -11,6 +11,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
+
+import javax.annotation.Nonnull;
 
 public class Utils {
 
@@ -129,11 +131,11 @@ public class Utils {
 		return stack.getItem() == stack2.getItem() && stack.getItemDamage() == stack2.getItemDamage();
 	}
 
-	public static void ejectStack(World world, BlockPos pos, ItemStack stack) {
+	public static void ejectStack(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, ItemStack stack) {
 		Vec3d position = new Vec3d(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 		Vec3d velocity = Vec3d.ZERO;
 
-		switch (world.getBlockState(pos).getValue(BlockFrameBase.FACING)) {
+		switch (facing) {
 			case UP:
 				position = position.addVector(0.0D, -0.25D, 0.0D);
 				velocity = velocity.addVector(0.0D, 0.2D, 0.0D);

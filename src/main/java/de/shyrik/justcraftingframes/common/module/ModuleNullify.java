@@ -4,7 +4,6 @@ import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.justcraftingframes.ConfigValues;
 import de.shyrik.justcraftingframes.JustCraftingFrames;
 import de.shyrik.justcraftingframes.api.utils.Utils;
-import de.shyrik.justcraftingframes.common.block.BlockFrameBase;
 import de.shyrik.justcraftingframes.common.tile.TileModularFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,7 +35,7 @@ public class ModuleNullify extends ModuleFluid {
 
     @Nonnull
     @Override
-    public ResourceLocation getBackgroundTexture() {
+    public ResourceLocation getModelLocation() {
         return new ResourceLocation(JustCraftingFrames.MOD_ID, "blocks/nullify_frame_bg");
     }
 
@@ -67,7 +66,7 @@ public class ModuleNullify extends ModuleFluid {
             if (world.getTotalWorldTime() % 20 != 0)
                 return;
 
-            EnumFacing facing = world.getBlockState(pos).getValue(BlockFrameBase.FACING);
+            EnumFacing facing = tile.blockFacing();
             TileEntity tile = world.getTileEntity(pos.offset(facing));
             if(tile != null) {
                 IItemHandlerModifiable trash = (IItemHandlerModifiable) tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());

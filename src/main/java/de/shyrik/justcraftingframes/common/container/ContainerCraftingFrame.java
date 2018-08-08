@@ -33,8 +33,6 @@ public class ContainerCraftingFrame extends Container {
 		matrix = new FrameCrafting(this, frameInventory, 3, 3);
 		matrix.onCraftMatrixChanged();
 
-		callbacks.onContainerOpened(player);
-
 		this.addSlotToContainer(new SlotCrafting(player, this.matrix, this.craftResult, 0, 124, 35) {
 			@Override
 			public boolean canTakeStack(EntityPlayer playerIn)
@@ -93,13 +91,6 @@ public class ContainerCraftingFrame extends Container {
 	@Override
 	public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
 		return callbacks.isUsableByPlayer(playerIn);
-	}
-
-	@Override
-	public void onContainerClosed(final EntityPlayer playerIn) {
-		super.onContainerClosed(playerIn);
-
-		callbacks.onContainerClosed(playerIn);
 	}
 
 	/**

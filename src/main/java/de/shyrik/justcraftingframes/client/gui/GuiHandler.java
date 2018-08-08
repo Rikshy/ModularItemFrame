@@ -1,6 +1,7 @@
 package de.shyrik.justcraftingframes.client.gui;
 
-import de.shyrik.justcraftingframes.common.tile.TileCraftingFrame;
+import de.shyrik.justcraftingframes.common.module.ModuleCrafting;
+import de.shyrik.justcraftingframes.common.tile.TileModularFrame;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -19,8 +20,8 @@ public class GuiHandler implements IGuiHandler {
 
 		switch (ID) {
 			case CRAFTING_FRAME:
-				if (tileEntity instanceof TileCraftingFrame) {
-					return ((TileCraftingFrame) tileEntity).createContainer(player);
+				if (tileEntity instanceof TileModularFrame && ((TileModularFrame)tileEntity).module instanceof ModuleCrafting) {
+					return ((TileModularFrame) tileEntity).module.createContainer(player);
 				}
 
 			default:
@@ -34,8 +35,8 @@ public class GuiHandler implements IGuiHandler {
 		final TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
 		switch (ID) {
 			case CRAFTING_FRAME:
-				if (tileEntity instanceof TileCraftingFrame)
-					return new GuiCraftingFrame(((TileCraftingFrame) tileEntity).createContainer(player));
+				if (tileEntity instanceof TileModularFrame && ((TileModularFrame)tileEntity).module instanceof ModuleCrafting)
+					return new GuiCraftingFrame(((TileModularFrame) tileEntity).module.createContainer(player));
 				break;
 		}
 

@@ -32,14 +32,21 @@ public class FrameRenderer extends TileEntitySpecialRenderer<TileModularFrame> {
 
     private void getBakedModels(TileModularFrame te) {
         IModel model = null;
-        if (modelFrame == null) {
+        if (modelFrame == null || te.reloadModel) {
             try {
                 model = ModelLoaderRegistry.getModel(new ResourceLocation(JustCraftingFrames.MOD_ID, "block/modular_frame"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            modelFrame = model.bake(model.getDefaultState(), DefaultVertexFormats.BLOCK,
-                    location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString()));
+            //modelFrame = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM,
+            //        location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString()));
+            modelFrame = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM,
+                    location -> {
+                        if (location.getResourcePath().contains("dummy"))
+                            return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(te.module.getModelLocation().toString());
+                        return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
+                    });
+            te.reloadModel = false;
         }
     }
 

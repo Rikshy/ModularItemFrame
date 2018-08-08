@@ -6,19 +6,6 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCraftResult;
 
 public interface IContainerCallbacks {
-	/**
-	 * Called when the {@link Container} is opened by a player.
-	 *
-	 * @param player The player
-	 */
-	void onContainerOpened(EntityPlayer player);
-
-	/**
-	 * Called when the {@link Container} is closed by a player.
-	 *
-	 * @param player The player
-	 */
-	void onContainerClosed(EntityPlayer player);
 
 	/**
 	 * Is this usable by the specified player?

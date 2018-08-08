@@ -1,5 +1,7 @@
 package de.shyrik.justcraftingframes.common.module;
 
+import com.teamwizardry.librarianlib.features.base.block.tile.module.SerializableFluidTank;
+import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.justcraftingframes.JustCraftingFrames;
 import de.shyrik.justcraftingframes.api.ModuleFrameBase;
 import de.shyrik.justcraftingframes.api.utils.RenderUtils;
@@ -9,7 +11,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import javax.annotation.Nonnull;
 
 public abstract class ModuleFluid extends ModuleFrameBase {
@@ -18,11 +19,12 @@ public abstract class ModuleFluid extends ModuleFrameBase {
         super(te);
     }
 
-    public FluidTank tank = new FluidTank(1000);
+    @Save
+    public SerializableFluidTank tank = new SerializableFluidTank(1000);
 
     @Nonnull
     @Override
-    public ResourceLocation getBackgroundTexture() {
+    public ResourceLocation getModelLocation() {
         return new ResourceLocation(JustCraftingFrames.MOD_ID, "tank_frame_bg");
     }
 

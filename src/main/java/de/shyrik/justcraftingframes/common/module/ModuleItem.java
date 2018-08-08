@@ -24,17 +24,18 @@ public class ModuleItem extends ModuleFrameBase {
 
     @Save
     public ItemStack displayItem = ItemStack.EMPTY;
+
     public ModuleItem(TileModularFrame te) {
         super(te);
     }
 
     @Nonnull
-    public ResourceLocation getBackgroundTexture() {
+    public ResourceLocation getModelLocation() {
         return new ResourceLocation(JustCraftingFrames.MOD_ID, "blocks/item_frame_bg");
     }
 
-    private final float scale = 0.9f;
-    private final float offset =  0.05F;
+    protected float scale = 0.9f;
+    protected float offset = 0.05F;
 
     public void rotate(EntityPlayer player) {
         if (player.isSneaking()) {
