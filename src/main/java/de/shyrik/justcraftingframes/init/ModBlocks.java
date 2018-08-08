@@ -11,6 +11,7 @@ public class ModBlocks {
     public static BlockItemFrame FRAME_ITEM;
     public static BlockTankFrame FRAME_TANK;
     public static BlockTeleportFrame FRAME_TELE;
+    public static BlockModularFrame FRAME_MODULAR;
 
     public static void init() {
         FRAME_CRAFTING = new BlockCraftingFrame();
@@ -18,6 +19,7 @@ public class ModBlocks {
         FRAME_ITEM = new BlockItemFrame();
         FRAME_TANK = new BlockTankFrame();
         FRAME_TELE = new BlockTeleportFrame();
+        FRAME_MODULAR = new BlockModularFrame();
     }
 
     @SideOnly(Side.CLIENT)
@@ -27,5 +29,6 @@ public class ModBlocks {
             FRAME_NULLIFY.initModel();
         FRAME_ITEM.initModel();
         FRAME_TANK.initModel();
+        FRAME_MODULAR.initModel();
     }
 }

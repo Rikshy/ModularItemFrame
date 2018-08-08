@@ -1,0 +1,27 @@
+{
+	"variants": {
+		"facing=down": {
+			"model": "justcraftingframes:modular_dummy",
+			"x": 90
+		},
+		"facing=up": {
+			"model": "justcraftingframes:modular_dummy",
+			"x": 270
+		},
+		"facing=north": {
+			"model": "justcraftingframes:modular_dummy"
+		},
+		"facing=south": {
+			"model": "justcraftingframes:modular_dummy",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "justcraftingframes:modular_dummy",
+			"y": 270
+		},
+		"facing=east": {
+			"model": "justcraftingframes:modular_dummy",
+			"y": 90
+		}
+	}
+}
