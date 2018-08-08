@@ -3,7 +3,7 @@ package de.shyrik.justcraftingframes.common.tile;
 import com.teamwizardry.librarianlib.features.autoregister.TileRegister;
 import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.justcraftingframes.ConfigValues;
-import de.shyrik.justcraftingframes.common.utils.Utils;
+import de.shyrik.justcraftingframes.api.utils.Utils;
 import de.shyrik.justcraftingframes.common.block.BlockFrameBase;
 import de.shyrik.justcraftingframes.common.container.ContainerCraftingFrame;
 import de.shyrik.justcraftingframes.common.container.FrameCrafting;

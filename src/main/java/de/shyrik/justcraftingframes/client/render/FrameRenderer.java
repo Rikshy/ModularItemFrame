@@ -66,6 +66,8 @@ public class FrameRenderer extends TileEntitySpecialRenderer<TileModularFrame> {
 
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();
+
+        te.module.specialRendering(x, y, z, partialTicks, destroyStage, alpha);
     }
 
     private void rotateFrameOnFacing(EnumFacing facing, int rotation) {
