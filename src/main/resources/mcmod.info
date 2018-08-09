@@ -1,8 +1,8 @@
 [
 {
-  "modid": "justcraftingframes",
-  "name": "JustCraftingFrames",
-  "description": "just crafting frames",
+  "modid": "modularitemframe",
+  "name": "ModularItemFrame",
+  "description": "one frame - multiple modules",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
