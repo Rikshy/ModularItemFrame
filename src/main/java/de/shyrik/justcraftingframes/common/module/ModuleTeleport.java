@@ -1,5 +1,6 @@
 package de.shyrik.justcraftingframes.common.module;
 
+import com.teamwizardry.librarianlib.features.saving.NamedDynamic;
 import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.justcraftingframes.JustCraftingFrames;
 import de.shyrik.justcraftingframes.api.ModuleFrameBase;
@@ -16,6 +17,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
+@NamedDynamic(resourceLocation = "module_tele")
 public class ModuleTeleport extends ModuleFrameBase {
 
     @Save

@@ -1,6 +1,7 @@
 package de.shyrik.justcraftingframes.common.module;
 
 import com.teamwizardry.librarianlib.features.base.block.tile.module.SerializableFluidTank;
+import com.teamwizardry.librarianlib.features.saving.NamedDynamic;
 import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.justcraftingframes.JustCraftingFrames;
 import de.shyrik.justcraftingframes.api.ModuleFrameBase;
@@ -13,14 +14,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import javax.annotation.Nonnull;
 
+@NamedDynamic(resourceLocation = "module_fluid")
 public abstract class ModuleFluid extends ModuleFrameBase {
+
+    @Save
+    public SerializableFluidTank tank = new SerializableFluidTank(1000);
 
     public ModuleFluid(TileModularFrame te) {
         super(te);
     }
-
-    @Save
-    public SerializableFluidTank tank = new SerializableFluidTank(1000);
 
     @Nonnull
     @Override

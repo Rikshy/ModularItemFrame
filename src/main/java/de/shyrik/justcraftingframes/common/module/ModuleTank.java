@@ -1,5 +1,6 @@
 package de.shyrik.justcraftingframes.common.module;
 
+import com.teamwizardry.librarianlib.features.saving.NamedDynamic;
 import de.shyrik.justcraftingframes.ConfigValues;
 import de.shyrik.justcraftingframes.common.tile.TileModularFrame;
 import net.minecraft.block.state.IBlockState;
@@ -13,6 +14,7 @@ import net.minecraftforge.fluids.FluidUtil;
 
 import javax.annotation.Nonnull;
 
+@NamedDynamic(resourceLocation = "module_tank")
 public class ModuleTank extends ModuleFluid {
 
     public ModuleTank(TileModularFrame te) {

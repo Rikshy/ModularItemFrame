@@ -1,5 +1,6 @@
 package de.shyrik.justcraftingframes.common.module;
 
+import com.teamwizardry.librarianlib.features.saving.NamedDynamic;
 import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.justcraftingframes.ConfigValues;
 import de.shyrik.justcraftingframes.JustCraftingFrames;
@@ -31,6 +32,7 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
 
+@NamedDynamic(resourceLocation = "module_crafting")
 public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 
 	private IRecipe recipe;

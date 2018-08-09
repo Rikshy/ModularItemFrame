@@ -1,5 +1,6 @@
 package de.shyrik.justcraftingframes.common.module;
 
+import com.teamwizardry.librarianlib.features.saving.NamedDynamic;
 import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.justcraftingframes.ConfigValues;
 import de.shyrik.justcraftingframes.JustCraftingFrames;
@@ -23,6 +24,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 
+@NamedDynamic(resourceLocation = "module_nullify")
 public class ModuleNullify extends ModuleFluid {
 
     @Save

@@ -20,8 +20,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nonnull;
 
-//@SaveInPlace
-//@NamedDynamic(resourceLocation = "module_base")
+@SaveInPlace
+@NamedDynamic(resourceLocation = "module_base")
 public abstract class ModuleFrameBase {
 
     protected World world;

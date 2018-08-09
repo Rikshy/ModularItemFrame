@@ -14,7 +14,7 @@ public class TileModularFrame extends TileModTickable {
     @Save
     public int rotation = 0;
 
-    //@Save
+    @Save
     public ModuleFrameBase module;
 
     public boolean reloadModel;
