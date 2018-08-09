@@ -20,10 +20,6 @@ public abstract class ModuleFluid extends ModuleFrameBase {
     @Save
     public SerializableFluidTank tank = new SerializableFluidTank(1000);
 
-    public ModuleFluid(TileModularFrame te) {
-        super(te);
-    }
-
     @Nonnull
     @Override
     public ResourceLocation getModelLocation() {

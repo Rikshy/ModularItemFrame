@@ -23,10 +23,6 @@ public class ModuleTeleport extends ModuleFrameBase {
     @Save
     public BlockPos linkedLoc = null;
 
-    public ModuleTeleport(TileModularFrame te) {
-        super(te);
-    }
-
     @Nonnull
     @Override
     public ResourceLocation getModelLocation() {

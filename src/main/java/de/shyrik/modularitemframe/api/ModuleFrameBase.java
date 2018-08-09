@@ -23,8 +23,8 @@ public abstract class ModuleFrameBase {
 
     protected TileModularFrame tile;
 
-    public ModuleFrameBase(TileModularFrame te) {
-        this.tile = te;
+    public void setTile(TileModularFrame te) {
+        tile = te;
     }
 
     @Nonnull

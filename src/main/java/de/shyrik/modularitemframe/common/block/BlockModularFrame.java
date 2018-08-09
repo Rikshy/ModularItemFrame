@@ -2,6 +2,7 @@ package de.shyrik.modularitemframe.common.block;
 
 import com.teamwizardry.librarianlib.features.base.block.tile.BlockModContainer;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
+import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -11,6 +12,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -67,7 +69,15 @@ public class BlockModularFrame extends BlockModContainer {
 
     @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        getTE(worldIn, pos).module.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
+        ItemStack held = playerIn.getHeldItem(hand);
+        TileModularFrame tile = getTE(worldIn, pos);
+        if (held.getItem() instanceof ItemModule) {
+            tile.setModule(((ItemModule) held.getItem()).getModule());
+            held.setCount(held.getCount() - 1);
+        } else {
+            tile.module.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
+        }
+        tile.markDirty();
         return true;
     }
 

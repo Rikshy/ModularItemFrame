@@ -17,14 +17,14 @@ import javax.annotation.Nonnull;
 @NamedDynamic(resourceLocation = "module_tank")
 public class ModuleTank extends ModuleFluid {
 
-    public ModuleTank(TileModularFrame te) {
-        super(te);
+    public ModuleTank() {
+        super();
         tank.setCapacity(ConfigValues.TankFrameCapacity);
     }
 
     @Override
     public void onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        ItemStack stack = playerIn.getHeldItem(hand);
+        //ItemStack stack = playerIn.getHeldItem(hand);
         FluidUtil.interactWithFluidHandler(playerIn, hand, tank);
         tile.markDirty();
         //return FluidUtil.getFluidHandler(stack) != null; TODO

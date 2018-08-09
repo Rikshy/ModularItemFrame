@@ -20,7 +20,12 @@ public class TileModularFrame extends TileModTickable {
     public boolean reloadModel;
 
     public TileModularFrame() {
-        module = new ModuleItem(this);
+        setModule(new ModuleItem());
+    }
+
+    public void setModule(ModuleFrameBase mod) {
+        module = mod;
+        module.setTile(this);
         reloadModel = true;
     }
 

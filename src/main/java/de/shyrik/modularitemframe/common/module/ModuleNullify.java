@@ -30,8 +30,8 @@ public class ModuleNullify extends ModuleFluid {
     @Save
     public ItemStack lastStack = ItemStack.EMPTY;
 
-    public ModuleNullify(TileModularFrame te) {
-        super(te);
+    public ModuleNullify() {
+        super();
         tank.setFluid(FluidUtil.getFluidContained(new ItemStack(Items.LAVA_BUCKET)));
     }
 

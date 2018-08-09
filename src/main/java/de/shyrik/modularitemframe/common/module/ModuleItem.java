@@ -27,10 +27,6 @@ public class ModuleItem extends ModuleFrameBase {
     @Save
     public ItemStack displayItem = ItemStack.EMPTY;
 
-    public ModuleItem(TileModularFrame te) {
-        super(te);
-    }
-
     @Nonnull
     public ResourceLocation getModelLocation() {
         return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg");

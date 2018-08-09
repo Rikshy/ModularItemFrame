@@ -1,6 +1,7 @@
 package de.shyrik.modularitemframe.client.render;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
+import de.shyrik.modularitemframe.api.ModuleFrameBase;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

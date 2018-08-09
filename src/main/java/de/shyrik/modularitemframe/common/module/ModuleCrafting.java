@@ -40,8 +40,8 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 	@Save
 	public ItemStackHandler ghostInventory = new ItemStackHandler(9);
 
-	public ModuleCrafting(TileModularFrame te) {
-		super(te);
+	public ModuleCrafting() {
+		super();
 		scale = 0.7F;
 		offset = -0.05F;
 	}
