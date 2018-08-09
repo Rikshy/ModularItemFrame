@@ -1,0 +1,6 @@
+tile.modularitemframe:modular_frame.name=Modular Frame
+
+
+modularitemframe.message.no_target=No target location set - use the screwdriver
+modularitemframe.message.invalid_target=No Ender Frame at target location
+modularitemframe.message.location_blocked=Target location is blocked

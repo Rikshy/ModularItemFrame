@@ -1,0 +1,6 @@
+tile.modularitemframe:modular_frame.name=Modularer Rahmen
+
+
+modularitemframe.message.no_target=Keine Zielposition gesetzt - benutze dafür den Schraubenzieher
+modularitemframe.message.invalid_target=Kein Ender Rahmen an der Zielposition
+modularitemframe.message.location_blocked=Zielposition ist blockiert
