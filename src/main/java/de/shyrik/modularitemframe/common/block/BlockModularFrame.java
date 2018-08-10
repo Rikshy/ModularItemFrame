@@ -72,8 +72,10 @@ public class BlockModularFrame extends BlockModContainer {
         ItemStack held = playerIn.getHeldItem(hand);
         TileModularFrame tile = getTE(worldIn, pos);
         if (held.getItem() instanceof ItemModule) {
-            tile.setModule(((ItemModule) held.getItem()).getModule());
-            held.setCount(held.getCount() - 1);
+            if (!worldIn.isRemote) {
+                tile.setModule(((ItemModule) held.getItem()).getModule());
+                held.setCount(held.getCount() - 1);
+            }
         } else {
             tile.module.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
         }

@@ -6,6 +6,7 @@ import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.modularitemframe.api.ModuleFrameBase;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.module.ModuleItem;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
 @TileRegister("modular_frame")
@@ -31,6 +32,10 @@ public class TileModularFrame extends TileModTickable {
 
     public EnumFacing blockFacing() {
         return world.getBlockState(pos).getValue(BlockModularFrame.FACING);
+    }
+
+    public TileEntity getNeighbor(EnumFacing facing) {
+        return world.getTileEntity(pos.offset(facing));
     }
 
     @Override

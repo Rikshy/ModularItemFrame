@@ -9,7 +9,6 @@ import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
 import de.shyrik.modularitemframe.common.container.FrameCrafting;
 import de.shyrik.modularitemframe.common.container.IContainerCallbacks;
-import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -90,7 +89,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 		int craftAmount = fullStack ? Math.min(Utils.countPossibleCrafts(workingInv, recipe.getIngredients()), 64) : 1;
 		do {
 			ItemStack remain = Utils.giveStack(playerInventory, recipe.getRecipeOutput()); //use playerinventory here!
-			if (!remain.isEmpty()) Utils.ejectStack(world, pos, tile.blockFacing(), remain);
+			if (!remain.isEmpty()) Utils.ejectStack(player.world, tile.getPos(), tile.blockFacing(), remain);
 
 			for (Ingredient ingredient : recipe.getIngredients()) {
 				if (ingredient.getMatchingStacks().length > 0) {
@@ -98,12 +97,12 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 				}
 			}
 		} while (--craftAmount > 0);
-		world.playSound(null, pos, SoundEvents.BLOCK_LADDER_STEP, SoundCategory.BLOCKS, 0.4F, 0.7F);
+		player.world.playSound(null, tile.getPos(), SoundEvents.BLOCK_LADDER_STEP, SoundCategory.BLOCKS, 0.4F, 0.7F);
 	}
 
 	private IItemHandlerModifiable getWorkingInventories(IItemHandlerModifiable playerInventory) {
 		EnumFacing facing = tile.blockFacing();
-		TileEntity neighbor = world.getTileEntity(pos.offset(facing));
+		TileEntity neighbor = tile.getNeighbor(facing);
 		IItemHandlerModifiable neighborInventory = null;
 		if (neighbor != null) {
 			neighborInventory = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
@@ -133,7 +132,8 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 
 	@Override
 	public boolean isUsableByPlayer(EntityPlayer player) {
-		return world.getTileEntity(pos) == tile && player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
+		BlockPos pos = tile.getPos();
+		return player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
 	}
 
 	@Override

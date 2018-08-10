@@ -1,6 +1,8 @@
 package de.shyrik.modularitemframe.api;
 
+import com.teamwizardry.librarianlib.features.saving.Dyn;
 import com.teamwizardry.librarianlib.features.saving.NamedDynamic;
+import com.teamwizardry.librarianlib.features.saving.Savable;
 import com.teamwizardry.librarianlib.features.saving.SaveInPlace;
 import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
@@ -14,12 +16,10 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-@SaveInPlace
-@NamedDynamic(resourceLocation = "module_base")
+@Savable
+@Dyn
+//@NamedDynamic(resourceLocation = "module_base")
 public abstract class ModuleFrameBase {
-
-    protected World world;
-    protected BlockPos pos;
 
     protected TileModularFrame tile;
 
