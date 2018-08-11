@@ -1,5 +1,6 @@
 package de.shyrik.modularitemframe.api;
 
+import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import mcjty.theoneprobe.api.IProbeHitData;
@@ -56,7 +57,7 @@ public abstract class ModuleFrameBase implements INBTSerializable<NBTTagCompound
 		return bakedModel;
 	}
 
-	public void specialRendering(double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+	public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 	}
 
 	public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {

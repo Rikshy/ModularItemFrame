@@ -2,6 +2,8 @@ package de.shyrik.modularitemframe.common.module;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleFrameBase;
+import de.shyrik.modularitemframe.api.utils.RenderUtils;
+import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -35,7 +37,8 @@ public class ModuleTeleport extends ModuleFrameBase {
     }
 
     @Override
-    public void specialRendering(double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        RenderUtils.renderEnd(tesr, x, y, z, tile.blockFacing());
     }
 
     @Override

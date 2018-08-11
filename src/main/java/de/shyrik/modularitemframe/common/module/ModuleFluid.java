@@ -4,6 +4,7 @@ import com.teamwizardry.librarianlib.features.base.block.tile.module.Serializabl
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleFrameBase;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
+import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -25,7 +26,7 @@ public abstract class ModuleFluid extends ModuleFrameBase {
     }
 
     @Override
-    public void specialRendering(double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         if (tank != null && tank.getFluid() != null && tank.getFluidAmount() > 0) {
             GlStateManager.pushMatrix();
             GlStateManager.enableBlend();
