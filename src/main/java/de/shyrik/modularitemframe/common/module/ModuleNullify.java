@@ -4,6 +4,7 @@ import de.shyrik.modularitemframe.ConfigValues;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.utils.Utils;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
@@ -31,6 +32,11 @@ public class ModuleNullify extends ModuleFluid {
     public ModuleNullify() {
         super();
         tank.setFluid(FluidUtil.getFluidContained(new ItemStack(Items.LAVA_BUCKET)));
+    }
+
+    @Override
+    public String getModuleName() {
+        return I18n.format("modularitemframe.module.nullify");
     }
 
     @Nonnull

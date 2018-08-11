@@ -5,6 +5,7 @@ import de.shyrik.modularitemframe.api.ModuleFrameBase;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -27,6 +28,11 @@ public class ModuleItem extends ModuleFrameBase {
     @Nonnull
     public ResourceLocation getModelLocation() {
         return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg");
+    }
+
+    @Override
+    public String getModuleName() {
+        return I18n.format("modularitemframe.module.item");
     }
 
     protected float scale = 0.9f;

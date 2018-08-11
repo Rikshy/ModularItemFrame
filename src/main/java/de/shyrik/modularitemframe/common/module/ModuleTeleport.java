@@ -6,6 +6,7 @@ import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,6 +27,11 @@ public class ModuleTeleport extends ModuleFrameBase {
     @Override
     public ResourceLocation getModelLocation() {
         return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg");
+    }
+
+    @Override
+    public String getModuleName() {
+        return I18n.format("modularitemframe.module.tele");
     }
 
     @Override

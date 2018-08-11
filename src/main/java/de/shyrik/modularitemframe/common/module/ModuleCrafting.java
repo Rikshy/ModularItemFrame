@@ -12,6 +12,7 @@ import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.InventoryCraftResult;
@@ -52,6 +53,11 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 	@Override
 	public ResourceLocation getModelLocation() {
 		return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/crafting_frame_bg");
+	}
+
+	@Override
+	public String getModuleName() {
+		return I18n.format("modularitemframe.module.craft");
 	}
 
 	@Override
