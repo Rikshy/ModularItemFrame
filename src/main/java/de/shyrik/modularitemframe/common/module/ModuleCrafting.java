@@ -7,6 +7,10 @@ import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
 import de.shyrik.modularitemframe.common.container.FrameCrafting;
 import de.shyrik.modularitemframe.common.container.IContainerCallbacks;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.ProbeMode;
+import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -23,6 +27,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
@@ -132,6 +137,18 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 	public boolean isUsableByPlayer(EntityPlayer player) {
 		BlockPos pos = tile.getPos();
 		return player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
+	}
+
+	@Override
+	@Optional.Method(modid = "theoneprobe")
+	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+		if ( recipe != null && !recipe.getRecipeOutput().isEmpty()) {
+			IProbeInfo input = probeInfo.horizontal().text("Input:");
+			for (int slot = 0; slot < ghostInventory.getSlots(); ++slot) {
+				if (!ghostInventory.getStackInSlot(slot).isEmpty()) input.item(ghostInventory.getStackInSlot(slot));
+			}
+			probeInfo.horizontal().text("output:").item(recipe.getRecipeOutput());
+		}
 	}
 
 	@Override

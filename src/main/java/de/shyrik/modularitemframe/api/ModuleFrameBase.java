@@ -1,11 +1,10 @@
 package de.shyrik.modularitemframe.api;
 
-import com.teamwizardry.librarianlib.features.saving.Dyn;
-import com.teamwizardry.librarianlib.features.saving.NamedDynamic;
-import com.teamwizardry.librarianlib.features.saving.Savable;
-import com.teamwizardry.librarianlib.features.saving.SaveInPlace;
 import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,6 +14,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fml.common.Optional;
 
 import javax.annotation.Nonnull;
 
@@ -42,4 +42,7 @@ public abstract class ModuleFrameBase implements INBTSerializable<NBTTagCompound
     }
 
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {}
+
+    @Optional.Method(modid = "theoneprobe")
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {}
 }

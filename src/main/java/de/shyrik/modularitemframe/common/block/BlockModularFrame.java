@@ -5,6 +5,10 @@ import de.shyrik.modularitemframe.api.ModuleRegistry;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.IProbeInfoAccessor;
+import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -22,6 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +34,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
-public class BlockModularFrame extends BlockModContainer {
+@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
+public class BlockModularFrame extends BlockModContainer implements IProbeInfoAccessor {
 
     public static final PropertyEnum<EnumFacing> FACING = PropertyEnum.create("facing", EnumFacing.class);
 
@@ -82,6 +88,12 @@ public class BlockModularFrame extends BlockModContainer {
             tile.module.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
         }
         return true;
+    }
+
+    @Override
+    @Optional.Method(modid = "theoneprobe")
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+        getTE(world, data.getPos()).module.addProbeInfo(mode, probeInfo, player, world, blockState, data);
     }
 
     @Override
