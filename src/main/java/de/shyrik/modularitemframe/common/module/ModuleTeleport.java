@@ -35,6 +35,10 @@ public class ModuleTeleport extends ModuleFrameBase {
     }
 
     @Override
+    public void specialRendering(double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    }
+
+    @Override
     public void onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (linkedLoc == null) {
             playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.no_target"));
@@ -64,7 +68,8 @@ public class ModuleTeleport extends ModuleFrameBase {
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = new NBTTagCompound();
-        compound.setLong(NBT_LINK, linkedLoc.toLong());
+        if (linkedLoc != null)
+            compound.setLong(NBT_LINK, linkedLoc.toLong());
         return compound;
     }
 
