@@ -1,6 +1,20 @@
 tile.modularitemframe:modular_frame.name=Modularer Rahmen
 
+item.modularitemframe:module_item.name=Item Modul
+item.modularitemframe:module_craft.name=Crafting Modul
+item.modularitemframe:module_nullify.name=Nullify Modul
+item.modularitemframe:module_tele.name=Teleport Modul
+item.modularitemframe:module_tank.name=Tank Modul
 
 modularitemframe.message.no_target=Keine Zielposition gesetzt - benutze dafür den Schraubenzieher
 modularitemframe.message.invalid_target=Kein Ender Rahmen an der Zielposition
 modularitemframe.message.location_blocked=Zielposition ist blockiert
+
+modularitemframe.module.item=Item
+modularitemframe.module.craft=Crafting
+modularitemframe.module.tank=Tank
+modularitemframe.module.nullify=Nullify
+modularitemframe.module.tele=Teleport
+
+modularitemframe.tooltip.module=Modul: %s
+modularitemframe.tooltip.capacity=%dmb / %dmb
