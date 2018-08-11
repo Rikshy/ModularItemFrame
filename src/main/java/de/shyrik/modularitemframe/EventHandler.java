@@ -17,6 +17,6 @@ public class EventHandler {
         event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg"));
         event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/nullify_frame_bg"));
         event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank_frame_bg"));
-        event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg"));
+        //event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg"));
     }
 }

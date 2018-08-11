@@ -24,8 +24,9 @@ public class ModuleRegistry {
 		try {
 			return modules.get(id).newInstance();
 		} catch (Exception ex) {
-			return null;
+			ex.printStackTrace();
 		}
+		return null;
 	}
 
 	public static String getModuleId(Class<? extends ModuleFrameBase> moduleClass) {
