@@ -148,6 +148,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 	@Override
 	@Optional.Method(modid = "theoneprobe")
 	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+		super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
 		if ( recipe != null && !recipe.getRecipeOutput().isEmpty()) {
 			IProbeInfo input = probeInfo.horizontal().text("Input:");
 			for (int slot = 0; slot < ghostInventory.getSlots(); ++slot) {
