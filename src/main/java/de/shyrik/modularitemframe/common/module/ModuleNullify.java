@@ -1,16 +1,14 @@
 package de.shyrik.modularitemframe.common.module;
 
-import com.teamwizardry.librarianlib.features.saving.NamedDynamic;
-import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.modularitemframe.ConfigValues;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.utils.Utils;
-import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -24,10 +22,10 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 
-@NamedDynamic(resourceLocation = "module_nullify")
 public class ModuleNullify extends ModuleFluid {
 
-    @Save
+    private static final String NBT_LASTSTACK = "laststack";
+
     public ItemStack lastStack = ItemStack.EMPTY;
 
     public ModuleNullify() {
@@ -83,5 +81,18 @@ public class ModuleNullify extends ModuleFluid {
                 }
             }
         }
+    }
+
+    @Override
+    public NBTTagCompound serializeNBT() {
+        NBTTagCompound compound = super.serializeNBT();
+        compound.setTag(NBT_LASTSTACK, lastStack.serializeNBT());
+        return compound;
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagCompound nbt) {
+        super.deserializeNBT(nbt);
+        if (nbt.hasKey(NBT_LASTSTACK)) lastStack = new ItemStack(nbt.getCompoundTag(NBT_LASTSTACK));
     }
 }

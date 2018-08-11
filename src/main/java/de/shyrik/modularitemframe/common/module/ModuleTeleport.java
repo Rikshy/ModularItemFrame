@@ -1,7 +1,5 @@
 package de.shyrik.modularitemframe.common.module;
 
-import com.teamwizardry.librarianlib.features.saving.NamedDynamic;
-import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleFrameBase;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
@@ -10,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -17,16 +16,16 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-@NamedDynamic(resourceLocation = "module_tele")
 public class ModuleTeleport extends ModuleFrameBase {
 
-    @Save
+    private static final String NBT_LINK = "linked_pos";
+
     public BlockPos linkedLoc = null;
 
     @Nonnull
     @Override
     public ResourceLocation getModelLocation() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "item_frame_bg");
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg");
     }
 
     @Override
@@ -54,5 +53,17 @@ public class ModuleTeleport extends ModuleFrameBase {
 
     private boolean isTargetLocationValid(@Nonnull World worldIn) {
         return worldIn.isAirBlock(linkedLoc.offset(EnumFacing.DOWN));
+    }
+
+    @Override
+    public NBTTagCompound serializeNBT() {
+        NBTTagCompound compound = new NBTTagCompound();
+        compound.setLong(NBT_LINK, linkedLoc.toLong());
+        return compound;
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagCompound nbt) {
+        if (nbt.hasKey(NBT_LINK)) linkedLoc = BlockPos.fromLong(nbt.getInteger(NBT_LINK));
     }
 }

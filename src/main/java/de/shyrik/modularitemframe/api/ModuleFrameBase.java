@@ -8,18 +8,17 @@ import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nonnull;
 
-@Savable
-@Dyn
-//@NamedDynamic(resourceLocation = "module_base")
-public abstract class ModuleFrameBase {
+public abstract class ModuleFrameBase implements INBTSerializable<NBTTagCompound> {
 
     protected TileModularFrame tile;
 

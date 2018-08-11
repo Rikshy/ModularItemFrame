@@ -1,15 +1,13 @@
 package de.shyrik.modularitemframe.common.module;
 
-import com.teamwizardry.librarianlib.features.saving.NamedDynamic;
-import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleFrameBase;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
-import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -18,13 +16,12 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-@NamedDynamic(resourceLocation = "module_item")
 public class ModuleItem extends ModuleFrameBase {
 
-    @Save
-    public int rotation = 0;
+    private static final String NBT_DISPLAY = "display";
+    private static final String NBT_ROTATION = "rotation";
 
-    @Save
+    public int rotation = 0;
     public ItemStack displayItem = ItemStack.EMPTY;
 
     @Nonnull
@@ -75,5 +72,19 @@ public class ModuleItem extends ModuleFrameBase {
                 tile.markDirty();
             }
         }
+    }
+
+    @Override
+    public NBTTagCompound serializeNBT() {
+        NBTTagCompound compound = new NBTTagCompound();
+        compound.setTag(NBT_DISPLAY, displayItem.serializeNBT());
+        compound.setInteger("rotation", rotation);
+        return compound;
+    }
+
+    @Override
+    public void deserializeNBT(NBTTagCompound nbt) {
+        if (nbt.hasKey(NBT_DISPLAY)) displayItem = new ItemStack(nbt.getCompoundTag(NBT_DISPLAY));
+        if (nbt.hasKey(NBT_ROTATION)) rotation = nbt.getInteger(NBT_ROTATION);
     }
 }

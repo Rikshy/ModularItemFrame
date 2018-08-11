@@ -1,7 +1,5 @@
 package de.shyrik.modularitemframe.common.module;
 
-import com.teamwizardry.librarianlib.features.saving.NamedDynamic;
-import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.modularitemframe.ConfigValues;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.utils.Utils;
@@ -16,6 +14,7 @@ import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -31,12 +30,11 @@ import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
 
-@NamedDynamic(resourceLocation = "module_crafting")
 public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 
-	private IRecipe recipe;
+	private static final String NBT_GHOSTINVENTORY = "ghostinventory";
 
-	@Save
+	private IRecipe recipe;
 	public ItemStackHandler ghostInventory = new ItemStackHandler(9);
 
 	public ModuleCrafting() {
@@ -140,5 +138,19 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 	public void onContainerCraftingResultChanged(InventoryCraftResult result) {
 		displayItem = result.getStackInSlot(0);
 		recipe = result.getRecipeUsed();
+	}
+
+
+	@Override
+	public NBTTagCompound serializeNBT() {
+		NBTTagCompound compound = super.serializeNBT();
+		compound.setTag(NBT_GHOSTINVENTORY, ghostInventory.serializeNBT());
+		return compound;
+	}
+
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt) {
+		super.deserializeNBT(nbt);
+		if (nbt.hasKey(NBT_GHOSTINVENTORY)) ghostInventory.deserializeNBT(nbt.getCompoundTag(NBT_GHOSTINVENTORY));
 	}
 }

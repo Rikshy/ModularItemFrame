@@ -1,11 +1,8 @@
 package de.shyrik.modularitemframe.common.module;
 
-import com.teamwizardry.librarianlib.features.saving.NamedDynamic;
 import de.shyrik.modularitemframe.ConfigValues;
-import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -14,11 +11,9 @@ import net.minecraftforge.fluids.FluidUtil;
 
 import javax.annotation.Nonnull;
 
-@NamedDynamic(resourceLocation = "module_tank")
 public class ModuleTank extends ModuleFluid {
 
     public ModuleTank() {
-        super();
         tank.setCapacity(ConfigValues.TankFrameCapacity);
     }
 
