@@ -80,6 +80,8 @@ public abstract class ModuleFrameBase implements INBTSerializable<NBTTagCompound
 	@Nonnull
 	@Optional.Method(modid = "waila")
 	public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-		return new ArrayList<>();
+		List<String> tips = new ArrayList<>();
+		tips.add(I18n.format("modularitemframe.tooltip.module", getModuleName()));
+		return tips;
 	}
 }

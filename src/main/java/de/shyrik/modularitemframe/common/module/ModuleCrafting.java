@@ -11,6 +11,8 @@ import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
 import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,6 +37,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 
@@ -156,6 +159,12 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 			}
 			probeInfo.horizontal().text("output:").item(recipe.getRecipeOutput());
 		}
+	}
+
+	@Nonnull
+	@Override
+	public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+		return super.getWailaBody(itemStack, accessor, config);
 	}
 
 	@Override
