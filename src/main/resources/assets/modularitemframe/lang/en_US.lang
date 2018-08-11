@@ -1,5 +1,10 @@
 tile.modularitemframe:modular_frame.name=Modular Frame
 
+item.modularitemframe:module_item.name=Item Module
+item.modularitemframe:module_craft.name=Crafting Module
+item.modularitemframe:module_nullify.name=Nullify Module
+item.modularitemframe:module_tele.name=Teleport Module
+item.modularitemframe:module_tank.name=Tank Module
 
 modularitemframe.message.no_target=No target location set - use the screwdriver
 modularitemframe.message.invalid_target=No Ender Frame at target location

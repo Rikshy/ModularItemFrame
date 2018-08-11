@@ -7,8 +7,7 @@ import de.shyrik.modularitemframe.api.ModuleRegistry;
 import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.item.ItemModule;
-import de.shyrik.modularitemframe.common.module.ModuleItem;
-import de.shyrik.modularitemframe.common.module.ModuleTank;
+import de.shyrik.modularitemframe.common.module.*;
 import mcjty.theoneprobe.api.ITheOneProbe;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Loader;
@@ -24,11 +23,18 @@ public class CommonProxy {
     public static BlockModularFrame FRAME_MODULAR;
 
     public static ItemModule MODULE_TANK;
+    public static ItemModule MODULE_ITEM;
+    public static ItemModule MODULE_TELE;
+    public static ItemModule MODULE_CRAFT;
+    public static ItemModule MODULE_NULL;
 
     public void preInit(FMLPreInitializationEvent event){
         FRAME_MODULAR = new BlockModularFrame();
         MODULE_TANK = ModuleRegistry.registerCreate("module_tank", ModuleTank.class);
-        ModuleRegistry.register("module_item", ModuleItem.class);
+        MODULE_ITEM = ModuleRegistry.registerCreate("module_item", ModuleItem.class);
+        MODULE_TELE = ModuleRegistry.registerCreate("module_tele", ModuleTeleport.class);
+        MODULE_CRAFT = ModuleRegistry.registerCreate("module_craft", ModuleCrafting.class);
+        MODULE_NULL = ModuleRegistry.registerCreate("module_nullify", ModuleNullify.class);
 
         ModTab.init();
 
