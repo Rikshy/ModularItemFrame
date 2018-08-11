@@ -30,39 +30,55 @@ import java.util.List;
 
 public abstract class ModuleFrameBase implements INBTSerializable<NBTTagCompound> {
 
-    protected TileModularFrame tile;
+	protected TileModularFrame tile;
 
-    public void setTile(TileModularFrame te) {
-        tile = te;
-    }
+	public void setTile(TileModularFrame te) {
+		tile = te;
+	}
 
-    @Nonnull
-    public abstract ResourceLocation getModelLocation();
+	@Nonnull
+	public abstract ResourceLocation getModelLocation();
 
-    public abstract String getModuleName();
+	public abstract String getModuleName();
 
-    public void specialRendering(double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+	public boolean reloadModel = false;
+	private IBakedModel bakedModel = null;
 
-    }
+	public IBakedModel bakeModel(IModel model) {
+		if (bakedModel == null || reloadModel) {
+			bakedModel = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, location -> {
+				if (location.getResourcePath().contains("dummy"))
+					return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(getModelLocation().toString());
+				return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
+			});
+			reloadModel = false;
+		}
+		return bakedModel;
+	}
 
-    public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {}
+	public void specialRendering(double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+	}
 
-    public abstract void onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ);
+	public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
+	}
 
-    public ContainerCraftingFrame createContainer(final EntityPlayer player) {
-        return null;
-    }
+	public abstract void onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ);
 
-    public void tick(@Nonnull World world, @Nonnull BlockPos pos) {}
+	public ContainerCraftingFrame createContainer(final EntityPlayer player) {
+		return null;
+	}
 
-    @Optional.Method(modid = "theoneprobe")
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        probeInfo.horizontal().text(I18n.format("modularitemframe.tooltip.module", getModuleName()));
-    }
+	public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
+	}
 
-    @Nonnull
-    @Optional.Method(modid = "waila")
-    public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        return new ArrayList<>();
-    }
+	@Optional.Method(modid = "theoneprobe")
+	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+		probeInfo.horizontal().text(I18n.format("modularitemframe.tooltip.module", getModuleName()));
+	}
+
+	@Nonnull
+	@Optional.Method(modid = "waila")
+	public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+		return new ArrayList<>();
+	}
 }

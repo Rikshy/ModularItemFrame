@@ -25,9 +25,6 @@ public class TileModularFrame extends TileModTickable {
 
     public ModuleFrameBase module;
 
-    @Save
-    public boolean reloadModel;
-
     public TileModularFrame() {
         setModule(new ModuleItem());
     }
@@ -35,7 +32,6 @@ public class TileModularFrame extends TileModTickable {
     public void setModule(ModuleFrameBase mod) {
         module = mod;
         module.setTile(this);
-        reloadModel = true;
     }
 
     public EnumFacing blockFacing() {
