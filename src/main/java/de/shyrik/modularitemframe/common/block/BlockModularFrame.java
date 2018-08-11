@@ -1,6 +1,7 @@
 package de.shyrik.modularitemframe.common.block;
 
 import com.teamwizardry.librarianlib.features.base.block.tile.BlockModContainer;
+import de.shyrik.modularitemframe.api.ModuleRegistry;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
@@ -73,13 +74,13 @@ public class BlockModularFrame extends BlockModContainer {
         TileModularFrame tile = getTE(worldIn, pos);
         if (held.getItem() instanceof ItemModule) {
             if (!worldIn.isRemote) {
-                tile.setModule(((ItemModule) held.getItem()).getModule());
+                tile.setModule(ModuleRegistry.createModuleInstance(((ItemModule) held.getItem()).moduleId));
                 held.setCount(held.getCount() - 1);
+                tile.markDirty();
             }
         } else {
             tile.module.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
         }
-        tile.markDirty();
         return true;
     }
 
