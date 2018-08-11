@@ -60,9 +60,10 @@ public class TileModularFrame extends TileModTickable {
         if (ModuleRegistry.getModuleId(module.getClass()).equals(cmp.getString(NBTMODULE))) {
             module.deserializeNBT(cmp.getCompoundTag(NBTMODULEDATA));
         } else {
-            cmp.removeTag(NBTMODULEDATA);
             module = ModuleRegistry.createModuleInstance(cmp.getString(NBTMODULE));
+            module.deserializeNBT(cmp.getCompoundTag(NBTMODULEDATA));
             module.setTile(this);
+            cmp.removeTag(NBTMODULEDATA);
         }
     }
 
