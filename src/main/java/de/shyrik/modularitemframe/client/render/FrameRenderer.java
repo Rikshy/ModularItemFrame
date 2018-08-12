@@ -49,7 +49,7 @@ public class FrameRenderer extends TileEntitySpecialRenderer<TileModularFrame> {
 
         GlStateManager.translate(x, y, z); // Translate pad to coords here
         GlStateManager.disableRescaleNormal();
-        rotateFrameOnFacing(te.blockFacing(), 0);
+        rotateFrameOnFacing(te.blockFacing(), te.rotation);
 
         Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(
                 modelFrame, 1.0F, 1, 1, 1);
@@ -65,6 +65,7 @@ public class FrameRenderer extends TileEntitySpecialRenderer<TileModularFrame> {
     }
 
     private void rotateFrameOnFacing(EnumFacing facing, int rotation) {
+        int r = Math.abs(rotation);
         switch (facing) {
             case NORTH:
                 break;
@@ -88,6 +89,7 @@ public class FrameRenderer extends TileEntitySpecialRenderer<TileModularFrame> {
                 GlStateManager.translate(0.0F, 1.0F, 0.0F);
                 GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
         }
-        GlStateManager.rotate(rotation, 0.0F, 0.0F, 1.0F);
+        GlStateManager.rotate(rotation * 90.0F, 0.0F, 0.0F, 1.0F);
+        GlStateManager.translate((r == 1 || r == 2) ? -1 : 0, (r == 3 || r == 2) ? -1 : 0,   0);
     }
 }

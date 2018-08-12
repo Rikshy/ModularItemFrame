@@ -24,12 +24,12 @@ public class ModTab extends ModCreativeTab {
 	@Nonnull
 	@Override
 	public ItemStack getTabIconItem() {
-		return new ItemStack(CommonProxy.MODULE_TANK);
+		return new ItemStack(CommonProxy.FRAME_MODULAR);
 	}
 
 	@Nonnull
 	@Override
 	public ItemStack getIconStack() {
-		return new ItemStack(CommonProxy.MODULE_TANK);
+		return new ItemStack(CommonProxy.FRAME_MODULAR);
 	}
 }

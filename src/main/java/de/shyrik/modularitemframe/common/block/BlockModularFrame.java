@@ -4,6 +4,7 @@ import com.teamwizardry.librarianlib.features.base.block.tile.BlockModContainer;
 import de.shyrik.modularitemframe.api.ModuleRegistry;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.item.ItemModule;
+import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -84,7 +85,7 @@ public class BlockModularFrame extends BlockModContainer implements IProbeInfoAc
                 held.setCount(held.getCount() - 1);
                 tile.markDirty();
             }
-        } else {
+        }  else {
             tile.module.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
         }
         return true;
