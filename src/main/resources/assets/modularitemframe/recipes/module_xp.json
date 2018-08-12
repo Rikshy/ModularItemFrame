@@ -1,0 +1,20 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "modularitemframe:module_xp"
+  },
+  "pattern": [
+    " C ",
+    "C#C",
+    " C "
+  ],
+  "key": {
+    "#": {
+      "type": "forge:ore_dict",
+      "ore": "gemEmerald"
+    },
+    "C": {
+      "item": "modularitemframe:canvas"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "modularitemframe:module_tank"
+  },
+  "pattern": [
+    " C ",
+    "C#C",
+    " C "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:bucket"
+    },
+    "C": {
+      "item": "modularitemframe:canvas"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "modularitemframe:module_item"
+  },
+  "pattern": [
+    " C ",
+    "C#C",
+    " C "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:item_frame"
+    },
+    "C": {
+      "item": "modularitemframe:canvas"
+    }
+  }
+}

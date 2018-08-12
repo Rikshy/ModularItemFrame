@@ -1,5 +1,6 @@
 package de.shyrik.modularitemframe.common;
 
+import com.teamwizardry.librarianlib.features.base.item.ItemMod;
 import de.shyrik.modularitemframe.ModTab;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleRegistry;
@@ -26,6 +27,8 @@ public class CommonProxy {
 
 	public static ItemScrewdriver SCREWDRIVER;
 
+	public static ItemMod ITEM_CANVAS;
+
 	public void preInit(FMLPreInitializationEvent event) {
 		FRAME_MODULAR = new BlockModularFrame();
 		MODULE_TANK = ModuleRegistry.registerCreate("module_tank", ModuleTank.class);
@@ -36,6 +39,8 @@ public class CommonProxy {
 		MODULE_DROP = ModuleRegistry.registerCreate("module_drop", ModuleDrop.class);
 		MODULE_XP = ModuleRegistry.registerCreate("module_xp", ModuleXP.class);
 		SCREWDRIVER = new ItemScrewdriver();
+
+		ITEM_CANVAS = new ItemMod("canvas");
 
 		ModTab.init();
 

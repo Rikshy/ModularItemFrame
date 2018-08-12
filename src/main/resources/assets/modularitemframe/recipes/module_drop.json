@@ -1,0 +1,19 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "modularitemframe:module_drop"
+  },
+  "pattern": [
+    " C ",
+    "C#C",
+    " C "
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:dropper"
+    },
+    "C": {
+      "item": "modularitemframe:canvas"
+    }
+  }
+}

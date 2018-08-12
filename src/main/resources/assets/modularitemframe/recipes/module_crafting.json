@@ -1,21 +1,20 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "justcraftingframes:crafting_frame"
+    "item": "modularitemframe:module_craft"
   },
   "pattern": [
-    "SSS",
-    "S#S",
-    "SSS"
+    " C ",
+    "C#C",
+    " C "
   ],
   "key": {
     "#": {
       "type": "forge:ore_dict",
       "ore": "workbench"
     },
-    "S": {
-      "type": "forge:ore_dict",
-      "ore": "stickWood"
+    "C": {
+      "item": "modularitemframe:canvas"
     }
   }
 }

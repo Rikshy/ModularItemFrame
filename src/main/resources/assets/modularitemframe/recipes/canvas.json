@@ -1,16 +1,18 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "justcraftingframes:tele_frame"
+    "item": "modularitemframe:canvas",
+    "count": 4
   },
   "pattern": [
     "SSS",
-    "S#S",
+    "###",
     "SSS"
   ],
   "key": {
     "#": {
-      "item": "minecraft:observer"
+      "type": "forge:ore_dict",
+      "ore": "leather"
     },
     "S": {
       "type": "forge:ore_dict",

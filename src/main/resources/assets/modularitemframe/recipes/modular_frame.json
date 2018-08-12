@@ -1,21 +1,17 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "justcraftingframes:item_frame"
+    "item": "modularitemframe:modular_frame"
   },
   "pattern": [
     "SSS",
-    "S#S",
+    "S S",
     "SSS"
   ],
   "key": {
-    "#": {
-      "type": "forge:ore_dict",
-      "ore": "plankWood"
-    },
     "S": {
       "type": "forge:ore_dict",
-      "ore": "stickWood"
+      "ore": "slabWood"
     }
   }
 }
