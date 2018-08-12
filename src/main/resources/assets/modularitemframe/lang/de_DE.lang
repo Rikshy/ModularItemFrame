@@ -7,6 +7,7 @@ item.modularitemframe:module_nullify.name=Nullify Modul
 item.modularitemframe:module_tele.name=Teleport Modul
 item.modularitemframe:module_tank.name=Tank Modul
 item.modularitemframe:module_drop.name=Spender Modul
+item.modularitemframe:module_xp.name=XP Modul
 
 modularitemframe.message.no_target=[ModularItemFrame] Keine Zielposition gesetzt - benutze dafür den Schraubenzieher
 modularitemframe.message.invalid_target=[ModularItemFrame] Kein Ender Rahmen an der Zielposition
@@ -15,17 +16,20 @@ modularitemframe.message.too_far=[ModularItemFrame] Zielort ist zu weit entfernt
 modularitemframe.message.link_established=[ModularItemFrame] Verbindung hergestellt
 modularitemframe.message.loc_saved=[ModularItemFrame] Position gespeichert
 modularitemframe.message.range_change=[ModularItemFrame] Spenderreichweite verändert auf %d
-modularitemframe.message.tank_mode_change=[ModularItemFrame] Tank modus verändert zu %s
+modularitemframe.message.tank_mode_change=[ModularItemFrame] Tank Modus verändert zu %s
+modularitemframe.message.xp_mode_change=[ModularItemFrame] XP Modus verändert zu %s
 
 modularitemframe.module.item=Item
 modularitemframe.module.craft=Crafting
 modularitemframe.module.tank=Tank
 modularitemframe.module.nullify=Nullify
 modularitemframe.module.tele=Teleport
+modularitemframe.module.xp=XP
 
 modularitemframe.tooltip.module=Modul: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb
 modularitemframe.tooltip.tankmode=Tankmodus: %s
 modularitemframe.tooltip.tele_valid=Valides Ziel: %s
+modularitemframe.tooltip.xp_level=%d Level
 
 item_group.modularitemframe=ModularItemFrame

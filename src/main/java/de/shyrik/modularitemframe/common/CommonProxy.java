@@ -22,6 +22,7 @@ public class CommonProxy {
 	public static ItemModule MODULE_CRAFT;
 	public static ItemModule MODULE_NULL;
 	public static ItemModule MODULE_DROP;
+	public static ItemModule MODULE_XP;
 
 	public static ItemScrewdriver SCREWDRIVER;
 
@@ -33,6 +34,7 @@ public class CommonProxy {
 		MODULE_CRAFT = ModuleRegistry.registerCreate("module_craft", ModuleCrafting.class);
 		MODULE_NULL = ModuleRegistry.registerCreate("module_nullify", ModuleNullify.class);
 		MODULE_DROP = ModuleRegistry.registerCreate("module_drop", ModuleDrop.class);
+		MODULE_XP = ModuleRegistry.registerCreate("module_xp", ModuleXP.class);
 		SCREWDRIVER = new ItemScrewdriver();
 
 		ModTab.init();

@@ -7,6 +7,7 @@ item.modularitemframe:module_nullify.name=Nullify Module
 item.modularitemframe:module_tele.name=Teleport Module
 item.modularitemframe:module_tank.name=Tank Module
 item.modularitemframe:module_drop.name=Drop Module
+item.modularitemframe:module_xp.name=XP Module
 
 modularitemframe.message.no_target=[ModularItemFrame] No target location set - use the screwdriver
 modularitemframe.message.invalid_target=[ModularItemFrame] No Ender Frame at target location
@@ -16,16 +17,19 @@ modularitemframe.message.link_established=[ModularItemFrame] Link established
 modularitemframe.message.loc_saved=[ModularItemFrame] Location saved
 modularitemframe.message.range_change=[ModularItemFrame] Dropper range changed to %d
 modularitemframe.message.tank_mode_change=[ModularItemFrame] Tank mode changed to %s
+modularitemframe.message.xp_mode_change=[ModularItemFrame] XP mode changed to %s
 
 modularitemframe.module.item=Item
 modularitemframe.module.craft=Crafting
 modularitemframe.module.tank=Tank
 modularitemframe.module.nullify=Nullify
 modularitemframe.module.tele=Teleport
+modularitemframe.module.xp=XP
 
 modularitemframe.tooltip.module=Module: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb
 modularitemframe.tooltip.tankmode=Tankmode: %s
 modularitemframe.tooltip.tele_valid=Valid location: %s
+modularitemframe.tooltip.xp_level=%d Level
 
 item_group.modularitemframe=ModularItemFrame
