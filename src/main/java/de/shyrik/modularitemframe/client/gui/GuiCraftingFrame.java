@@ -15,7 +15,7 @@ public class GuiCraftingFrame extends GuiContainer {
 	/**
 	 * The ResourceLocation containing the chest GUI texture.
 	 */
-	private static final ResourceLocation CF_GUI_TEXTURE = new ResourceLocation(ModularItemFrame.MOD_ID,"textures/gui/crafting_frame.png");
+	private static final ResourceLocation CF_GUI_TEXTURE = new ResourceLocation(ModularItemFrame.MOD_ID, "textures/gui/crafting_frame.png");
 
 	public GuiCraftingFrame(final ContainerCraftingFrame container) {
 		super(container);

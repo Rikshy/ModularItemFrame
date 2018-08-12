@@ -30,9 +30,8 @@ public class Utils {
 	}
 
 	public static boolean areItemsEqualIgnoreDurability(ItemStack[] tocheck, ItemStack itemStack) {
-		for( ItemStack check : tocheck) {
-			if (ItemStack.areItemsEqualIgnoreDurability(check, itemStack))
-				return true;
+		for (ItemStack check : tocheck) {
+			if (ItemStack.areItemsEqualIgnoreDurability(check, itemStack)) return true;
 		}
 		return false;
 	}
@@ -50,8 +49,7 @@ public class Utils {
 						break;
 					}
 				}
-				if (!found)
-					return false;
+				if (!found) return false;
 			}
 		}
 		return true;
@@ -61,7 +59,7 @@ public class Utils {
 		IItemHandler copy = Utils.copyItemHandler(inventory);
 		boolean canCraft = true;
 		int count = 0;
-		while(canCraft) {
+		while (canCraft) {
 			for (Ingredient ingredient : ingredients) {
 				if (ingredient.getMatchingStacks().length > 0) {
 					boolean found = false;
@@ -79,7 +77,7 @@ public class Utils {
 					}
 				}
 			}
-			if(canCraft)count++;
+			if (canCraft) count++;
 		}
 		return count;
 	}
@@ -87,7 +85,7 @@ public class Utils {
 	public static void removeFromInventory(IItemHandlerModifiable inventory, ItemStack[] toRemove) {
 		for (int invSlot = 0; invSlot < inventory.getSlots(); invSlot++) {
 			ItemStack stack = inventory.extractItem(invSlot, 1, true);
-			if (!stack.isEmpty() && areItemsEqualIgnoreDurability( toRemove, stack)) {
+			if (!stack.isEmpty() && areItemsEqualIgnoreDurability(toRemove, stack)) {
 				inventory.extractItem(invSlot, 1, false);
 				break;
 			}
@@ -96,8 +94,7 @@ public class Utils {
 
 	public static ItemStack giveStack(IItemHandlerModifiable inventory, ItemStack stack) {
 		int slot = getFittingSlot(inventory, stack);
-		if (slot < 0 )
-			return stack;
+		if (slot < 0) return stack;
 		ItemStack remain = inventory.insertItem(slot, stack, false);
 		if (!remain.isEmpty()) giveStack(inventory, remain);
 		return ItemStack.EMPTY;
@@ -109,7 +106,9 @@ public class Utils {
 	}
 
 	public static int getItemEqualSlot(IItemHandler inventory, ItemStack stack) {
-		for (int i = 0; i < inventory.getSlots(); ++i) if (inventory.getStackInSlot(i).getCount() < inventory.getStackInSlot(i).getMaxStackSize() && ItemStack.areItemsEqual(inventory.getStackInSlot(i), stack)) return i;
+		for (int i = 0; i < inventory.getSlots(); ++i)
+			if (inventory.getStackInSlot(i).getCount() < inventory.getStackInSlot(i).getMaxStackSize() && ItemStack.areItemsEqual(inventory.getStackInSlot(i), stack))
+				return i;
 		return -1;
 	}
 
@@ -162,7 +161,7 @@ public class Utils {
 		}
 
 		EntityItem item = new EntityItem(world, position.x, position.y, position.z, stack);
-		item.setVelocity( velocity.x, velocity.y, velocity.z);
+		item.setVelocity(velocity.x, velocity.y, velocity.z);
 		world.spawnEntity(item);
 	}
 }

@@ -35,8 +35,7 @@ public class ContainerCraftingFrame extends Container {
 
 		this.addSlotToContainer(new SlotCrafting(player, this.matrix, this.craftResult, 0, 124, 35) {
 			@Override
-			public boolean canTakeStack(EntityPlayer playerIn)
-			{
+			public boolean canTakeStack(EntityPlayer playerIn) {
 				return false;
 			}
 		});

@@ -69,7 +69,7 @@ public class FrameCrafting extends InventoryCrafting {
 	}
 
 	public void onCraftMatrixChanged() {
-		if(!doNotCallUpdates) {
+		if (!doNotCallUpdates) {
 			this.eventHandler.onCraftMatrixChanged(this);
 		}
 	}

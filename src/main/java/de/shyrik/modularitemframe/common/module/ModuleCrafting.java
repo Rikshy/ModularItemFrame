@@ -10,7 +10,6 @@ import de.shyrik.modularitemframe.common.container.IContainerCallbacks;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
-import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
@@ -69,10 +68,8 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 			if (!hasValidRecipe(playerIn))
 				playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, worldIn, pos.getX(), pos.getY(), pos.getZ());
 			else {
-				if (playerIn.isSneaking())
-					craft(playerIn, true);
-				else
-					craft(playerIn, false);
+				if (playerIn.isSneaking()) craft(playerIn, true);
+				else craft(playerIn, false);
 			}
 			tile.markDirty();
 		}
@@ -80,20 +77,18 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 
 	@Override
 	public ContainerCraftingFrame createContainer(final EntityPlayer player) {
-		final IItemHandlerModifiable playerInventory = (IItemHandlerModifiable)player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+		final IItemHandlerModifiable playerInventory = (IItemHandlerModifiable) player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 
 		return new ContainerCraftingFrame(playerInventory, ghostInventory, player, this);
 	}
 
 	private void craft(EntityPlayer player, boolean fullStack) {
-		if (player instanceof FakePlayer && !ConfigValues.AllowFakePlayers)
-			return;
+		if (player instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return;
 
 		final IItemHandlerModifiable playerInventory = (IItemHandlerModifiable) player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 		final IItemHandlerModifiable workingInv = getWorkingInventories(playerInventory);
 
-		if (recipe == null)
-			reloadRecipe(player);
+		if (recipe == null) reloadRecipe(player);
 
 		if (workingInv == null || recipe == null || recipe.getRecipeOutput().isEmpty() || !Utils.canCraft(workingInv, recipe.getIngredients()))
 			return;
@@ -120,7 +115,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 			neighborInventory = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
 		}
 
-		if(neighborInventory != null) {
+		if (neighborInventory != null) {
 			if (!ConfigValues.StillUsePlayerInv) return neighborInventory;
 			else return new CombinedInvWrapper(neighborInventory, playerInventory);
 		}
@@ -128,7 +123,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 	}
 
 	public boolean hasValidRecipe(@Nonnull EntityPlayer player) {
-		if ( recipe == null) reloadRecipe(player);
+		if (recipe == null) reloadRecipe(player);
 		return recipe != null && !recipe.getRecipeOutput().isEmpty();
 	}
 
@@ -152,7 +147,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 	@Optional.Method(modid = "theoneprobe")
 	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
 		super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
-		if ( recipe != null && !recipe.getRecipeOutput().isEmpty()) {
+		if (recipe != null && !recipe.getRecipeOutput().isEmpty()) {
 			IProbeInfo input = probeInfo.horizontal().text("Input:");
 			for (int slot = 0; slot < ghostInventory.getSlots(); ++slot) {
 				if (!ghostInventory.getStackInSlot(slot).isEmpty()) input.item(ghostInventory.getStackInSlot(slot));

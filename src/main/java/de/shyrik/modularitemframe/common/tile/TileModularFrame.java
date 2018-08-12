@@ -18,83 +18,83 @@ import org.jetbrains.annotations.NotNull;
 @TileRegister("modular_frame")
 public class TileModularFrame extends TileModTickable {
 
-    private static final String NBTMODULE =  "framemodule";
-    private static final String NBTMODULEDATA =  "framemoduledata";
+	private static final String NBTMODULE = "framemodule";
+	private static final String NBTMODULEDATA = "framemoduledata";
 
-    @Save
-    public int rotation = 0;
+	@Save
+	public int rotation = 0;
 
-    public ModuleFrameBase module;
+	public ModuleFrameBase module;
 
-    public TileModularFrame() {
-        setModule(new ModuleItem());
-    }
+	public TileModularFrame() {
+		setModule(new ModuleItem());
+	}
 
-    public void setModule(ModuleFrameBase mod) {
-        module = mod;
-        module.setTile(this);
-    }
+	public void setModule(ModuleFrameBase mod) {
+		module = mod;
+		module.setTile(this);
+	}
 
-    public EnumFacing blockFacing() {
-        return world.getBlockState(pos).getValue(BlockModularFrame.FACING);
-    }
+	public EnumFacing blockFacing() {
+		return world.getBlockState(pos).getValue(BlockModularFrame.FACING);
+	}
 
-    public TileEntity getNeighbor(EnumFacing facing) {
-        return world.getTileEntity(pos.offset(facing));
-    }
+	public TileEntity getNeighbor(EnumFacing facing) {
+		return world.getTileEntity(pos.offset(facing));
+	}
 
-    public void rotate(EntityPlayer player) {
-        if (player.isSneaking()) {
-        rotation += 1;
-    } else {
-        rotation -= 1;
-    }
-        if(rotation >= 4 || rotation <= -4) rotation = 0;
-        markDirty();
-    }
+	public void rotate(EntityPlayer player) {
+		if (player.isSneaking()) {
+			rotation += 1;
+		} else {
+			rotation -= 1;
+		}
+		if (rotation >= 4 || rotation <= -4) rotation = 0;
+		markDirty();
+	}
 
-    @Override
-    public void tick() {
-        module.tick(world, pos);
-    }
+	@Override
+	public void tick() {
+		module.tick(world, pos);
+	}
 
-    @Override
-    public void writeCustomNBT(@NotNull NBTTagCompound cmp, boolean sync) {
-        super.writeCustomNBT(cmp, sync);
-        cmp.setString(NBTMODULE, ModuleRegistry.getModuleId(module.getClass()));
-        cmp.setTag(NBTMODULEDATA, module.serializeNBT());
-    }
+	@Override
+	public void writeCustomNBT(@NotNull NBTTagCompound cmp, boolean sync) {
+		super.writeCustomNBT(cmp, sync);
+		cmp.setString(NBTMODULE, ModuleRegistry.getModuleId(module.getClass()));
+		cmp.setTag(NBTMODULEDATA, module.serializeNBT());
+	}
 
-    @Override
-    public void readCustomNBT(@NotNull NBTTagCompound cmp) {
-        super.readCustomNBT(cmp);
-        if (ModuleRegistry.getModuleId(module.getClass()).equals(cmp.getString(NBTMODULE))) {
-            module.deserializeNBT(cmp.getCompoundTag(NBTMODULEDATA));
-        } else {
-            module = ModuleRegistry.createModuleInstance(cmp.getString(NBTMODULE));
-            module.deserializeNBT(cmp.getCompoundTag(NBTMODULEDATA));
-            module.setTile(this);
-            cmp.removeTag(NBTMODULEDATA);
-        }
-    }
+	@Override
+	public void readCustomNBT(@NotNull NBTTagCompound cmp) {
+		super.readCustomNBT(cmp);
+		if (ModuleRegistry.getModuleId(module.getClass()).equals(cmp.getString(NBTMODULE))) {
+			module.deserializeNBT(cmp.getCompoundTag(NBTMODULEDATA));
+		} else {
+			module = ModuleRegistry.createModuleInstance(cmp.getString(NBTMODULE));
+			module.deserializeNBT(cmp.getCompoundTag(NBTMODULEDATA));
+			module.setTile(this);
+			cmp.removeTag(NBTMODULEDATA);
+		}
+	}
 
-    @Override
-    public void writeCustomBytes(ByteBuf buf, boolean sync) {
-        if (module == null) CommonUtilMethods.writeNullSignature(buf);
-        else {
-            CommonUtilMethods.writeNonnullSignature(buf);
-            CommonUtilMethods.writeString(buf, ModuleRegistry.getModuleId(module.getClass()));
-            CommonUtilMethods.writeTag(buf, module.serializeNBT());
-        }
-    }
+	@Override
+	public void writeCustomBytes(ByteBuf buf, boolean sync) {
+		if (module == null) CommonUtilMethods.writeNullSignature(buf);
+		else {
+			CommonUtilMethods.writeNonnullSignature(buf);
+			CommonUtilMethods.writeString(buf, ModuleRegistry.getModuleId(module.getClass()));
+			CommonUtilMethods.writeTag(buf, module.serializeNBT());
+		}
+	}
 
-    @Override
-    public void readCustomBytes(ByteBuf buf) {
-        if (CommonUtilMethods.hasNullSignature(buf)) module = null;
-        else {
-            module = ModuleRegistry.createModuleInstance(CommonUtilMethods.readString(buf));
-            module.setTile(this);
-            module.deserializeNBT(CommonUtilMethods.readTag(buf));
-        }
-    }
+	@Override
+	public void readCustomBytes(ByteBuf buf) {
+		if (CommonUtilMethods.hasNullSignature(buf)) module = null;
+		else {
+			module = ModuleRegistry.createModuleInstance(CommonUtilMethods.readString(buf));
+			module.setTile(this);
+			module.deserializeNBT(CommonUtilMethods.readTag(buf));
+		}
+	}
 }

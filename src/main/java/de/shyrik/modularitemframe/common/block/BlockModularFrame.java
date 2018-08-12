@@ -4,7 +4,6 @@ import com.teamwizardry.librarianlib.features.base.block.tile.BlockModContainer;
 import de.shyrik.modularitemframe.api.ModuleRegistry;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.item.ItemModule;
-import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -38,152 +37,154 @@ import javax.annotation.Nonnull;
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
 public class BlockModularFrame extends BlockModContainer implements IProbeInfoAccessor {
 
-    public static final PropertyEnum<EnumFacing> FACING = PropertyEnum.create("facing", EnumFacing.class);
+	public static final PropertyEnum<EnumFacing> FACING = PropertyEnum.create("facing", EnumFacing.class);
 
-    private static final AxisAlignedBB UP_AABB = new AxisAlignedBB(0.125D, 1.0D, 0.125D, 0.875D, 0.895D, 0.875D);
-    private static final AxisAlignedBB DOWN_AABB = new AxisAlignedBB(0.125D, 0.0D, 0.125D, 0.875D, 0.11D, 0.875D);
-    private static final AxisAlignedBB NORTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 0.0D, 0.875D, 0.875D, 0.11D);
-    private static final AxisAlignedBB SOUTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 1.0D, 0.875D, 0.875D, 0.895D);
-    private static final AxisAlignedBB EAST_AABB = new AxisAlignedBB(0.895D, 0.125D, 0.125D, 1.0D, 0.875D, 0.875D);
-    private static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.0D, 0.125D, 0.125D, 0.11D, 0.875D, 0.875D);
+	private static final AxisAlignedBB UP_AABB = new AxisAlignedBB(0.125D, 1.0D, 0.125D, 0.875D, 0.895D, 0.875D);
+	private static final AxisAlignedBB DOWN_AABB = new AxisAlignedBB(0.125D, 0.0D, 0.125D, 0.875D, 0.11D, 0.875D);
+	private static final AxisAlignedBB NORTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 0.0D, 0.875D, 0.875D, 0.11D);
+	private static final AxisAlignedBB SOUTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 1.0D, 0.875D, 0.875D, 0.895D);
+	private static final AxisAlignedBB EAST_AABB = new AxisAlignedBB(0.895D, 0.125D, 0.125D, 1.0D, 0.875D, 0.875D);
+	private static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.0D, 0.125D, 0.125D, 0.11D, 0.875D, 0.875D);
 
-    public BlockModularFrame() {
-        super("modular_frame", Material.WOOD);
-        setHardness(2.0F);
-        setResistance(4.0F);
-        setSoundType(SoundType.WOOD);
+	public BlockModularFrame() {
+		super("modular_frame", Material.WOOD);
+		setHardness(2.0F);
+		setResistance(4.0F);
+		setSoundType(SoundType.WOOD);
 
-        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-    }
-    @SideOnly(Side.CLIENT)
-    public void initModel() {
-        ClientRegistry.bindTileEntitySpecialRenderer(TileModularFrame.class, new FrameRenderer());
-    }
+		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+	}
 
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(@NotNull World world, @NotNull IBlockState state) {
-        return new TileModularFrame();
-    }
+	@SideOnly(Side.CLIENT)
+	public void initModel() {
+		ClientRegistry.bindTileEntitySpecialRenderer(TileModularFrame.class, new FrameRenderer());
+	}
 
-    private TileModularFrame getTE(@Nonnull World world, @Nonnull BlockPos pos) {
-        return (TileModularFrame) world.getTileEntity(pos);
-    }
+	@Nullable
+	@Override
+	public TileEntity createTileEntity(@NotNull World world, @NotNull IBlockState state) {
+		return new TileModularFrame();
+	}
 
-    @Override
-    public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
-        getTE(worldIn, pos).module.onBlockClicked(worldIn, pos, playerIn);
-    }
+	private TileModularFrame getTE(@Nonnull World world, @Nonnull BlockPos pos) {
+		return (TileModularFrame) world.getTileEntity(pos);
+	}
 
-    @Override
-    public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        ItemStack held = playerIn.getHeldItem(hand);
-        TileModularFrame tile = getTE(worldIn, pos);
-        if (held.getItem() instanceof ItemModule) {
-            if (!worldIn.isRemote) {
-                tile.setModule(ModuleRegistry.createModuleInstance(((ItemModule) held.getItem()).moduleId));
-                held.setCount(held.getCount() - 1);
-                tile.markDirty();
-            }
-        }  else {
-            tile.module.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
-        }
-        return true;
-    }
+	@Override
+	public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
+		getTE(worldIn, pos).module.onBlockClicked(worldIn, pos, playerIn);
+	}
 
-    @Override
-    @Optional.Method(modid = "theoneprobe")
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        getTE(world, data.getPos()).module.addProbeInfo(mode, probeInfo, player, world, blockState, data);
-    }
+	@Override
+	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+		ItemStack held = playerIn.getHeldItem(hand);
+		TileModularFrame tile = getTE(worldIn, pos);
+		if (held.getItem() instanceof ItemModule) {
+			if (!worldIn.isRemote) {
+				tile.setModule(ModuleRegistry.createModuleInstance(((ItemModule) held.getItem()).moduleId));
+				held.setCount(held.getCount() - 1);
+				tile.markDirty();
+			}
+		} else {
+			tile.module.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
+		}
+		return true;
+	}
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean isFullBlock(IBlockState state) {
-        return false;
-    }
+	@Override
+	@Optional.Method(modid = "theoneprobe")
+	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+		getTE(world, data.getPos()).module.addProbeInfo(mode, probeInfo, player, world, blockState, data);
+	}
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean isFullCube(IBlockState state){
-        return false;
-    }
+	@Override
+	@SuppressWarnings("deprecation")
+	public boolean isFullBlock(IBlockState state) {
+		return false;
+	}
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
+	@Override
+	@SuppressWarnings("deprecation")
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
 
-    @Override
-    public boolean isPassable(IBlockAccess worldIn, BlockPos pos) {
-        return true;
-    }
+	@Override
+	@SuppressWarnings("deprecation")
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
 
-    @Override
-    @Nonnull
-    @SuppressWarnings("deprecation")
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        switch (state.getValue(FACING)) {
-            case UP:
-                return UP_AABB;
-            case DOWN:
-                return DOWN_AABB;
-            case NORTH:
-                return NORTH_AABB;
-            case SOUTH:
-                return SOUTH_AABB;
-            case EAST:
-                return EAST_AABB;
-            case WEST:
-                return WEST_AABB;
-        }
-        return FULL_BLOCK_AABB;
-    }
+	@Override
+	public boolean isPassable(IBlockAccess worldIn, BlockPos pos) {
+		return true;
+	}
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
-        return getBoundingBox(state, world, pos);
-    }
+	@Override
+	@Nonnull
+	@SuppressWarnings("deprecation")
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		switch (state.getValue(FACING)) {
+			case UP:
+				return UP_AABB;
+			case DOWN:
+				return DOWN_AABB;
+			case NORTH:
+				return NORTH_AABB;
+			case SOUTH:
+				return SOUTH_AABB;
+			case EAST:
+				return EAST_AABB;
+			case WEST:
+				return WEST_AABB;
+		}
+		return FULL_BLOCK_AABB;
+	}
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public @Nonnull IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return this.getStateFromMeta(meta).withProperty(FACING, facing.getOpposite());
-    }
+	@Override
+	@SuppressWarnings("deprecation")
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
+		return getBoundingBox(state, world, pos);
+	}
 
-    @Override
-    @Nonnull
-    @SuppressWarnings("deprecation")
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(FACING, EnumFacing.getFront(meta & 7));
-    }
+	@Override
+	@SuppressWarnings("deprecation")
+	public @Nonnull
+	IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+		return this.getStateFromMeta(meta).withProperty(FACING, facing.getOpposite());
+	}
 
-    @Override
-    public boolean canPlaceBlockOnSide(@Nonnull World worldIn, @Nonnull BlockPos pos, EnumFacing side) {
-        return !worldIn.isAirBlock(pos.offset(side.getOpposite()));
-    }
+	@Override
+	@Nonnull
+	@SuppressWarnings("deprecation")
+	public IBlockState getStateFromMeta(int meta) {
+		return getDefaultState().withProperty(FACING, EnumFacing.getFront(meta & 7));
+	}
 
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(FACING).getIndex();
-    }
+	@Override
+	public boolean canPlaceBlockOnSide(@Nonnull World worldIn, @Nonnull BlockPos pos, EnumFacing side) {
+		return !worldIn.isAirBlock(pos.offset(side.getOpposite()));
+	}
 
-    @Override
-    @SuppressWarnings("deprecation")
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        BlockPos attachedPos = pos.offset(state.getValue(FACING));
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return state.getValue(FACING).getIndex();
+	}
 
-        if (worldIn.isAirBlock(attachedPos)) {
-            dropBlockAsItem(worldIn, pos, state, 0);
-            worldIn.setBlockToAir(pos);
-        }
-    }
+	@Override
+	@SuppressWarnings("deprecation")
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+		BlockPos attachedPos = pos.offset(state.getValue(FACING));
 
-    @Override
-    @Nonnull
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING);
-    }
+		if (worldIn.isAirBlock(attachedPos)) {
+			dropBlockAsItem(worldIn, pos, state, 0);
+			worldIn.setBlockToAir(pos);
+		}
+	}
+
+	@Override
+	@Nonnull
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, FACING);
+	}
 }

@@ -24,5 +24,7 @@ public class GhostSlot extends Slot {
 	}
 
 	@Override
-	public int getItemStackLimit(@Nonnull ItemStack stack) { return 1; }
+	public int getItemStackLimit(@Nonnull ItemStack stack) {
+		return 1;
+	}
 }

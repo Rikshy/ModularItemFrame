@@ -10,13 +10,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @Mod.EventBusSubscriber
 public class EventHandler {
 
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    public static void registerTex(TextureStitchEvent.Pre event) {
-        event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/crafting_frame_bg"));
-        event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg"));
-        event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/nullify_frame_bg"));
-        event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank_frame_bg"));
-        //event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg"));
-    }
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public static void registerTex(TextureStitchEvent.Pre event) {
+		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/crafting_frame_bg"));
+		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg"));
+		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/nullify_frame_bg"));
+		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank_frame_bg"));
+	}
 }

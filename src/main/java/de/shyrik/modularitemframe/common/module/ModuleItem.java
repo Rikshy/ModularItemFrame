@@ -20,79 +20,79 @@ import javax.annotation.Nonnull;
 
 public class ModuleItem extends ModuleFrameBase {
 
-    private static final String NBT_DISPLAY = "display";
-    private static final String NBT_ROTATION = "rotation";
+	private static final String NBT_DISPLAY = "display";
+	private static final String NBT_ROTATION = "rotation";
 
-    public int rotation = 0;
-    public ItemStack displayItem = ItemStack.EMPTY;
+	public int rotation = 0;
+	public ItemStack displayItem = ItemStack.EMPTY;
 
-    @Nonnull
-    public ResourceLocation getModelLocation() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg");
-    }
+	@Nonnull
+	public ResourceLocation getModelLocation() {
+		return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg");
+	}
 
-    @Override
-    public String getModuleName() {
-        return I18n.format("modularitemframe.module.item");
-    }
+	@Override
+	public String getModuleName() {
+		return I18n.format("modularitemframe.module.item");
+	}
 
-    protected float scale = 0.9f;
-    protected float offset = 0.05F;
+	protected float scale = 0.9f;
+	protected float offset = 0.05F;
 
-    public void rotate(EntityPlayer player) {
-        if (player.isSneaking()) {
-            rotation += 20;
-        } else {
-            rotation -= 20;
-        }
-        if(rotation >= 360 || rotation <= -360) rotation = 0;
-        tile.markDirty();
-    }
+	public void rotate(EntityPlayer player) {
+		if (player.isSneaking()) {
+			rotation += 20;
+		} else {
+			rotation -= 20;
+		}
+		if (rotation >= 360 || rotation <= -360) rotation = 0;
+		tile.markDirty();
+	}
 
-    @Override
-    public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
-        GlStateManager.scale(scale, scale, scale);
-        GlStateManager.pushMatrix();
+	@Override
+	public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
+		GlStateManager.scale(scale, scale, scale);
+		GlStateManager.pushMatrix();
 
-        RenderUtils.renderItem(displayItem, tile.blockFacing(), rotation, offset);
+		RenderUtils.renderItem(displayItem, tile.blockFacing(), rotation, offset);
 
-        GlStateManager.popMatrix();
-        GlStateManager.popMatrix();
-    }
+		GlStateManager.popMatrix();
+		GlStateManager.popMatrix();
+	}
 
-    @Override
-    public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
-        if(!worldIn.isRemote) {
-            rotate(playerIn);
-            tile.markDirty();
-        }
-    }
+	@Override
+	public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
+		if (!worldIn.isRemote) {
+			rotate(playerIn);
+			tile.markDirty();
+		}
+	}
 
-    @Override
-    public void onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!worldIn.isRemote) {
-            if(!playerIn.isSneaking()) {
-                ItemStack copy = playerIn.getHeldItem(hand).copy();
-                copy.setCount(1);
-                displayItem = copy;
-                tile.markDirty();
-            }
-        }
-    }
+	@Override
+	public void onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (!worldIn.isRemote) {
+			if (!playerIn.isSneaking()) {
+				ItemStack copy = playerIn.getHeldItem(hand).copy();
+				copy.setCount(1);
+				displayItem = copy;
+				tile.markDirty();
+			}
+		}
+	}
 
-    @Override
-    public NBTTagCompound serializeNBT() {
-        NBTTagCompound compound = new NBTTagCompound();
-        compound.setTag(NBT_DISPLAY, displayItem.serializeNBT());
-        compound.setInteger("rotation", rotation);
-        return compound;
-    }
+	@Override
+	public NBTTagCompound serializeNBT() {
+		NBTTagCompound compound = new NBTTagCompound();
+		compound.setTag(NBT_DISPLAY, displayItem.serializeNBT());
+		compound.setInteger("rotation", rotation);
+		return compound;
+	}
 
-    @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
-        if (nbt.hasKey(NBT_DISPLAY)) displayItem = new ItemStack(nbt.getCompoundTag(NBT_DISPLAY));
-        if (nbt.hasKey(NBT_ROTATION)) rotation = nbt.getInteger(NBT_ROTATION);
-    }
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt) {
+		if (nbt.hasKey(NBT_DISPLAY)) displayItem = new ItemStack(nbt.getCompoundTag(NBT_DISPLAY));
+		if (nbt.hasKey(NBT_ROTATION)) rotation = nbt.getInteger(NBT_ROTATION);
+	}
 }

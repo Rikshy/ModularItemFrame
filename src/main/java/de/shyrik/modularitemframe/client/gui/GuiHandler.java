@@ -20,7 +20,7 @@ public class GuiHandler implements IGuiHandler {
 
 		switch (ID) {
 			case CRAFTING_FRAME:
-				if (tileEntity instanceof TileModularFrame && ((TileModularFrame)tileEntity).module instanceof ModuleCrafting) {
+				if (tileEntity instanceof TileModularFrame && ((TileModularFrame) tileEntity).module instanceof ModuleCrafting) {
 					return ((TileModularFrame) tileEntity).module.createContainer(player);
 				}
 
@@ -35,7 +35,7 @@ public class GuiHandler implements IGuiHandler {
 		final TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
 		switch (ID) {
 			case CRAFTING_FRAME:
-				if (tileEntity instanceof TileModularFrame && ((TileModularFrame)tileEntity).module instanceof ModuleCrafting)
+				if (tileEntity instanceof TileModularFrame && ((TileModularFrame) tileEntity).module instanceof ModuleCrafting)
 					return new GuiCraftingFrame(((TileModularFrame) tileEntity).module.createContainer(player));
 				break;
 		}
