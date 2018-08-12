@@ -70,6 +70,13 @@ public class ModuleItem extends ModuleFrameBase {
 		}
 	}
 
+	public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
+		if (!world.isRemote) {
+			rotate(playerIn);
+			tile.markDirty();
+		}
+	}
+
 	@Override
 	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {

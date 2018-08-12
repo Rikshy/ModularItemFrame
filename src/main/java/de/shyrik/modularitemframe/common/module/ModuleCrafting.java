@@ -61,6 +61,14 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 	}
 
 	@Override
+	public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
+		if(!world.isRemote) {
+			playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, world, pos.getX(), pos.getY(), pos.getZ());
+			tile.markDirty();
+		}
+	}
+
+	@Override
 	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {
 			if (!hasValidRecipe(playerIn))
@@ -130,11 +138,6 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 		FrameCrafting fc = new FrameCrafting(new ContainerCraftingFrame(null, ghostInventory, player, this), ghostInventory, 3, 3);
 		fc.onCraftMatrixChanged();
 	}
-
-	/*if(!worldIn.isRemote && placer instanceof EntityPlayer) {
-		((EntityPlayer) placer).openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, worldIn, pos.getX(), pos.getY(), pos.getZ());
-		getTE(worldIn, pos).markDirty();
-	}*/
 
 	@Override
 	public boolean isUsableByPlayer(EntityPlayer player) {

@@ -66,12 +66,6 @@ public abstract class ModuleFluid extends ModuleFrameBase {
 	}
 
 	@Override
-	public boolean hasScrewInteraction() {
-		return true;
-	}
-
-
-	@Override
 	public NBTTagCompound serializeNBT() {
 		NBTTagCompound compound = new NBTTagCompound();
 		compound.setTag(NBT_TANK, tank.serializeNBT());

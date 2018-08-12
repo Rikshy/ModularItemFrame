@@ -78,12 +78,7 @@ public class ModuleTeleport extends ModuleFrameBase {
 	}
 
 	@Override
-	public boolean hasScrewInteraction() {
-		return true;
-	}
-
-	@Override
-	public void screw(@Nonnull EntityPlayer playerIn, ItemStack driver) {
+	public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
 		NBTTagCompound nbt = driver.getTagCompound();
 		if (playerIn.isSneaking()) {
 			if (nbt == null) nbt = new NBTTagCompound();
@@ -129,9 +124,7 @@ public class ModuleTeleport extends ModuleFrameBase {
 
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
-		if (nbt.hasKey(NBT_LINKX)) {
+		if (nbt.hasKey(NBT_LINKX))
 			linkedLoc = new BlockPos(nbt.getInteger(NBT_LINKX), nbt.getInteger(NBT_LINKY), nbt.getInteger(NBT_LINKZ));
-
-		}
 	}
 }

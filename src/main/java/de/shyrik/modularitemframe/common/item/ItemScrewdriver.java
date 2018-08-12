@@ -27,7 +27,7 @@ public class ItemScrewdriver extends ItemMod {
 			if (!world.isRemote) {
 				TileModularFrame tile = (TileModularFrame) tmp;
 				if (tile.module.hasScrewInteraction()) {
-					tile.module.screw(player, player.getHeldItem(hand));
+					tile.module.screw(world, pos, player, player.getHeldItem(hand));
 				} else {
 					//tile.rotate(player);
 				}

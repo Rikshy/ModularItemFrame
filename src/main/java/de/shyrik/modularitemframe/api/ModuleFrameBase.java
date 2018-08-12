@@ -64,10 +64,10 @@ public abstract class ModuleFrameBase implements INBTSerializable<NBTTagCompound
 	}
 
 	public boolean hasScrewInteraction() {
-		return false;
+		return true;
 	}
 
-	public void screw(@Nonnull EntityPlayer playerIn, ItemStack driver) {
+	public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
 
 	}
 
