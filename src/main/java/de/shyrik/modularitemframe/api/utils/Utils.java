@@ -13,6 +13,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class Utils {
 
@@ -163,5 +164,23 @@ public class Utils {
 		EntityItem item = new EntityItem(world, position.x, position.y, position.z, stack);
 		item.setVelocity(velocity.x, velocity.y, velocity.z);
 		world.spawnEntity(item);
+	}
+
+	public static boolean increaseStackinList(List<ItemStack> list, ItemStack stack) {
+		int idx = listContainsItemStackEqual(list, stack);
+		if (idx >= 0) {
+			ItemStack listStack = list.get(idx);
+			listStack.setCount(listStack.getCount() + stack.getCount());
+			return true;
+		}
+		return false;
+	}
+
+	public static int listContainsItemStackEqual(List<ItemStack> list, ItemStack stack) {
+		for(int i = 0; i < list.size(); ++i) {
+			if (simpleAreItemsEqual(stack, list.get(i)))
+				return i;
+		}
+		return -1;
 	}
 }

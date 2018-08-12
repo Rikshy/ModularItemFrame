@@ -22,10 +22,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
@@ -36,6 +33,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
@@ -150,8 +148,16 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 		super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
 		if (recipe != null && !recipe.getRecipeOutput().isEmpty()) {
 			IProbeInfo input = probeInfo.horizontal().text("Input:");
+			List<ItemStack> stacks = new ArrayList<>();
 			for (int slot = 0; slot < ghostInventory.getSlots(); ++slot) {
-				if (!ghostInventory.getStackInSlot(slot).isEmpty()) input.item(ghostInventory.getStackInSlot(slot));
+				ItemStack stack = ghostInventory.getStackInSlot(slot);
+				if (!stack.isEmpty()) {
+					if (!Utils.increaseStackinList(stacks, stack))
+						stacks.add(stack.copy());
+				}
+			}
+			for (ItemStack stack : stacks) {
+				input.item(stack);
 			}
 			probeInfo.horizontal().text("output:").item(recipe.getRecipeOutput());
 		}
