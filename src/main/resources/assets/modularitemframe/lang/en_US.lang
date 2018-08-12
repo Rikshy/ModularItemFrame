@@ -15,6 +15,7 @@ modularitemframe.message.too_far=[ModularItemFrame] Target destination is too fa
 modularitemframe.message.link_established=[ModularItemFrame] Link established
 modularitemframe.message.loc_saved=[ModularItemFrame] Location saved
 modularitemframe.message.range_change=[ModularItemFrame] Dropper range changed to %d
+modularitemframe.message.tank_mode_change=[ModularItemFrame] Tank mode changed to %s
 
 modularitemframe.module.item=Item
 modularitemframe.module.craft=Crafting
@@ -24,5 +25,6 @@ modularitemframe.module.tele=Teleport
 
 modularitemframe.tooltip.module=Module: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb
+modularitemframe.tooltip.tankmode=Tankmode: %s
 
 item_group.modularitemframe=ModularItemFrame

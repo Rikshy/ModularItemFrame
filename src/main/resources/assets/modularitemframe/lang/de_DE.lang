@@ -15,6 +15,7 @@ modularitemframe.message.too_far=[ModularItemFrame] Zielort ist zu weit entfernt
 modularitemframe.message.link_established=[ModularItemFrame] Verbindung hergestellt
 modularitemframe.message.loc_saved=[ModularItemFrame] Position gespeichert
 modularitemframe.message.range_change=[ModularItemFrame] Spenderreichweite verändert auf %d
+modularitemframe.message.tank_mode_change=[ModularItemFrame] Tank modus verändert zu %s
 
 modularitemframe.module.item=Item
 modularitemframe.module.craft=Crafting
@@ -24,5 +25,6 @@ modularitemframe.module.tele=Teleport
 
 modularitemframe.tooltip.module=Modul: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb
+modularitemframe.tooltip.tankmode=Tankmodus: %s
 
 item_group.modularitemframe=ModularItemFrame
