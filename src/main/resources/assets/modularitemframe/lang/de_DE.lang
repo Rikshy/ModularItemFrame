@@ -26,5 +26,6 @@ modularitemframe.module.tele=Teleport
 modularitemframe.tooltip.module=Modul: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb
 modularitemframe.tooltip.tankmode=Tankmodus: %s
+modularitemframe.tooltip.tele_valid=Valides Ziel: %s
 
 item_group.modularitemframe=ModularItemFrame
