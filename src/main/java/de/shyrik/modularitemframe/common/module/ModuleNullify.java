@@ -1,6 +1,6 @@
 package de.shyrik.modularitemframe.common.module;
 
-import de.shyrik.modularitemframe.ConfigValues;
+import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import net.minecraft.block.state.IBlockState;

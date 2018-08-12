@@ -1,6 +1,6 @@
 package de.shyrik.modularitemframe.common.module;
 
-import de.shyrik.modularitemframe.ConfigValues;
+import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleFrameBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
@@ -40,7 +40,7 @@ public class ModuleDrop extends ModuleFrameBase {
 
 	@Override
 	public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
-		if(!world.isRemote && ConfigValues.AddDropperRange > 0) {
+		if (!world.isRemote && ConfigValues.AddDropperRange > 0) {
 			if (playerIn.isSneaking()) range--;
 			else range++;
 			if (range < 0) range = ConfigValues.AddDropperRange;

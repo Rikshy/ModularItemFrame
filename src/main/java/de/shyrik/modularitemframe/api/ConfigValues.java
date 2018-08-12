@@ -1,4 +1,4 @@
-package de.shyrik.modularitemframe;
+package de.shyrik.modularitemframe.api;
 
 import com.teamwizardry.librarianlib.features.config.ConfigIntRange;
 import com.teamwizardry.librarianlib.features.config.ConfigProperty;

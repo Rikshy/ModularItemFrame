@@ -179,9 +179,8 @@ public class ItemUtils {
 	}
 
 	public static int listContainsItemStackEqual(List<ItemStack> list, ItemStack stack) {
-		for(int i = 0; i < list.size(); ++i) {
-			if (simpleAreItemsEqual(stack, list.get(i)))
-				return i;
+		for (int i = 0; i < list.size(); ++i) {
+			if (simpleAreItemsEqual(stack, list.get(i))) return i;
 		}
 		return -1;
 	}

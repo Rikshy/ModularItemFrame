@@ -1,6 +1,6 @@
 package de.shyrik.modularitemframe.common.module;
 
-import de.shyrik.modularitemframe.ConfigValues;
+import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleFrameBase;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
@@ -9,7 +9,6 @@ import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
-import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
@@ -61,7 +60,8 @@ public class ModuleTeleport extends ModuleFrameBase {
 		if (!worldIn.isRemote) {
 			if (hasValidConnection(worldIn, playerIn)) {
 				BlockPos target;
-				if (tile.blockFacing().getAxis().isHorizontal() || tile.blockFacing() == EnumFacing.UP) target = linkedLoc.offset(EnumFacing.DOWN);
+				if (tile.blockFacing().getAxis().isHorizontal() || tile.blockFacing() == EnumFacing.UP)
+					target = linkedLoc.offset(EnumFacing.DOWN);
 				else target = linkedLoc;
 
 				for (int i = 0; i < 64; i++)

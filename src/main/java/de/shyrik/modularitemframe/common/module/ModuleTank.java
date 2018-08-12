@@ -1,6 +1,6 @@
 package de.shyrik.modularitemframe.common.module;
 
-import de.shyrik.modularitemframe.ConfigValues;
+import de.shyrik.modularitemframe.api.ConfigValues;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
@@ -43,7 +43,7 @@ public class ModuleTank extends ModuleFluid {
 
 	@Override
 	public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
-		if(!world.isRemote) {
+		if (!world.isRemote) {
 			if (ConfigValues.TankTransferRate > 0) {
 				int modeIdx = mode.getIndex() + 1;
 				if (modeIdx == EnumMode.values().length) modeIdx = 0;
@@ -72,8 +72,7 @@ public class ModuleTank extends ModuleFluid {
 				if (handler != null) {
 					if (mode == EnumMode.DRAIN)
 						FluidUtil.tryFluidTransfer(tank, handler, ConfigValues.TankTransferRate, true);
-					else
-						FluidUtil.tryFluidTransfer(handler, tank, ConfigValues.TankTransferRate, true);
+					else FluidUtil.tryFluidTransfer(handler, tank, ConfigValues.TankTransferRate, true);
 					tile.markDirty();
 				}
 			}
@@ -109,13 +108,12 @@ public class ModuleTank extends ModuleFluid {
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
 		super.deserializeNBT(nbt);
-		if (nbt.hasKey(NBT_MODE)) mode = ConfigValues.TankTransferRate > 0 ? EnumMode.VALUES[nbt.getInteger(NBT_MODE)] : EnumMode.NONE;
+		if (nbt.hasKey(NBT_MODE))
+			mode = ConfigValues.TankTransferRate > 0 ? EnumMode.VALUES[nbt.getInteger(NBT_MODE)] : EnumMode.NONE;
 	}
 
 	public enum EnumMode {
-		NONE(0, "none"),
-		DRAIN(1, "input"),
-		PUSH(2, "output");
+		NONE(0, "none"), DRAIN(1, "input"), PUSH(2, "output");
 
 		public static final EnumMode[] VALUES = new EnumMode[3];
 
@@ -126,18 +124,17 @@ public class ModuleTank extends ModuleFluid {
 			index = indexIn;
 			name = nameIn;
 		}
-		public int getIndex()
-		{
+
+		public int getIndex() {
 			return this.index;
 		}
-		public String getName()
-		{
+
+		public String getName() {
 			return this.name;
 		}
 
 
-		static
-		{
+		static {
 			for (EnumMode enummode : values())
 				VALUES[enummode.index] = enummode;
 		}

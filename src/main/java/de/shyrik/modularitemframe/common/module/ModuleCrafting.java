@@ -1,6 +1,6 @@
 package de.shyrik.modularitemframe.common.module;
 
-import de.shyrik.modularitemframe.ConfigValues;
+import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.client.gui.GuiHandler;
@@ -62,7 +62,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 
 	@Override
 	public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
-		if(!world.isRemote) {
+		if (!world.isRemote) {
 			playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, world, pos.getX(), pos.getY(), pos.getZ());
 			tile.markDirty();
 		}
@@ -155,8 +155,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 			for (int slot = 0; slot < ghostInventory.getSlots(); ++slot) {
 				ItemStack stack = ghostInventory.getStackInSlot(slot);
 				if (!stack.isEmpty()) {
-					if (!ItemUtils.increaseStackinList(stacks, stack))
-						stacks.add(stack.copy());
+					if (!ItemUtils.increaseStackinList(stacks, stack)) stacks.add(stack.copy());
 				}
 			}
 			for (ItemStack stack : stacks) {
