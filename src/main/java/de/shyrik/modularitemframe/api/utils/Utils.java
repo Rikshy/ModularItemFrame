@@ -165,5 +165,4 @@ public class Utils {
 		item.setVelocity( velocity.x, velocity.y, velocity.z);
 		world.spawnEntity(item);
 	}
-
 }

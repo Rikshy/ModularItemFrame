@@ -9,6 +9,7 @@ import de.shyrik.modularitemframe.api.ModuleRegistry;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.module.ModuleItem;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -40,6 +41,16 @@ public class TileModularFrame extends TileModTickable {
 
     public TileEntity getNeighbor(EnumFacing facing) {
         return world.getTileEntity(pos.offset(facing));
+    }
+
+    public void rotate(EntityPlayer player) {
+        if (player.isSneaking()) {
+        rotation += 1;
+    } else {
+        rotation -= 1;
+    }
+        if(rotation >= 4 || rotation <= -4) rotation = 0;
+        markDirty();
     }
 
     @Override

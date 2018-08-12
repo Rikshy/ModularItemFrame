@@ -20,4 +20,8 @@ public final class ConfigValues {
 	@ConfigIntRange(min = 1000, max = 32000)
 	@ConfigProperty(category = "general", comment = "Fluid Capacity of the tank frame (mB)")
 	public static int TankFrameCapacity = 4000;
+
+	@ConfigIntRange(min = 0, max = 1000)
+	@ConfigProperty(category = "general", comment = "Maximum teleport distance of the teleport module")
+	public static int MaxTeleportRange = 64;
 }

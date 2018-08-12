@@ -1,14 +1,18 @@
 tile.modularitemframe:modular_frame.name=Modular Frame
 
+item.modularitemframe:screwdriver.name=Screwdriver
 item.modularitemframe:module_item.name=Item Module
 item.modularitemframe:module_craft.name=Crafting Module
 item.modularitemframe:module_nullify.name=Nullify Module
 item.modularitemframe:module_tele.name=Teleport Module
 item.modularitemframe:module_tank.name=Tank Module
 
-modularitemframe.message.no_target=No target location set - use the screwdriver
-modularitemframe.message.invalid_target=No Ender Frame at target location
-modularitemframe.message.location_blocked=Target location is blocked
+modularitemframe.message.no_target=[ModularItemFrame] No target location set - use the screwdriver
+modularitemframe.message.invalid_target=[ModularItemFrame] No Ender Frame at target location
+modularitemframe.message.location_blocked=[ModularItemFrame] Target location is blocked
+modularitemframe.message.too_far=[ModularItemFrame] Target destination is too far away (Max %s)
+modularitemframe.message.link_established=[ModularItemFrame] Link established
+modularitemframe.message.loc_saved=[ModularItemFrame] Location saved
 
 modularitemframe.module.item=Item
 modularitemframe.module.craft=Crafting

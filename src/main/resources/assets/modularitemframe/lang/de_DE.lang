@@ -1,14 +1,18 @@
 tile.modularitemframe:modular_frame.name=Modularer Rahmen
 
+item.modularitemframe:screwdriver.name=Schraubendreher
 item.modularitemframe:module_item.name=Item Modul
 item.modularitemframe:module_craft.name=Crafting Modul
 item.modularitemframe:module_nullify.name=Nullify Modul
 item.modularitemframe:module_tele.name=Teleport Modul
 item.modularitemframe:module_tank.name=Tank Modul
 
-modularitemframe.message.no_target=Keine Zielposition gesetzt - benutze dafür den Schraubenzieher
-modularitemframe.message.invalid_target=Kein Ender Rahmen an der Zielposition
-modularitemframe.message.location_blocked=Zielposition ist blockiert
+modularitemframe.message.no_target=[ModularItemFrame] Keine Zielposition gesetzt - benutze dafür den Schraubenzieher
+modularitemframe.message.invalid_target=[ModularItemFrame] Kein Ender Rahmen an der Zielposition
+modularitemframe.message.location_blocked=[ModularItemFrame] Zielposition ist blockiert
+modularitemframe.message.too_far=[ModularItemFrame] Zielort ist zu weit entfernt (Max %s)
+modularitemframe.message.link_established=[ModularItemFrame] Verbindung hergestellt
+modularitemframe.message.loc_saved=[ModularItemFrame] Position gespeichert
 
 modularitemframe.module.item=Item
 modularitemframe.module.craft=Crafting

@@ -45,6 +45,7 @@ public class ModuleItem extends ModuleFrameBase {
         } else {
             rotation -= 20;
         }
+        if(rotation >= 360 || rotation <= -360) rotation = 0;
         tile.markDirty();
     }
 
@@ -55,7 +56,7 @@ public class ModuleItem extends ModuleFrameBase {
         GlStateManager.scale(scale, scale, scale);
         GlStateManager.pushMatrix();
 
-        RenderUtils.renderItem(displayItem, tile.blockFacing(), tile.rotation, offset);
+        RenderUtils.renderItem(displayItem, tile.blockFacing(), rotation, offset);
 
         GlStateManager.popMatrix();
         GlStateManager.popMatrix();

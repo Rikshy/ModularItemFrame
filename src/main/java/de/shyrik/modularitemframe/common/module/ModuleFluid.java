@@ -64,6 +64,11 @@ public abstract class ModuleFluid extends ModuleFrameBase {
         }
     }
 
+    @Override
+    public boolean hasScrewInteraction() {
+        return true;
+    }
+
 
     @Override
     public NBTTagCompound serializeNBT() {

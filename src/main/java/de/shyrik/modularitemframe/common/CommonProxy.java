@@ -1,12 +1,14 @@
 package de.shyrik.modularitemframe.common;
 
 import com.teamwizardry.librarianlib.features.base.ModCreativeTab;
+import com.teamwizardry.librarianlib.features.base.item.ItemMod;
 import de.shyrik.modularitemframe.ModTab;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleRegistry;
 import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.item.ItemModule;
+import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.module.*;
 import mcjty.theoneprobe.api.ITheOneProbe;
 import net.minecraft.item.ItemStack;
@@ -28,6 +30,8 @@ public class CommonProxy {
     public static ItemModule MODULE_CRAFT;
     public static ItemModule MODULE_NULL;
 
+    public static ItemScrewdriver SCREWDRIVER;
+
     public void preInit(FMLPreInitializationEvent event){
         FRAME_MODULAR = new BlockModularFrame();
         MODULE_TANK = ModuleRegistry.registerCreate("module_tank", ModuleTank.class);
@@ -35,6 +39,7 @@ public class CommonProxy {
         MODULE_TELE = ModuleRegistry.registerCreate("module_tele", ModuleTeleport.class);
         MODULE_CRAFT = ModuleRegistry.registerCreate("module_craft", ModuleCrafting.class);
         MODULE_NULL = ModuleRegistry.registerCreate("module_nullify", ModuleNullify.class);
+        SCREWDRIVER = new ItemScrewdriver();
 
         ModTab.init();
 

@@ -63,6 +63,14 @@ public abstract class ModuleFrameBase implements INBTSerializable<NBTTagCompound
 	public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
 	}
 
+	public boolean hasScrewInteraction() {
+		return false;
+	}
+
+	public void screw(@Nonnull EntityPlayer playerIn, ItemStack driver) {
+
+	}
+
 	public abstract void onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ);
 
 	public ContainerCraftingFrame createContainer(final EntityPlayer player) {
