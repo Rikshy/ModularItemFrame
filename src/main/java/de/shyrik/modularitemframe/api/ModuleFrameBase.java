@@ -24,8 +24,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.Optional;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,6 +87,10 @@ public abstract class ModuleFrameBase implements INBTSerializable<NBTTagCompound
 	}
 
 	public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
+	}
+
+	public void onRemove(@NotNull World worldIn, @NotNull BlockPos pos, @Nullable EntityPlayer playerIn) {
+
 	}
 
 	@Optional.Method(modid = "theoneprobe")

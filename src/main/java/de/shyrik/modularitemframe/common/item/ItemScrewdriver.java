@@ -44,6 +44,7 @@ public class ItemScrewdriver extends ItemMod {
 				} else {
 					Item item = Item.getByNameOrId(ModularItemFrame.MOD_ID + ":" + ModuleRegistry.getModuleId(tile.module.getClass()));
 					if (item instanceof ItemModule) {
+						tile.module.onRemove(world, pos, player);
 						ItemStack remain = ItemUtils.giveStack(ItemUtils.getPlayerInv(player), new ItemStack(item));
 						if (!remain.isEmpty())
 							ItemUtils.ejectStack(player.world, tile.getPos(), tile.blockFacing(), remain);

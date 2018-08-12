@@ -78,6 +78,12 @@ public class BlockModularFrame extends BlockModContainer implements IProbeInfoAc
 	}
 
 	@Override
+	public void breakBlock(@NotNull World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state) {
+		getTE(worldIn, pos).module.onRemove(worldIn, pos, null);
+		super.breakBlock(worldIn, pos, state);
+	}
+
+	@Override
 	@Optional.Method(modid = "theoneprobe")
 	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
 		getTE(world, data.getPos()).module.addProbeInfo(mode, probeInfo, player, world, blockState, data);

@@ -8,10 +8,12 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.SPacketSpawnExperienceOrb;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -19,8 +21,10 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 //thx openblocks and enderio
@@ -103,6 +107,14 @@ public class ModuleXP extends ModuleItem {
 
 		addExperience(-requiredXP);
 		XpUtils.addPlayerXP(player, requiredXP);
+	}
+
+	@Override
+	public void onRemove(@NotNull World worldIn, @NotNull BlockPos pos, @Nullable EntityPlayer playerIn) {
+		if(playerIn == null || playerIn instanceof FakePlayer)
+			worldIn.spawnEntity(new EntityXPOrb(worldIn, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, experience));
+		else
+			playerIn.addExperience(experience);
 	}
 
 	@Override
