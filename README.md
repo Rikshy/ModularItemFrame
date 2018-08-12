@@ -1,4 +1,5 @@
-# ModularItemFrame
+# ModularItemFrame 
+[![Build Status](https://travis-ci.org/Rikshy/ModularItemFrame.svg?branch=master)](https://travis-ci.org/Rikshy/ModularItemFrame)
 
 this mod is heavily inspired by <a href="https://minecraft.curseforge.com/projects/super-crafting-frame">Super Crafting Frames</a>! Sadly the mod never made it past 1.11, but since i loved the idea behind it i made my own take on the concept.
 
