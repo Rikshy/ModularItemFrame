@@ -2,7 +2,7 @@ package de.shyrik.modularitemframe.common.module;
 
 import de.shyrik.modularitemframe.ConfigValues;
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.utils.Utils;
+import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -49,7 +49,7 @@ public class ModuleNullify extends ModuleFluid {
 	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
 		ItemStack held = playerIn.getHeldItem(hand);
 		if (!playerIn.isSneaking() && !held.isEmpty()) {
-			if (Utils.simpleAreStacksEqual(held, lastStack)) {
+			if (ItemUtils.simpleAreStacksEqual(held, lastStack)) {
 				if (held.getCount() + lastStack.getCount() > lastStack.getMaxStackSize())
 					lastStack.setCount(lastStack.getMaxStackSize());
 				else lastStack.setCount(lastStack.getCount() + held.getCount());

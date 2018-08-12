@@ -15,7 +15,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class Utils {
+public class ItemUtils {
 
 	public static IItemHandler copyItemHandler(IItemHandler itemHandler) {
 		ItemStackHandler copy = new ItemStackHandler(itemHandler.getSlots());
@@ -38,7 +38,7 @@ public class Utils {
 	}
 
 	public static boolean canCraft(IItemHandler inventory, NonNullList<Ingredient> ingredients) {
-		IItemHandler copy = Utils.copyItemHandler(inventory);
+		IItemHandler copy = ItemUtils.copyItemHandler(inventory);
 		for (Ingredient ingredient : ingredients) {
 			if (ingredient.getMatchingStacks().length > 0) {
 				boolean found = false;
@@ -57,7 +57,7 @@ public class Utils {
 	}
 
 	public static int countPossibleCrafts(IItemHandler inventory, NonNullList<Ingredient> ingredients) {
-		IItemHandler copy = Utils.copyItemHandler(inventory);
+		IItemHandler copy = ItemUtils.copyItemHandler(inventory);
 		boolean canCraft = true;
 		int count = 0;
 		while (canCraft) {

@@ -3,7 +3,7 @@ package de.shyrik.modularitemframe.common.module;
 import de.shyrik.modularitemframe.ConfigValues;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleFrameBase;
-import de.shyrik.modularitemframe.api.utils.Utils;
+import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -55,7 +55,7 @@ public class ModuleDrop extends ModuleFrameBase {
 		if (!worldIn.isRemote) {
 			ItemStack held = playerIn.getHeldItem(hand);
 			if (!playerIn.isSneaking() && !held.isEmpty()) {
-				Utils.ejectStack(worldIn, pos, facing.getOpposite(), held.copy());
+				ItemUtils.ejectStack(worldIn, pos, facing.getOpposite(), held.copy());
 				held.setCount(0);
 			}
 		}
@@ -74,7 +74,7 @@ public class ModuleDrop extends ModuleFrameBase {
 				if (inv != null) {
 					for (int slot = 0; slot < inv.getSlots(); slot++) {
 						if (!inv.getStackInSlot(slot).isEmpty()) {
-							Utils.ejectStack(world, pos, facing, inv.getStackInSlot(slot));
+							ItemUtils.ejectStack(world, pos, facing, inv.getStackInSlot(slot));
 							inv.setStackInSlot(slot, ItemStack.EMPTY);
 							break;
 						}

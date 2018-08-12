@@ -2,7 +2,7 @@ package de.shyrik.modularitemframe.common.module;
 
 import de.shyrik.modularitemframe.ConfigValues;
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.utils.Utils;
+import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
 import de.shyrik.modularitemframe.common.container.FrameCrafting;
@@ -97,17 +97,17 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 
 		if (recipe == null) reloadRecipe(player);
 
-		if (workingInv == null || recipe == null || recipe.getRecipeOutput().isEmpty() || !Utils.canCraft(workingInv, recipe.getIngredients()))
+		if (workingInv == null || recipe == null || recipe.getRecipeOutput().isEmpty() || !ItemUtils.canCraft(workingInv, recipe.getIngredients()))
 			return;
 
-		int craftAmount = fullStack ? Math.min(Utils.countPossibleCrafts(workingInv, recipe.getIngredients()), 64) : 1;
+		int craftAmount = fullStack ? Math.min(ItemUtils.countPossibleCrafts(workingInv, recipe.getIngredients()), 64) : 1;
 		do {
-			ItemStack remain = Utils.giveStack(playerInventory, recipe.getRecipeOutput()); //use playerinventory here!
-			if (!remain.isEmpty()) Utils.ejectStack(player.world, tile.getPos(), tile.blockFacing(), remain);
+			ItemStack remain = ItemUtils.giveStack(playerInventory, recipe.getRecipeOutput()); //use playerinventory here!
+			if (!remain.isEmpty()) ItemUtils.ejectStack(player.world, tile.getPos(), tile.blockFacing(), remain);
 
 			for (Ingredient ingredient : recipe.getIngredients()) {
 				if (ingredient.getMatchingStacks().length > 0) {
-					Utils.removeFromInventory(workingInv, ingredient.getMatchingStacks());
+					ItemUtils.removeFromInventory(workingInv, ingredient.getMatchingStacks());
 				}
 			}
 		} while (--craftAmount > 0);
@@ -155,7 +155,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 			for (int slot = 0; slot < ghostInventory.getSlots(); ++slot) {
 				ItemStack stack = ghostInventory.getStackInSlot(slot);
 				if (!stack.isEmpty()) {
-					if (!Utils.increaseStackinList(stacks, stack))
+					if (!ItemUtils.increaseStackinList(stacks, stack))
 						stacks.add(stack.copy());
 				}
 			}
