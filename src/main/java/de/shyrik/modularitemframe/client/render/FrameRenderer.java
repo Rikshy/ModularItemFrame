@@ -45,7 +45,7 @@ public class FrameRenderer extends TileEntitySpecialRenderer<TileModularFrame> {
 
 		GlStateManager.translate(x, y, z); // Translate pad to coords here
 		GlStateManager.disableRescaleNormal();
-		rotateFrameOnFacing(te.blockFacing(), te.rotation);
+		rotateFrameOnFacing(te.blockFacing(), 0);
 
 		Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(modelFrame, 1.0F, 1, 1, 1);
 

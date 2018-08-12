@@ -7,9 +7,8 @@ import com.teamwizardry.librarianlib.features.saving.Save;
 import de.shyrik.modularitemframe.api.ModuleFrameBase;
 import de.shyrik.modularitemframe.api.ModuleRegistry;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
-import de.shyrik.modularitemframe.common.module.ModuleItem;
+import de.shyrik.modularitemframe.common.module.ModuleEmpty;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -21,13 +20,10 @@ public class TileModularFrame extends TileModTickable {
 	private static final String NBTMODULE = "framemodule";
 	private static final String NBTMODULEDATA = "framemoduledata";
 
-	@Save
-	public int rotation = 0;
-
 	public ModuleFrameBase module;
 
 	public TileModularFrame() {
-		setModule(new ModuleItem());
+		setModule(new ModuleEmpty());
 	}
 
 	public void setModule(ModuleFrameBase mod) {
@@ -41,16 +37,6 @@ public class TileModularFrame extends TileModTickable {
 
 	public TileEntity getNeighbor(EnumFacing facing) {
 		return world.getTileEntity(pos.offset(facing));
-	}
-
-	public void rotate(EntityPlayer player) {
-		if (player.isSneaking()) {
-			rotation += 1;
-		} else {
-			rotation -= 1;
-		}
-		if (rotation >= 4 || rotation <= -4) rotation = 0;
-		markDirty();
 	}
 
 	@Override
@@ -72,6 +58,7 @@ public class TileModularFrame extends TileModTickable {
 			module.deserializeNBT(cmp.getCompoundTag(NBTMODULEDATA));
 		} else {
 			module = ModuleRegistry.createModuleInstance(cmp.getString(NBTMODULE));
+			if (module == null) module = new ModuleEmpty();
 			module.deserializeNBT(cmp.getCompoundTag(NBTMODULEDATA));
 			module.setTile(this);
 			cmp.removeTag(NBTMODULEDATA);
@@ -93,6 +80,7 @@ public class TileModularFrame extends TileModTickable {
 		if (CommonUtilMethods.hasNullSignature(buf)) module = null;
 		else {
 			module = ModuleRegistry.createModuleInstance(CommonUtilMethods.readString(buf));
+			if (module == null) module = new ModuleEmpty();
 			module.setTile(this);
 			module.deserializeNBT(CommonUtilMethods.readTag(buf));
 		}

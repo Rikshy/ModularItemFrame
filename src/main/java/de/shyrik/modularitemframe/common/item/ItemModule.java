@@ -2,6 +2,7 @@ package de.shyrik.modularitemframe.common.item;
 
 import com.teamwizardry.librarianlib.features.base.item.ItemMod;
 import de.shyrik.modularitemframe.api.ModuleRegistry;
+import de.shyrik.modularitemframe.common.module.ModuleEmpty;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -31,7 +32,7 @@ public class ItemModule extends ItemMod {
 		TileEntity tmp = world.getTileEntity(pos);
 		if (tmp instanceof TileModularFrame) {
 			TileModularFrame tile = (TileModularFrame) tmp;
-			if (!world.isRemote) {
+			if (!world.isRemote && tile.module instanceof ModuleEmpty) {
 				ItemStack held = player.getHeldItem(hand);
 				tile.setModule(ModuleRegistry.createModuleInstance(((ItemModule) held.getItem()).moduleId));
 				held.setCount(held.getCount() - 1);

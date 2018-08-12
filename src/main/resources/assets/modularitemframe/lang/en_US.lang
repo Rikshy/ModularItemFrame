@@ -18,13 +18,16 @@ modularitemframe.message.loc_saved=[ModularItemFrame] Location saved
 modularitemframe.message.range_change=[ModularItemFrame] Dropper range changed to %d
 modularitemframe.message.tank_mode_change=[ModularItemFrame] Tank mode changed to %s
 modularitemframe.message.xp_mode_change=[ModularItemFrame] XP mode changed to %s
+modularitemframe.message.screw_mode_change=[ModularItemFrame] Screwdriver mode changed to %s
 
+modularitemframe.module.empty=Empty
 modularitemframe.module.item=Item
 modularitemframe.module.craft=Crafting
 modularitemframe.module.tank=Tank
 modularitemframe.module.nullify=Nullify
 modularitemframe.module.tele=Teleport
 modularitemframe.module.xp=XP
+modularitemframe.module.drop=Drop
 
 modularitemframe.tooltip.module=Module: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb

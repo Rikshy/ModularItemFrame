@@ -38,7 +38,12 @@ public abstract class ModuleFrameBase implements INBTSerializable<NBTTagCompound
 	}
 
 	@Nonnull
-	public abstract ResourceLocation getModelLocation();
+	public abstract ResourceLocation frontTexture();
+
+	@Nonnull
+	public ResourceLocation backTexture() {
+		return new ResourceLocation("minecraft", "blocks/log_birch_top");
+	}
 
 	public abstract String getModuleName();
 
@@ -48,8 +53,10 @@ public abstract class ModuleFrameBase implements INBTSerializable<NBTTagCompound
 	public IBakedModel bakeModel(IModel model) {
 		if (bakedModel == null || reloadModel) {
 			bakedModel = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, location -> {
-				if (location.getResourcePath().contains("dummy"))
-					return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(getModelLocation().toString());
+				if (location.getResourcePath().contains("default_front"))
+					return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(frontTexture().toString());
+				if (location.getResourcePath().contains("default_back"))
+					return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(backTexture().toString());
 				return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
 			});
 			reloadModel = false;

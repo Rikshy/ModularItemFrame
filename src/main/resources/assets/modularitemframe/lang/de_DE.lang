@@ -18,13 +18,16 @@ modularitemframe.message.loc_saved=[ModularItemFrame] Position gespeichert
 modularitemframe.message.range_change=[ModularItemFrame] Spenderreichweite verändert auf %d
 modularitemframe.message.tank_mode_change=[ModularItemFrame] Tank Modus verändert zu %s
 modularitemframe.message.xp_mode_change=[ModularItemFrame] XP Modus verändert zu %s
+modularitemframe.message.screw_mode_change=[ModularItemFrame] Schraubendreher Modus verändert zu %s
 
+modularitemframe.module.empty=Leer
 modularitemframe.module.item=Item
 modularitemframe.module.craft=Crafting
 modularitemframe.module.tank=Tank
 modularitemframe.module.nullify=Nullify
 modularitemframe.module.tele=Teleport
 modularitemframe.module.xp=XP
+modularitemframe.module.drop=Spender
 
 modularitemframe.tooltip.module=Modul: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb

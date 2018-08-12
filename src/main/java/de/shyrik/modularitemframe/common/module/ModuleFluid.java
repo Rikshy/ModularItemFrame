@@ -22,7 +22,7 @@ public abstract class ModuleFluid extends ModuleFrameBase {
 
 	@Nonnull
 	@Override
-	public ResourceLocation getModelLocation() {
+	public ResourceLocation frontTexture() {
 		return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank_frame_bg");
 	}
 

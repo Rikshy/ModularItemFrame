@@ -51,7 +51,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 
 	@Nonnull
 	@Override
-	public ResourceLocation getModelLocation() {
+	public ResourceLocation frontTexture() {
 		return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/crafting_frame_bg");
 	}
 

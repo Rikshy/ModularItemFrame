@@ -27,7 +27,7 @@ public class ModuleItem extends ModuleFrameBase {
 	public ItemStack displayItem = ItemStack.EMPTY;
 
 	@Nonnull
-	public ResourceLocation getModelLocation() {
+	public ResourceLocation frontTexture() {
 		return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg");
 	}
 
