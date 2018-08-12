@@ -1,6 +1,7 @@
 package de.shyrik.modularitemframe.common.module;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
+import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleFrameBase;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
@@ -15,6 +16,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nonnull;
 
@@ -62,14 +64,6 @@ public class ModuleItem extends ModuleFrameBase {
 		GlStateManager.popMatrix();
 	}
 
-	@Override
-	public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
-		if (!worldIn.isRemote) {
-			rotate(playerIn);
-			tile.markDirty();
-		}
-	}
-
 	public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
 		if (!world.isRemote) {
 			rotate(playerIn);
@@ -79,6 +73,8 @@ public class ModuleItem extends ModuleFrameBase {
 
 	@Override
 	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return false;
+
 		if (!worldIn.isRemote) {
 			if (!playerIn.isSneaking()) {
 				ItemStack copy = playerIn.getHeldItem(hand).copy();

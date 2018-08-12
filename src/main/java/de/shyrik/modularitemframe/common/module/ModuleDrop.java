@@ -16,6 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -40,6 +41,8 @@ public class ModuleDrop extends ModuleFrameBase {
 
 	@Override
 	public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
+		if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return;
+
 		if (!world.isRemote && ConfigValues.AddDropperRange > 0) {
 			if (playerIn.isSneaking()) range--;
 			else range++;
@@ -52,6 +55,8 @@ public class ModuleDrop extends ModuleFrameBase {
 
 	@Override
 	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return false;
+
 		if (!worldIn.isRemote) {
 			ItemStack held = playerIn.getHeldItem(hand);
 			if (!playerIn.isSneaking() && !held.isEmpty()) {

@@ -62,6 +62,8 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 
 	@Override
 	public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
+		if (playerIn instanceof FakePlayer) return;
+
 		if (!world.isRemote) {
 			playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, world, pos.getX(), pos.getY(), pos.getZ());
 			tile.markDirty();
@@ -70,6 +72,8 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 
 	@Override
 	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return false;
+
 		if (!worldIn.isRemote) {
 			if (!hasValidRecipe(playerIn))
 				playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, worldIn, pos.getX(), pos.getY(), pos.getZ());
@@ -90,8 +94,6 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 	}
 
 	private void craft(EntityPlayer player, boolean fullStack) {
-		if (player instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return;
-
 		final IItemHandlerModifiable playerInventory = (IItemHandlerModifiable) player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 		final IItemHandlerModifiable workingInv = getWorkingInventories(playerInventory);
 

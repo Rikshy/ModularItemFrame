@@ -17,6 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -47,6 +48,8 @@ public class ModuleNullify extends ModuleFluid {
 
 	@Override
 	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return false;
+
 		ItemStack held = playerIn.getHeldItem(hand);
 		if (!playerIn.isSneaking() && !held.isEmpty()) {
 			if (ItemUtils.simpleAreStacksEqual(held, lastStack)) {

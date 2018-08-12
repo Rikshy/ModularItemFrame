@@ -24,6 +24,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
 
 import javax.annotation.Nonnull;
@@ -57,6 +58,8 @@ public class ModuleTeleport extends ModuleFrameBase {
 
 	@Override
 	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (playerIn instanceof FakePlayer) return false;
+
 		if (!worldIn.isRemote) {
 			if (hasValidConnection(worldIn, playerIn)) {
 				BlockPos target;
