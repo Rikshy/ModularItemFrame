@@ -33,11 +33,11 @@ public class ModuleTank extends ModuleFluid {
 	}
 
 	@Override
-	public void onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-		//ItemStack stack = playerIn.getHeldItem(hand);
+	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+		ItemStack stack = playerIn.getHeldItem(hand);
 		FluidUtil.interactWithFluidHandler(playerIn, hand, tank);
 		tile.markDirty();
-		//return FluidUtil.getFluidHandler(stack) != null; TODO
+		return FluidUtil.getFluidHandler(stack) != null;
 	}
 
 	@Override

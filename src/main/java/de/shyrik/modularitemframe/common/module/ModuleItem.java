@@ -71,7 +71,7 @@ public class ModuleItem extends ModuleFrameBase {
 	}
 
 	@Override
-	public void onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {
 			if (!playerIn.isSneaking()) {
 				ItemStack copy = playerIn.getHeldItem(hand).copy();
@@ -80,6 +80,7 @@ public class ModuleItem extends ModuleFrameBase {
 				tile.markDirty();
 			}
 		}
+		return true;
 	}
 
 	@Override

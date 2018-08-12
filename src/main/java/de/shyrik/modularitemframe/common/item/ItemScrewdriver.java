@@ -29,7 +29,7 @@ public class ItemScrewdriver extends ItemMod {
 				if (tile.module.hasScrewInteraction()) {
 					tile.module.screw(player, player.getHeldItem(hand));
 				} else {
-					tile.rotate(player);
+					//tile.rotate(player);
 				}
 				tile.markDirty();
 			}

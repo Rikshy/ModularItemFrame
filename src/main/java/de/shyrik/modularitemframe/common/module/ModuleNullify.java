@@ -46,7 +46,7 @@ public class ModuleNullify extends ModuleFluid {
 	}
 
 	@Override
-	public void onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
 		ItemStack held = playerIn.getHeldItem(hand);
 		if (!playerIn.isSneaking() && !held.isEmpty()) {
 			if (Utils.simpleAreStacksEqual(held, lastStack)) {
@@ -63,6 +63,7 @@ public class ModuleNullify extends ModuleFluid {
 			lastStack = ItemStack.EMPTY;
 			worldIn.playSound(null, pos, SoundEvents.ENTITY_ENDERPEARL_THROW, SoundCategory.BLOCKS, 0.4F, 0.7F);
 		}
+		return true;
 	}
 
 	@Override

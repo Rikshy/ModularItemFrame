@@ -45,19 +45,19 @@ public class ModuleTeleport extends ModuleFrameBase {
 	}
 
 	@Override
-	public void onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {
 			if (linkedLoc == null) {
 				playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.no_target"));
-				return;
+				return true;
 			}
 			if (!(worldIn.getTileEntity(linkedLoc) instanceof TileModularFrame) || !(((TileModularFrame) worldIn.getTileEntity(linkedLoc)).module instanceof ModuleTeleport)) {
 				playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.invalid_target"));
-				return;
+				return true;
 			}
 			if (!isTargetLocationValid(worldIn)) {
 				playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.location_blocked"));
-				return;
+				return true;
 			}
 			BlockPos target = null;
 			if (tile.blockFacing().getAxis().isHorizontal() || tile.blockFacing() == EnumFacing.UP)
@@ -71,6 +71,7 @@ public class ModuleTeleport extends ModuleFrameBase {
 			for (int i = 0; i < 64; i++)
 				worldIn.spawnParticle(EnumParticleTypes.PORTAL, target.getX(), target.getY() + worldIn.rand.nextDouble() * 2.0D, target.getZ(), worldIn.rand.nextGaussian(), 0.0D, worldIn.rand.nextGaussian());
 		}
+		return true;
 	}
 
 	@Override
@@ -98,6 +99,8 @@ public class ModuleTeleport extends ModuleFrameBase {
 					linkedLoc = tmp;
 					((ModuleTeleport) ((TileModularFrame) targetTile).module).linkedLoc = tile.getPos();
 					playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.link_established"));
+					nbt.removeTag(NBT_LINK);
+					driver.setTagCompound(nbt);
 				}
 			}
 		}

@@ -63,7 +63,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 	}
 
 	@Override
-	public void onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
 		if (!worldIn.isRemote) {
 			if (!hasValidRecipe(playerIn))
 				playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, worldIn, pos.getX(), pos.getY(), pos.getZ());
@@ -73,6 +73,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 			}
 			tile.markDirty();
 		}
+		return true;
 	}
 
 	@Override
@@ -166,6 +167,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 	public void onContainerCraftingResultChanged(InventoryCraftResult result) {
 		displayItem = result.getStackInSlot(0);
 		recipe = result.getRecipeUsed();
+		tile.markDirty();
 	}
 
 
