@@ -11,9 +11,6 @@ public final class ConfigValues {
 	@ConfigProperty(category = "general", comment = "Allow fake players to interact with frames")
 	public static boolean AllowFakePlayers = false;
 
-	@ConfigProperty(category = "general", comment = "Animated Nullify Frame")
-	public static boolean AnimateNulliFrame = true;
-
 	@ConfigProperty(category = "general", comment = "Can the Nullify frame suck items from attached inventory - making it a trash can (this also goes for Fluid and Energy Storage")
 	public static boolean CanNulliFrameSuckFromInvent = false;
 
@@ -24,4 +21,8 @@ public final class ConfigValues {
 	@ConfigIntRange(min = 0, max = 1000)
 	@ConfigProperty(category = "general", comment = "Maximum teleport distance of the teleport module")
 	public static int MaxTeleportRange = 64;
+
+	@ConfigIntRange(min = 0, max = 5)
+	@ConfigProperty(category = "general", comment = "Additional range the dropper can have for inventory checking")
+	public static int AddDropperRange = 1;
 }

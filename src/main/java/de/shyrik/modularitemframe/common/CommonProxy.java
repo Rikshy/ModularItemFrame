@@ -13,8 +13,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-import javax.annotation.Nonnull;
-
 public class CommonProxy {
 	public static BlockModularFrame FRAME_MODULAR;
 
@@ -23,6 +21,7 @@ public class CommonProxy {
 	public static ItemModule MODULE_TELE;
 	public static ItemModule MODULE_CRAFT;
 	public static ItemModule MODULE_NULL;
+	public static ItemModule MODULE_DROP;
 
 	public static ItemScrewdriver SCREWDRIVER;
 
@@ -33,6 +32,7 @@ public class CommonProxy {
 		MODULE_TELE = ModuleRegistry.registerCreate("module_tele", ModuleTeleport.class);
 		MODULE_CRAFT = ModuleRegistry.registerCreate("module_craft", ModuleCrafting.class);
 		MODULE_NULL = ModuleRegistry.registerCreate("module_nullify", ModuleNullify.class);
+		MODULE_DROP = ModuleRegistry.registerCreate("module_drop", ModuleDrop.class);
 		SCREWDRIVER = new ItemScrewdriver();
 
 		ModTab.init();
