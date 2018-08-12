@@ -25,6 +25,9 @@ import javax.annotation.Nonnull;
 public class ModuleTeleport extends ModuleFrameBase {
 
 	private static final String NBT_LINK = "linked_pos";
+	private static final String NBT_LINKX = "linked_posX";
+	private static final String NBT_LINKY = "linked_posY";
+	private static final String NBT_LINKZ = "linked_posZ";
 
 	public BlockPos linkedLoc = null;
 
@@ -116,12 +119,19 @@ public class ModuleTeleport extends ModuleFrameBase {
 	@Override
 	public NBTTagCompound serializeNBT() {
 		NBTTagCompound compound = new NBTTagCompound();
-		if (linkedLoc != null) compound.setLong(NBT_LINK, linkedLoc.toLong());
+		if (linkedLoc != null) {
+			compound.setInteger(NBT_LINKX, linkedLoc.getX());
+			compound.setInteger(NBT_LINKY, linkedLoc.getY());
+			compound.setInteger(NBT_LINKZ, linkedLoc.getZ());
+		}
 		return compound;
 	}
 
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
-		if (nbt.hasKey(NBT_LINK)) linkedLoc = BlockPos.fromLong(nbt.getInteger(NBT_LINK));
+		if (nbt.hasKey(NBT_LINKX)) {
+			linkedLoc = new BlockPos(nbt.getInteger(NBT_LINKX), nbt.getInteger(NBT_LINKY), nbt.getInteger(NBT_LINKZ));
+
+		}
 	}
 }
