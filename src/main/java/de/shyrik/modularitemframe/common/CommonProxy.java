@@ -15,43 +15,45 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 public class CommonProxy {
-	public static BlockModularFrame FRAME_MODULAR;
+    public static BlockModularFrame FRAME_MODULAR;
 
-	public static ItemModule MODULE_TANK;
-	public static ItemModule MODULE_ITEM;
-	public static ItemModule MODULE_TELE;
-	public static ItemModule MODULE_CRAFT;
-	public static ItemModule MODULE_NULL;
-	public static ItemModule MODULE_DROP;
-	public static ItemModule MODULE_XP;
+    public static ItemModule MODULE_TANK;
+    public static ItemModule MODULE_ITEM;
+    public static ItemModule MODULE_TELE;
+    public static ItemModule MODULE_CRAFT;
+    public static ItemModule MODULE_NULL;
+    public static ItemModule MODULE_DROP;
+    public static ItemModule MODULE_XP;
+    public static ItemModule MODULE_VACUUM;
 
-	public static ItemScrewdriver SCREWDRIVER;
+    public static ItemScrewdriver SCREWDRIVER;
 
-	public static ItemMod ITEM_CANVAS;
+    public static ItemMod ITEM_CANVAS;
 
-	public void preInit(FMLPreInitializationEvent event) {
-		FRAME_MODULAR = new BlockModularFrame();
-		MODULE_TANK = ModuleRegistry.registerCreate("module_tank", ModuleTank.class);
-		MODULE_ITEM = ModuleRegistry.registerCreate("module_item", ModuleItem.class);
-		MODULE_TELE = ModuleRegistry.registerCreate("module_tele", ModuleTeleport.class);
-		MODULE_CRAFT = ModuleRegistry.registerCreate("module_craft", ModuleCrafting.class);
-		MODULE_NULL = ModuleRegistry.registerCreate("module_nullify", ModuleNullify.class);
-		MODULE_DROP = ModuleRegistry.registerCreate("module_drop", ModuleDrop.class);
-		MODULE_XP = ModuleRegistry.registerCreate("module_xp", ModuleXP.class);
-		SCREWDRIVER = new ItemScrewdriver();
+    public void preInit(FMLPreInitializationEvent event) {
+        FRAME_MODULAR = new BlockModularFrame();
+        MODULE_TANK = ModuleRegistry.registerCreate("module_tank", ModuleTank.class);
+        MODULE_ITEM = ModuleRegistry.registerCreate("module_item", ModuleItem.class);
+        MODULE_TELE = ModuleRegistry.registerCreate("module_tele", ModuleTeleport.class);
+        MODULE_CRAFT = ModuleRegistry.registerCreate("module_craft", ModuleCrafting.class);
+        MODULE_NULL = ModuleRegistry.registerCreate("module_nullify", ModuleNullify.class);
+        MODULE_DROP = ModuleRegistry.registerCreate("module_drop", ModuleDrop.class);
+        MODULE_XP = ModuleRegistry.registerCreate("module_xp", ModuleXP.class);
+        MODULE_VACUUM = ModuleRegistry.registerCreate("module_vacuum", ModuleVacuum.class);
+        SCREWDRIVER = new ItemScrewdriver();
 
-		ITEM_CANVAS = new ItemMod("canvas");
+        ITEM_CANVAS = new ItemMod("canvas");
 
-		ModTab.init();
+        ModTab.init();
 
-		NetworkRegistry.INSTANCE.registerGuiHandler(ModularItemFrame.instance, new GuiHandler());
-	}
+        NetworkRegistry.INSTANCE.registerGuiHandler(ModularItemFrame.instance, new GuiHandler());
+    }
 
-	public void init(FMLInitializationEvent event) {
+    public void init(FMLInitializationEvent event) {
 
-	}
+    }
 
-	public void postInit(FMLPostInitializationEvent event) {
+    public void postInit(FMLPostInitializationEvent event) {
 
-	}
+    }
 }
