@@ -29,4 +29,8 @@ public final class ConfigValues {
 	@ConfigIntRange(min = 0, max = 5)
 	@ConfigProperty(category = "general", comment = "Additional range the dropper can have for inventory checking")
 	public static int AddDropperRange = 1;
+
+	@ConfigIntRange(min = 1, max = 1000)
+	@ConfigProperty(category = "general", comment = "Delay between entity pick ups in tile ticks (20~=1sec)")
+	public static int VacuumCooldown = 20;
 }

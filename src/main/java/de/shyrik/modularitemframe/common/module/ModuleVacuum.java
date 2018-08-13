@@ -26,8 +26,6 @@ import java.util.List;
 
 public class ModuleVacuum extends ModuleFrameBase {
 
-    private int cooldown = 20;
-
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
@@ -55,8 +53,7 @@ public class ModuleVacuum extends ModuleFrameBase {
 
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
-        if (world.getTotalWorldTime() % cooldown != 0) return;
-
+        if (world.getTotalWorldTime() % ConfigValues.VacuumCooldown != 0) return;
 
         IItemHandlerModifiable handler = getNeighborTileItemCap();
         if (handler != null) {
@@ -72,6 +69,7 @@ public class ModuleVacuum extends ModuleFrameBase {
                 else
                     entity.setItem(remain);
                 world.spawnParticle(EnumParticleTypes.LAVA, entity.posX, entity.posY, entity.posZ, world.rand.nextGaussian(), 0.0D, world.rand.nextGaussian());
+                break;
             }
         }
     }
