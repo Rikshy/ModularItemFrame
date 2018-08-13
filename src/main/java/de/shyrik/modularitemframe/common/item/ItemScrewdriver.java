@@ -1,6 +1,6 @@
 package de.shyrik.modularitemframe.common.item;
 
-import com.teamwizardry.librarianlib.features.base.item.ItemMod;
+import com.teamwizardry.librarianlib.features.base.item.ItemModTool;
 import de.shyrik.modularitemframe.common.module.ModuleEmpty;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.client.resources.I18n;
@@ -18,11 +18,11 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ItemScrewdriver extends ItemMod {
+public class ItemScrewdriver extends ItemModTool {
 	private static final String NBT_MODE = "mode";
 
 	public ItemScrewdriver() {
-		super("screwdriver");
+		super("screwdriver", ToolMaterial.IRON, "wrench");
 		setMaxStackSize(1);
 	}
 
