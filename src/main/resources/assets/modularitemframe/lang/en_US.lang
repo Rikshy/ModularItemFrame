@@ -24,10 +24,13 @@ modularitemframe.message.tank_mode_change.out=output
 modularitemframe.message.xp_mode_change=[ModularItemFrame] XP mode changed to %s
 modularitemframe.message.xp_mode_change.in=input
 modularitemframe.message.xp_mode_change.out=output
+modularitemframe.message.xp_mode_change.vacuum=vacuum
 modularitemframe.message.screw_mode_change=[ModularItemFrame] Screwdriver mode changed to %s
 modularitemframe.message.screw_mode_change.rem=remove
 modularitemframe.message.screw_mode_change.inter=interact
 modularitemframe.message.screw_mode_change.rot=rotate
+modularitemframe.message.vacuum_mode_change=[ModularItemFrame] Vacuum mode changed to adjust %s range
+modularitemframe.message.vacuum_range_change=[ModularItemFrame] Vacuum range %s changed to %d
 
 modularitemframe.module.empty=Empty
 modularitemframe.module.item=Item

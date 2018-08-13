@@ -33,4 +33,8 @@ public final class ConfigValues {
 	@ConfigIntRange(min = 1, max = 1000)
 	@ConfigProperty(category = "general", comment = "Delay between entity pick ups in tile ticks (20~=1sec)")
 	public static int VacuumCooldown = 20;
+
+	@ConfigIntRange(min = 1, max = 10)
+	@ConfigProperty(category = "general", comment = "Maximum range of the vacuum frame")
+	public static int MaxVacuumRange = 5;
 }

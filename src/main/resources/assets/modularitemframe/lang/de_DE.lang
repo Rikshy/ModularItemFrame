@@ -24,10 +24,13 @@ modularitemframe.message.tank_mode_change.out=Auslass
 modularitemframe.message.xp_mode_change=[ModularItemFrame] XP Modus verändert zu %s
 modularitemframe.message.xp_mode_change.in=Aufnahme
 modularitemframe.message.xp_mode_change.out=Abgabe
+modularitemframe.message.xp_mode_change.vacuum=Aufsaugen
 modularitemframe.message.screw_mode_change=[ModularItemFrame] Schraubendreher Modus verändert zu %s
 modularitemframe.message.screw_mode_change.rem=entfernen
 modularitemframe.message.screw_mode_change.inter=interagieren
 modularitemframe.message.screw_mode_change.rot=rotieren
+modularitemframe.message.vacuum_mode_change=[ModularItemFrame] Vacuum Modus verändert jetzt die %s Reichweite
+modularitemframe.message.vacuum_range_change=[ModularItemFrame] Vacuum Reichweite %s auf %d geändert
 
 modularitemframe.module.empty=Leer
 modularitemframe.module.item=Item
@@ -37,7 +40,7 @@ modularitemframe.module.nullify=Nullify
 modularitemframe.module.tele=Teleport
 modularitemframe.module.xp=XP
 modularitemframe.module.drop=Spender
-modularitemframe.module.vacuum=Saug
+modularitemframe.module.vacuum=Vacuum
 
 modularitemframe.tooltip.module=Modul: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb
