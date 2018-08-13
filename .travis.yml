@@ -8,3 +8,11 @@ cache:
     - $HOME/.gradle/wrapper/
 install: ./gradlew setupCIWorkspace -S
 script: ./gradlew build -S
+deploy:
+  provider: releases
+  api_key: $ght
+  file_glob: true
+  file: build/libs/*
+  skip_cleanup: true
+  on:
+    tags: false
