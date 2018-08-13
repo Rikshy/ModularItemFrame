@@ -37,6 +37,7 @@ modularitemframe.module.nullify=Nullify
 modularitemframe.module.tele=Teleport
 modularitemframe.module.xp=XP
 modularitemframe.module.drop=Drop
+modularitemframe.module.vacuum=Vacuum
 
 modularitemframe.tooltip.module=Module: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb
