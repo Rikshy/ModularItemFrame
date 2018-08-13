@@ -1,13 +1,9 @@
 package de.shyrik.modularitemframe.common.item;
 
 import com.teamwizardry.librarianlib.features.base.item.ItemMod;
-import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ModuleRegistry;
-import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.common.module.ModuleEmpty;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -70,6 +66,7 @@ public class ItemScrewdriver extends ItemMod {
 		NBTTagCompound nbt = stack.getTagCompound();
 		if (nbt == null) nbt = new NBTTagCompound();
 		nbt.setInteger(NBT_MODE, mode.getIndex());
+		stack.setTagCompound(nbt);
 	}
 
 	private EnumMode readModeFromNBT(ItemStack stack) {
