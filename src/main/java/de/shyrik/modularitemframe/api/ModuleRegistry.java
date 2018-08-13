@@ -43,9 +43,8 @@ public class ModuleRegistry {
 		try {
 			return modules.get(id).newInstance();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 
 	/**
