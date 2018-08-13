@@ -49,7 +49,6 @@ public class ModuleVacuum extends ModuleFrameBase {
                 held.setCount(remain.getCount());
             }
         }
-        return true;
     }
 
     @Override
