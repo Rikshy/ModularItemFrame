@@ -3,6 +3,7 @@ package de.shyrik.modularitemframe.common.item;
 import com.teamwizardry.librarianlib.features.base.item.ItemMod;
 import de.shyrik.modularitemframe.common.module.ModuleEmpty;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -78,7 +79,9 @@ public class ItemScrewdriver extends ItemMod {
 	}
 
 	public enum EnumMode {
-		REMOVE(0, "remove"), INTERACT(1, "interact");
+		REMOVE(0, "modularitemframe.message.screw_mode_change.rem"),
+		INTERACT(1, "modularitemframe.message.screw_mode_change.inter");
+		//ROTATE(2, "modularitemframe.message.screw_mode_change.rot");
 
 		public static final EnumMode[] VALUES = new EnumMode[3];
 
@@ -95,7 +98,7 @@ public class ItemScrewdriver extends ItemMod {
 		}
 
 		public String getName() {
-			return this.name;
+			return I18n.format(this.name);
 		}
 
 		static {

@@ -149,7 +149,8 @@ public class ModuleXP extends ModuleItem {
 	}
 
 	public enum EnumMode {
-		IN(0, "input"), OUT(1, "output");
+		IN(0, "modularitemframe.message.xp_mode_change.in"),
+		OUT(1, "modularitemframe.message.xp_mode_change.out");
 
 		public static final EnumMode[] VALUES = new EnumMode[3];
 
@@ -166,7 +167,7 @@ public class ModuleXP extends ModuleItem {
 		}
 
 		public String getName() {
-			return this.name;
+			return I18n.format(this.name);
 		}
 
 		static {

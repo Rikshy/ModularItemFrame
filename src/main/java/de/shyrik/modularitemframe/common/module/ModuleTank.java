@@ -118,7 +118,9 @@ public class ModuleTank extends ModuleFluid {
 	}
 
 	public enum EnumMode {
-		NONE(0, "none"), DRAIN(1, "input"), PUSH(2, "output");
+        NONE(0, "modularitemframe.message.tank_mode_change.no"),
+        DRAIN(1, "modularitemframe.message.tank_mode_change.in"),
+        PUSH(2, "modularitemframe.message.tank_mode_change.out");
 
 		public static final EnumMode[] VALUES = new EnumMode[3];
 
@@ -134,9 +136,9 @@ public class ModuleTank extends ModuleFluid {
 			return this.index;
 		}
 
-		public String getName() {
-			return this.name;
-		}
+        public String getName() {
+            return I18n.format(this.name);
+        }
 
 
 		static {

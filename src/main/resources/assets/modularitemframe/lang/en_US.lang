@@ -18,8 +18,16 @@ modularitemframe.message.link_established=[ModularItemFrame] Link established
 modularitemframe.message.loc_saved=[ModularItemFrame] Location saved
 modularitemframe.message.range_change=[ModularItemFrame] Dropper range changed to %d
 modularitemframe.message.tank_mode_change=[ModularItemFrame] Tank mode changed to %s
+modularitemframe.message.tank_mode_change.no=none
+modularitemframe.message.tank_mode_change.in=input
+modularitemframe.message.tank_mode_change.out=output
 modularitemframe.message.xp_mode_change=[ModularItemFrame] XP mode changed to %s
+modularitemframe.message.xp_mode_change.in=input
+modularitemframe.message.xp_mode_change.out=output
 modularitemframe.message.screw_mode_change=[ModularItemFrame] Screwdriver mode changed to %s
+modularitemframe.message.screw_mode_change.rem=remove
+modularitemframe.message.screw_mode_change.inter=interact
+modularitemframe.message.screw_mode_change.rot=rotate
 
 modularitemframe.module.empty=Empty
 modularitemframe.module.item=Item
