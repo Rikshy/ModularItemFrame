@@ -88,7 +88,7 @@ public class ModuleItem extends ModuleFrameBase {
 
 	@Override
 	public NBTTagCompound serializeNBT() {
-		NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = super.serializeNBT();
 		compound.setTag(NBT_DISPLAY, displayItem.serializeNBT());
 		compound.setInteger("rotation", rotation);
 		return compound;
@@ -96,6 +96,7 @@ public class ModuleItem extends ModuleFrameBase {
 
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
+		super.deserializeNBT(nbt);
 		if (nbt.hasKey(NBT_DISPLAY)) displayItem = new ItemStack(nbt.getCompoundTag(NBT_DISPLAY));
 		if (nbt.hasKey(NBT_ROTATION)) rotation = nbt.getInteger(NBT_ROTATION);
 	}

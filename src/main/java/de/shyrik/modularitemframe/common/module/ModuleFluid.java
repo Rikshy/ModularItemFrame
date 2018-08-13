@@ -67,13 +67,14 @@ public abstract class ModuleFluid extends ModuleFrameBase {
 
 	@Override
 	public NBTTagCompound serializeNBT() {
-		NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = super.serializeNBT();
 		compound.setTag(NBT_TANK, tank.serializeNBT());
 		return compound;
 	}
 
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
+		super.deserializeNBT(nbt);
 		if (nbt.hasKey(NBT_TANK)) tank.deserializeNBT(nbt.getCompoundTag(NBT_TANK));
 	}
 }

@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 
 public class ModuleDrop extends ModuleFrameBase {
 
-	public static final String NBT_RANGE = "range";
+	private static final String NBT_RANGE = "range";
 
 	public int range = 0;
 
@@ -91,13 +91,14 @@ public class ModuleDrop extends ModuleFrameBase {
 
 	@Override
 	public NBTTagCompound serializeNBT() {
-		NBTTagCompound nbt = new NBTTagCompound();
+		NBTTagCompound nbt = super.serializeNBT();
 		nbt.setInteger(NBT_RANGE, range);
 		return nbt;
 	}
 
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
+		super.deserializeNBT(nbt);
 		if (nbt.hasKey(NBT_RANGE)) range = nbt.getInteger(NBT_RANGE);
 	}
 }

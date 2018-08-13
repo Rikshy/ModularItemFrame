@@ -148,7 +148,7 @@ public class ModuleTeleport extends ModuleFrameBase {
 
 	@Override
 	public NBTTagCompound serializeNBT() {
-		NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = super.serializeNBT();
 		if (linkedLoc != null) {
 			compound.setInteger(NBT_LINKX, linkedLoc.getX());
 			compound.setInteger(NBT_LINKY, linkedLoc.getY());
@@ -159,6 +159,7 @@ public class ModuleTeleport extends ModuleFrameBase {
 
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
+		super.deserializeNBT(nbt);
 		if (nbt.hasKey(NBT_LINKX))
 			linkedLoc = new BlockPos(nbt.getInteger(NBT_LINKX), nbt.getInteger(NBT_LINKY), nbt.getInteger(NBT_LINKZ));
 	}

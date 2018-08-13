@@ -105,4 +105,14 @@ public abstract class ModuleFrameBase implements INBTSerializable<NBTTagCompound
 		tips.add(I18n.format("modularitemframe.tooltip.module", getModuleName()));
 		return tips;
 	}
+
+	@Override
+	public NBTTagCompound serializeNBT() {
+		return new NBTTagCompound();
+	}
+
+	@Override
+	public void deserializeNBT(NBTTagCompound nbtTagCompound) {
+
+	}
 }
