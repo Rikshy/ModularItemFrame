@@ -1,7 +1,6 @@
 package de.shyrik.modularitemframe.common.module;
 
 import com.teamwizardry.librarianlib.features.base.block.tile.module.SerializableFluidTank;
-import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleFrameBase;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
@@ -9,22 +8,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-
-import javax.annotation.Nonnull;
 
 public abstract class ModuleFluid extends ModuleFrameBase {
 
 	private static final String NBT_TANK = "tank";
 
 	public SerializableFluidTank tank = new SerializableFluidTank(1000);
-
-	@Nonnull
-	@Override
-	public ResourceLocation frontTexture() {
-		return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank_frame_bg");
-	}
 
 	@Override
 	public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {

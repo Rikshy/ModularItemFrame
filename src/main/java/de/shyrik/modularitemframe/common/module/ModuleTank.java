@@ -1,5 +1,6 @@
 package de.shyrik.modularitemframe.common.module;
 
+import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -15,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
@@ -35,6 +37,12 @@ public class ModuleTank extends ModuleFluid {
 
 	public ModuleTank() {
 		tank.setCapacity(ConfigValues.TankFrameCapacity);
+	}
+
+	@Nonnull
+	@Override
+	public ResourceLocation frontTexture() {
+		return new ResourceLocation("minecraft:blocks/cauldron_inner");
 	}
 
 	@Override
