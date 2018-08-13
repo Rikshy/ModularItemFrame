@@ -38,18 +38,10 @@ public class ItemScrewdriver extends ItemMod {
 				TileModularFrame tile = (TileModularFrame) tmp;
 				ItemStack driver = player.getHeldItem(hand);
 				if (readModeFromNBT(driver) == EnumMode.INTERACT) {
-					if (tile.module.hasScrewInteraction()) {
-						tile.module.screw(world, pos, player, driver);
-					}
+					tile.module.screw(world, pos, player, driver);
 				} else {
-					Item item = Item.getByNameOrId(ModularItemFrame.MOD_ID + ":" + ModuleRegistry.getModuleId(tile.module.getClass()));
-					if (item instanceof ItemModule) {
-						tile.module.onRemove(world, pos, player);
-						ItemStack remain = ItemUtils.giveStack(ItemUtils.getPlayerInv(player), new ItemStack(item));
-						if (!remain.isEmpty())
-							ItemUtils.ejectStack(player.world, tile.getPos(), tile.blockFacing(), remain);
-						tile.setModule(new ModuleEmpty());
-					}
+					tile.module.onRemove(world, pos, player);
+					tile.setModule(new ModuleEmpty());
 				}
 				tile.markDirty();
 			}

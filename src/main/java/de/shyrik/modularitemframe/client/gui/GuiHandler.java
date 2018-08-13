@@ -1,5 +1,6 @@
 package de.shyrik.modularitemframe.client.gui;
 
+import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
 import de.shyrik.modularitemframe.common.module.ModuleCrafting;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,7 +37,7 @@ public class GuiHandler implements IGuiHandler {
 		switch (ID) {
 			case CRAFTING_FRAME:
 				if (tileEntity instanceof TileModularFrame && ((TileModularFrame) tileEntity).module instanceof ModuleCrafting)
-					return new GuiCraftingFrame(((TileModularFrame) tileEntity).module.createContainer(player));
+					return new GuiCraftingFrame((ContainerCraftingFrame)((TileModularFrame) tileEntity).module.createContainer(player));
 				break;
 		}
 

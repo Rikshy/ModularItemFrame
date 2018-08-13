@@ -6,7 +6,7 @@ import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleRegistry;
 import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
-import de.shyrik.modularitemframe.common.item.ItemModule;
+import de.shyrik.modularitemframe.api.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.module.*;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;

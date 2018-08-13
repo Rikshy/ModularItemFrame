@@ -111,6 +111,7 @@ public class ModuleXP extends ModuleItem {
 
 	@Override
 	public void onRemove(@NotNull World worldIn, @NotNull BlockPos pos, @Nullable EntityPlayer playerIn) {
+		super.onRemove(worldIn, pos, playerIn);
 		if(playerIn == null || playerIn instanceof FakePlayer)
 			worldIn.spawnEntity(new EntityXPOrb(worldIn, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, experience));
 		else

@@ -38,6 +38,10 @@ public class TileModularFrame extends TileModTickable {
 		return world.getTileEntity(pos.offset(facing));
 	}
 
+	public boolean acceptsModule() {
+		return module instanceof ModuleEmpty;
+	}
+
 	@Override
 	public void tick() {
 		module.tick(world, pos);
