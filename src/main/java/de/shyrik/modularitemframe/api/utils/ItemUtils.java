@@ -103,6 +103,17 @@ public class ItemUtils {
 		return ItemStack.EMPTY;
 	}
 
+	public static void giveAllPossibleStacks(IItemHandlerModifiable target, IItemHandlerModifiable source, ItemStack stack) {
+        for (int i = 0; i < source.getSlots(); i++) {
+            ItemStack sourceStack = source.getStackInSlot(i);
+            if(simpleAreStacksEqual(stack, sourceStack)) {
+                ItemStack remain = giveStack(target, sourceStack);
+                sourceStack.setCount(remain.getCount());
+                if (!remain.isEmpty()) break;
+            }
+        }
+    }
+
 	public static int getFittingSlot(IItemHandler inventory, ItemStack stack) {
 		int slot = getItemEqualSlot(inventory, stack);
 		return slot < 0 ? getFirstUnOccupiedSlot(inventory) : slot;
