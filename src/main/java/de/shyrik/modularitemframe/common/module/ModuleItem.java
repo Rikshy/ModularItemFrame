@@ -3,8 +3,14 @@ package de.shyrik.modularitemframe.common.module;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleFrameBase;
+import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.ProbeMode;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -17,8 +23,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.common.Optional;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModuleItem extends ModuleFrameBase {
 
@@ -76,7 +85,7 @@ public class ModuleItem extends ModuleFrameBase {
 		if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return false;
 
 		if (!worldIn.isRemote) {
-			if (!playerIn.isSneaking()) {
+			if (playerIn.isSneaking()) {
 				ItemStack copy = playerIn.getHeldItem(hand).copy();
 				copy.setCount(1);
 				displayItem = copy;
@@ -85,6 +94,24 @@ public class ModuleItem extends ModuleFrameBase {
 		}
 		return true;
 	}
+
+	@Override
+	@Optional.Method(modid = "theoneprobe")
+	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+		super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
+		if (!displayItem.isEmpty())
+			probeInfo.horizontal().text("Display:").item(displayItem).text(displayItem.getDisplayName());
+	}
+
+	@Nonnull
+	@Override
+	public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+		List<String> tips = super.getWailaBody(itemStack, accessor, config);
+        if (!displayItem.isEmpty())
+            tips.add("Display: " + displayItem.getDisplayName());
+		return tips;
+	}
+
 
 	@Override
 	public NBTTagCompound serializeNBT() {

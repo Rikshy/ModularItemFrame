@@ -88,13 +88,13 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 
 	@Override
 	public ContainerCraftingFrame createContainer(final EntityPlayer player) {
-		final IItemHandlerModifiable playerInventory = (IItemHandlerModifiable) player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+		final IItemHandlerModifiable playerInventory = ItemUtils.getPlayerInv(player);
 
 		return new ContainerCraftingFrame(playerInventory, ghostInventory, player, this);
 	}
 
 	private void craft(EntityPlayer player, boolean fullStack) {
-		final IItemHandlerModifiable playerInventory = (IItemHandlerModifiable) player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
+		final IItemHandlerModifiable playerInventory = ItemUtils.getPlayerInv(player);
 		final IItemHandlerModifiable workingInv = getWorkingInventories(playerInventory);
 
 		if (recipe == null) reloadRecipe(player);
@@ -170,7 +170,9 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 	@Nonnull
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-		return super.getWailaBody(itemStack, accessor, config);
+		List<String> tips = super.getWailaBody(itemStack, accessor, config);
+		tips.add("output: " + recipe.getRecipeOutput().getDisplayName());
+		return tips;
 	}
 
 	@Override

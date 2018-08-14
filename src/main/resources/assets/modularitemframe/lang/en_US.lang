@@ -41,6 +41,7 @@ modularitemframe.module.tele=Teleport
 modularitemframe.module.xp=XP
 modularitemframe.module.drop=Drop
 modularitemframe.module.vacuum=Vacuum
+modularitemframe.module.access=Quick Access
 
 modularitemframe.tooltip.module=Module: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb
