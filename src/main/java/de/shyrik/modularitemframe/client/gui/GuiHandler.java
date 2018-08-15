@@ -1,7 +1,7 @@
 package de.shyrik.modularitemframe.client.gui;
 
 import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
-import de.shyrik.modularitemframe.common.module.ModuleCrafting;
+import de.shyrik.modularitemframe.common.module.t1.ModuleCrafting;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

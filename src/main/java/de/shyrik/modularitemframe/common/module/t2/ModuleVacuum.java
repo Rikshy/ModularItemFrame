@@ -1,4 +1,4 @@
-package de.shyrik.modularitemframe.common.module;
+package de.shyrik.modularitemframe.common.module.t2;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
@@ -58,7 +58,7 @@ public class ModuleVacuum extends ModuleFrameBase {
 
     @Override
     public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
-        if(world.isRemote) return;
+        if (world.isRemote) return;
 
         if (playerIn.isSneaking()) {
             int modeIdx = mode.getIndex() + 1;
@@ -99,10 +99,8 @@ public class ModuleVacuum extends ModuleFrameBase {
                     continue;
 
                 ItemStack remain = ItemUtils.giveStack(handler, entityStack);
-                if (remain.isEmpty())
-                    entity.setDead();
-                else
-                    entity.setItem(remain);
+                if (remain.isEmpty()) entity.setDead();
+                else entity.setItem(remain);
                 world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entity.posX, entity.posY, entity.posZ, world.rand.nextGaussian(), 0.0D, world.rand.nextGaussian());
                 break;
             }
@@ -122,8 +120,7 @@ public class ModuleVacuum extends ModuleFrameBase {
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_MODE))
-            mode = EnumMode.VALUES[nbt.getInteger(NBT_MODE)];
+        if (nbt.hasKey(NBT_MODE)) mode = EnumMode.VALUES[nbt.getInteger(NBT_MODE)];
         if (nbt.hasKey(NBT_RANGEX)) rangeX = nbt.getInteger(NBT_RANGEX);
         if (nbt.hasKey(NBT_RANGEY)) rangeY = nbt.getInteger(NBT_RANGEY);
         if (nbt.hasKey(NBT_RANGEZ)) rangeZ = nbt.getInteger(NBT_RANGEZ);
@@ -135,45 +132,45 @@ public class ModuleVacuum extends ModuleFrameBase {
         TileEntity te = tile.getNeighbor(facing);
 
         if (te != null)
-            return (IItemHandlerModifiable)te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+            return (IItemHandlerModifiable) te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
         return null;
     }
 
     private AxisAlignedBB getVacuumBB(@Nonnull BlockPos pos) {
         switch (tile.blockFacing()) {
             case DOWN:
-                return new AxisAlignedBB(pos.add(-rangeX, 0, -rangeZ), pos.add(rangeX,rangeY,rangeZ));
+                return new AxisAlignedBB(pos.add(-rangeX, 0, -rangeZ), pos.add(rangeX, rangeY, rangeZ));
             case UP:
-                return new AxisAlignedBB(pos.add(-rangeX, 0, -rangeZ), pos.add(rangeX,-rangeY,rangeZ));
+                return new AxisAlignedBB(pos.add(-rangeX, 0, -rangeZ), pos.add(rangeX, -rangeY, rangeZ));
             case NORTH:
-                return new AxisAlignedBB(pos.add(-rangeX, -rangeY, 0), pos.add(rangeX,rangeY,rangeZ));
+                return new AxisAlignedBB(pos.add(-rangeX, -rangeY, 0), pos.add(rangeX, rangeY, rangeZ));
             case SOUTH:
-                return new AxisAlignedBB(pos.add(-rangeX, -rangeY, 0), pos.add(rangeX,rangeY,-rangeZ));
+                return new AxisAlignedBB(pos.add(-rangeX, -rangeY, 0), pos.add(rangeX, rangeY, -rangeZ));
             case WEST:
-                return new AxisAlignedBB(pos.add(0, -rangeY, -rangeZ), pos.add(-rangeX,rangeY,rangeZ));
+                return new AxisAlignedBB(pos.add(0, -rangeY, -rangeZ), pos.add(-rangeX, rangeY, rangeZ));
             case EAST:
-                return new AxisAlignedBB(pos.add(0, -rangeY, -rangeZ), pos.add(rangeX,rangeY,rangeZ));
+                return new AxisAlignedBB(pos.add(0, -rangeY, -rangeZ), pos.add(rangeX, rangeY, rangeZ));
         }
-        return new AxisAlignedBB(pos, pos.add(1,1,1));
+        return new AxisAlignedBB(pos, pos.add(1, 1, 1));
     }
 
     private void adjustRange(@Nonnull EntityPlayer playerIn) {
-        if(ConfigValues.MaxVacuumRange > 1) {
+        if (ConfigValues.MaxVacuumRange > 1) {
             int r = 0;
             switch (mode) {
                 case X:
                     rangeX++;
-                    if(rangeX > ConfigValues.MaxVacuumRange) rangeX = 1;
+                    if (rangeX > ConfigValues.MaxVacuumRange) rangeX = 1;
                     r = rangeX;
                     break;
                 case Y:
                     rangeY++;
-                    if(rangeY > ConfigValues.MaxVacuumRange) rangeY = 1;
+                    if (rangeY > ConfigValues.MaxVacuumRange) rangeY = 1;
                     r = rangeY;
                     break;
                 case Z:
                     rangeZ++;
-                    if(rangeZ > ConfigValues.MaxVacuumRange) rangeZ = 1;
+                    if (rangeZ > ConfigValues.MaxVacuumRange) rangeZ = 1;
                     r = rangeZ;
                     break;
             }
@@ -182,9 +179,7 @@ public class ModuleVacuum extends ModuleFrameBase {
     }
 
     public enum EnumMode {
-        X(0, "x"),
-        Y(1, "y"),
-        Z(2, "z");
+        X(0, "x"), Y(1, "y"), Z(2, "z");
 
         public static final EnumMode[] VALUES = new EnumMode[3];
 

@@ -3,6 +3,7 @@ package de.shyrik.modularitemframe.api;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
+import de.shyrik.modularitemframe.common.module.t1.ModuleItem;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -98,7 +99,7 @@ public abstract class ModuleFrameBase implements INBTSerializable<NBTTagCompound
 	/**
 	 * Called by the {@link FrameRenderer} after rendering the frame.
 	 * Extra rendering can be don here
-	 * like the {@link de.shyrik.modularitemframe.common.module.ModuleItem ModuleItem} does the item thing)
+	 * like the {@link ModuleItem ModuleItem} does the item thing)
 	 *
 	 * @param tesr instance of the current {@link FrameRenderer}
 	 */

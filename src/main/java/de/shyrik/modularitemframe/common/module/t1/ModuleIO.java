@@ -1,4 +1,4 @@
-package de.shyrik.modularitemframe.common.module;
+package de.shyrik.modularitemframe.common.module.t1;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleFrameBase;
@@ -19,7 +19,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 
-public class ModuleAccess extends ModuleFrameBase {
+public class ModuleIO extends ModuleFrameBase {
 
     private static final String NBT_LAST = "lastclick";
     private static final String NBT_LASTSTACK = "laststack";
@@ -61,7 +61,7 @@ public class ModuleAccess extends ModuleFrameBase {
 
     @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if(!worldIn.isRemote) {
+        if (!worldIn.isRemote) {
             EnumFacing blockFacing = tile.blockFacing();
             TileEntity neighbor = tile.getNeighbor(blockFacing);
             if (neighbor != null) {
@@ -79,7 +79,7 @@ public class ModuleAccess extends ModuleFrameBase {
                         else {
                             heldCopy.setCount(1);
                             ItemUtils.giveStack(handler, heldCopy);
-                            held.setCount(held.getCount()-1);
+                            held.setCount(held.getCount() - 1);
 
                             lastStack = heldCopy;
                             lastClick = time;
