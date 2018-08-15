@@ -11,7 +11,6 @@ import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -20,8 +19,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 
@@ -68,28 +65,6 @@ public class ModuleNullify extends ModuleFluid {
             worldIn.playSound(null, pos, SoundEvents.ENTITY_ENDERPEARL_THROW, SoundCategory.BLOCKS, 0.4F, 0.7F);
         }
         return true;
-    }
-
-    @Override
-    public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
-        if (ConfigValues.CanNulliFrameSuckFromInvent && !world.isRemote) {
-            if (world.getTotalWorldTime() % 20 != 0) return;
-
-            EnumFacing facing = tile.blockFacing();
-            TileEntity tile = world.getTileEntity(pos.offset(facing));
-            if (tile != null) {
-                IItemHandlerModifiable trash = (IItemHandlerModifiable) tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
-                if (trash != null) {
-                    for (int slot = 0; slot < trash.getSlots(); slot++) {
-                        if (!trash.getStackInSlot(slot).isEmpty()) {
-                            trash.setStackInSlot(slot, ItemStack.EMPTY);
-                            world.playSound(null, pos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.4F, 0.7F);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
     }
 
     @Override

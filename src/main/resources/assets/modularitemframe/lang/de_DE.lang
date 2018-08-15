@@ -9,7 +9,9 @@ item.modularitemframe:module_tank.name=Tank Modul
 item.modularitemframe:module_drop.name=Spender Modul
 item.modularitemframe:module_xp.name=XP Modul
 item.modularitemframe:module_vacuum.name=Vacuum Modul
-item.modularitemframe:canvas.name=Modul Leinwand
+item.modularitemframe:io.name=I/O Modul
+item.modularitemframe:module_trash_can.name=Mülleimer Modul
+item.modularitemframe:canvas.name=Leinwand
 
 modularitemframe.message.no_target=[ModularItemFrame] Keine Zielposition gesetzt - benutze dafür den Schraubenzieher
 modularitemframe.message.invalid_target=[ModularItemFrame] Kein Ender Rahmen an der Zielposition
@@ -42,7 +44,8 @@ modularitemframe.module.tele=Teleport
 modularitemframe.module.xp=XP
 modularitemframe.module.drop=Spender
 modularitemframe.module.vacuum=Vacuum
-modularitemframe.module.access=I/O
+modularitemframe.module.io=I/O
+modularitemframe.module.trash_can=Mülleimer
 
 modularitemframe.tooltip.module=Modul: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb

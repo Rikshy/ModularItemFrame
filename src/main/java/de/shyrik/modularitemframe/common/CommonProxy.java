@@ -28,6 +28,7 @@ public class CommonProxy {
     public static ItemModule MODULE_XP;
     public static ItemModule MODULE_VACUUM;
     public static ItemModule MODULE_IO;
+    public static ItemModule MODULE_TRASHCAN;
 
     public static ItemScrewdriver SCREWDRIVER;
 
@@ -43,7 +44,8 @@ public class CommonProxy {
         MODULE_DROP = ModuleRegistry.registerCreate("module_drop", ModuleDrop.class);
         MODULE_XP = ModuleRegistry.registerCreate("module_xp", ModuleXP.class);
         MODULE_VACUUM = ModuleRegistry.registerCreate("module_vacuum", ModuleVacuum.class);
-        //MODULE_IO = ModuleRegistry.registerCreate("module_item", ModuleIO.class);
+        //MODULE_IO = ModuleRegistry.registerCreate("module_io", ModuleIO.class);
+        //MODULE_TRASHCAN = ModuleRegistry.registerCreate("module_trash_can", ModuleTrashCan.class);
         SCREWDRIVER = new ItemScrewdriver();
 
         ITEM_CANVAS = new ItemMod("canvas");

@@ -9,7 +9,9 @@ item.modularitemframe:module_tank.name=Tank Module
 item.modularitemframe:module_drop.name=Drop Module
 item.modularitemframe:module_xp.name=XP Module
 item.modularitemframe:module_vacuum.name=Vacuum Module
-item.modularitemframe:canvas.name=Module Canvas
+item.modularitemframe:io.name=I/O Module
+item.modularitemframe:module_trash_can.name=Trash can Module
+item.modularitemframe:canvas.name=Canvas
 
 modularitemframe.message.no_target=[ModularItemFrame] No target location set - use the screwdriver
 modularitemframe.message.invalid_target=[ModularItemFrame] No Ender Frame at target location
@@ -42,7 +44,8 @@ modularitemframe.module.tele=Teleport
 modularitemframe.module.xp=XP
 modularitemframe.module.drop=Drop
 modularitemframe.module.vacuum=Vacuum
-modularitemframe.module.access=I/O
+modularitemframe.module.io=I/O
+modularitemframe.module.trash_can=Trash can
 
 modularitemframe.tooltip.module=Module: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb
