@@ -8,6 +8,7 @@ item.modularitemframe:module_tele.name=Teleport Module
 item.modularitemframe:module_tank.name=Tank Module
 item.modularitemframe:module_drop.name=Drop Module
 item.modularitemframe:module_xp.name=XP Module
+item.modularitemframe:module_vacuum.name=Vacuum Module
 item.modularitemframe:canvas.name=Module Canvas
 
 modularitemframe.message.no_target=[ModularItemFrame] No target location set - use the screwdriver
@@ -41,7 +42,7 @@ modularitemframe.module.tele=Teleport
 modularitemframe.module.xp=XP
 modularitemframe.module.drop=Drop
 modularitemframe.module.vacuum=Vacuum
-modularitemframe.module.access=Quick Access
+modularitemframe.module.access=I/O
 
 modularitemframe.tooltip.module=Module: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb

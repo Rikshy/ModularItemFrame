@@ -107,7 +107,7 @@ public class ItemUtils {
         for (int i = 0; i < source.getSlots(); i++) {
             ItemStack sourceStack = source.getStackInSlot(i);
             if(simpleAreStacksEqual(stack, sourceStack)) {
-                ItemStack remain = giveStack(target, sourceStack);
+                ItemStack remain = giveStack(target, sourceStack.copy());
                 sourceStack.setCount(remain.getCount());
                 if (!remain.isEmpty()) break;
             }
@@ -133,6 +133,11 @@ public class ItemUtils {
 
 	public static int getLastUnOccupiedSlot(IItemHandler inventory) {
 		for (int i = inventory.getSlots() - 1; i >= 0; i--) if (inventory.getStackInSlot(i).isEmpty()) return i;
+		return -1;
+	}
+
+	public static int getFirstOccupiedSlot(IItemHandler inventory) {
+		for (int i = 0; i < inventory.getSlots(); ++i) if (!inventory.getStackInSlot(i).isEmpty()) return i;
 		return -1;
 	}
 

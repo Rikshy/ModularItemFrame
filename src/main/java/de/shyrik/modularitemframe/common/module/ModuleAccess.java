@@ -1,5 +1,6 @@
 package de.shyrik.modularitemframe.common.module;
 
+import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleFrameBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import net.minecraft.block.state.IBlockState;
@@ -21,13 +22,15 @@ import javax.annotation.Nonnull;
 public class ModuleAccess extends ModuleFrameBase {
 
     private static final String NBT_LAST = "lastclick";
+    private static final String NBT_LASTSTACK = "laststack";
 
     private long lastClick;
+    private ItemStack lastStack = ItemStack.EMPTY;
 
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return null;
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg");
     }
 
     @Override
@@ -37,19 +40,20 @@ public class ModuleAccess extends ModuleFrameBase {
 
     @Override
     public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
-        EnumFacing blockFacing = tile.blockFacing();
-        TileEntity neighbor = tile.getNeighbor(blockFacing);
-        if(neighbor != null) {
-            IItemHandlerModifiable handler = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, blockFacing);
-            IItemHandlerModifiable player = ItemUtils.getPlayerInv(playerIn);
-            if (handler != null && player != null) {
-                int slot = ItemUtils.getLastUnOccupiedSlot(handler);
-                if (slot >= 0) {
-                    int amount = playerIn.isSneaking() ? handler.getStackInSlot(slot).getMaxStackSize() : 1;
-                    ItemStack extract = handler.extractItem(slot, amount, false);
-                    extract = ItemUtils.giveStack(player, extract);
-                    if (!extract.isEmpty())
-                        ItemUtils.ejectStack(worldIn, pos, blockFacing, extract);
+        if (!worldIn.isRemote) {
+            EnumFacing blockFacing = tile.blockFacing();
+            TileEntity neighbor = tile.getNeighbor(blockFacing);
+            if (neighbor != null) {
+                IItemHandlerModifiable handler = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, blockFacing);
+                IItemHandlerModifiable player = ItemUtils.getPlayerInv(playerIn);
+                if (handler != null && player != null) {
+                    int slot = ItemUtils.getFirstOccupiedSlot(handler);
+                    if (slot >= 0) {
+                        int amount = playerIn.isSneaking() ? handler.getStackInSlot(slot).getMaxStackSize() : 1;
+                        ItemStack extract = handler.extractItem(slot, amount, false);
+                        extract = ItemUtils.giveStack(player, extract);
+                        if (!extract.isEmpty()) ItemUtils.ejectStack(worldIn, pos, blockFacing, extract);
+                    }
                 }
             }
         }
@@ -57,30 +61,43 @@ public class ModuleAccess extends ModuleFrameBase {
 
     @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        EnumFacing blockFacing = tile.blockFacing();
-        TileEntity neighbor = tile.getNeighbor(blockFacing);
-        if(neighbor != null) {
-            IItemHandlerModifiable handler = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, blockFacing);
-            IItemHandlerModifiable player = ItemUtils.getPlayerInv(playerIn);
-            if (handler != null && player != null) {
-                ItemStack held = playerIn.getHeldItem(hand);
-                if (!held.isEmpty()) {
+        if(!worldIn.isRemote) {
+            EnumFacing blockFacing = tile.blockFacing();
+            TileEntity neighbor = tile.getNeighbor(blockFacing);
+            if (neighbor != null) {
+                IItemHandlerModifiable handler = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, blockFacing);
+                IItemHandlerModifiable player = ItemUtils.getPlayerInv(playerIn);
+                if (handler != null && player != null) {
+                    ItemStack held = playerIn.getHeldItem(hand);
                     long time = worldIn.getTotalWorldTime();
 
-                    if (time - lastClick <= 8L) ItemUtils.giveAllPossibleStacks(handler, player, held);
-                    else ItemUtils.giveStack(handler, held);
-                    lastClick = time;
+                    if (time - lastClick <= 8L && !playerIn.isSneaking() && !lastStack.isEmpty())
+                        ItemUtils.giveAllPossibleStacks(handler, player, lastStack);
+                    else if (!held.isEmpty()) {
+                        ItemStack heldCopy = held.copy();
+                        if (playerIn.isSneaking()) held.setCount(ItemUtils.giveStack(handler, heldCopy).getCount());
+                        else {
+                            heldCopy.setCount(1);
+                            ItemUtils.giveStack(handler, heldCopy);
+                            held.setCount(held.getCount()-1);
+
+                            lastStack = heldCopy;
+                            lastClick = time;
+                        }
+                    }
+                    tile.markDirty();
+                    return true;
                 }
-                return true;
             }
         }
-        return false;
+        return true;
     }
 
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();
         compound.setLong(NBT_LAST, lastClick);
+        compound.setTag(NBT_LASTSTACK, lastStack.serializeNBT());
         return compound;
     }
 
@@ -88,5 +105,6 @@ public class ModuleAccess extends ModuleFrameBase {
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
         if (nbt.hasKey(NBT_LAST)) lastClick = nbt.getLong(NBT_LAST);
+        if (nbt.hasKey(NBT_LASTSTACK)) lastStack = new ItemStack(nbt.getCompoundTag(NBT_LASTSTACK));
     }
 }
