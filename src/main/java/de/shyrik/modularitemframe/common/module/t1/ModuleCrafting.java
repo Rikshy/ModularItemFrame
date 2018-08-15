@@ -7,7 +7,6 @@ import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
 import de.shyrik.modularitemframe.common.container.FrameCrafting;
 import de.shyrik.modularitemframe.common.container.IContainerCallbacks;
-import de.shyrik.modularitemframe.common.module.t1.ModuleItem;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
@@ -22,16 +21,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
-import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -41,8 +37,8 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 
     private static final String NBT_GHOSTINVENTORY = "ghostinventory";
 
-    private IRecipe recipe;
-    public ItemStackHandler ghostInventory = new ItemStackHandler(9);
+    protected IRecipe recipe;
+    private ItemStackHandler ghostInventory = new ItemStackHandler(9);
 
     public ModuleCrafting() {
         super();
@@ -117,18 +113,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
         player.world.playSound(null, tile.getPos(), SoundEvents.BLOCK_LADDER_STEP, SoundCategory.BLOCKS, 0.4F, 0.7F);
     }
 
-    private IItemHandlerModifiable getWorkingInventories(IItemHandlerModifiable playerInventory) {
-        EnumFacing facing = tile.blockFacing();
-        TileEntity neighbor = tile.getNeighbor(facing);
-        IItemHandlerModifiable neighborInventory = null;
-        if (neighbor != null) {
-            neighborInventory = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
-        }
-
-        if (neighborInventory != null) {
-            if (!ConfigValues.StillUsePlayerInv) return neighborInventory;
-            else return new CombinedInvWrapper(neighborInventory, playerInventory);
-        }
+    protected IItemHandlerModifiable getWorkingInventories(IItemHandlerModifiable playerInventory) {
         return playerInventory;
     }
 
