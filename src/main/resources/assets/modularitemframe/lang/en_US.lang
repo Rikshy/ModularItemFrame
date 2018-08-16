@@ -12,6 +12,7 @@ item.modularitemframe:module_vacuum.name=Vacuum Module
 item.modularitemframe:io.name=I/O Module
 item.modularitemframe:module_trash_can.name=Trash can Module
 item.modularitemframe:module_crafting_plus.name=Crafting Plus Module
+item.modularitemframe:module_auto_crafting.name=Auto Crafting Module
 item.modularitemframe:canvas.name=Canvas
 
 modularitemframe.message.no_target=[ModularItemFrame] No target location set - use the screwdriver
@@ -48,6 +49,7 @@ modularitemframe.module.vacuum=Vacuum
 modularitemframe.module.io=I/O
 modularitemframe.module.trash_can=Trash can
 modularitemframe.module.crafting_plus=Crafting Plus
+modularitemframe.module.auto_crafting=Auto Crafting
 
 modularitemframe.tooltip.module=Module: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb

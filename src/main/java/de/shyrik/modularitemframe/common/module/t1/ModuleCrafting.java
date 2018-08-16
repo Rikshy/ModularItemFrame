@@ -124,7 +124,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 
     protected void reloadRecipe() {
         recipe = ItemUtils.getRecipe(ghostInventory, tile.getWorld());
-        displayItem = recipe != null ? recipe.getRecipeOutput() : ItemStack.EMPTY;
+        displayItem = recipe != null ? recipe.getRecipeOutput().copy() : ItemStack.EMPTY;
         tile.markDirty();
     }
 

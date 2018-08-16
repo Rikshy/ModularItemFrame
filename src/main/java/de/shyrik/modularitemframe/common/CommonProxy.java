@@ -9,9 +9,8 @@ import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.api.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.module.t1.*;
-import de.shyrik.modularitemframe.common.module.t2.ModuleDrop;
-import de.shyrik.modularitemframe.common.module.t2.ModuleVacuum;
-import de.shyrik.modularitemframe.common.module.t2.ModuleXP;
+import de.shyrik.modularitemframe.common.module.t2.*;
+import de.shyrik.modularitemframe.common.module.t3.*;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -31,6 +30,7 @@ public class CommonProxy {
     public static ItemModule MODULE_IO;
     public static ItemModule MODULE_TRASHCAN;
     public static ItemModule MODULE_CRAFTINGPLUS;
+    public static ItemModule MODULE_AUTOCRAFTING;
 
     public static ItemScrewdriver SCREWDRIVER;
 
@@ -49,6 +49,7 @@ public class CommonProxy {
         //MODULE_IO = ModuleRegistry.registerCreate("module_io", ModuleIO.class);
         //MODULE_TRASHCAN = ModuleRegistry.registerCreate("module_trash_can", ModuleTrashCan.class);
         //MODULE_CRAFTINGPLUS = ModuleRegistry.registerCreate("module_crafting_plus", ModuleCraftingPlus.class);
+        //MODULE_AUTOCRAFTING = ModuleRegistry.registerCreate("module_crafting_plus", ModuleAutoCrafting.class);
         SCREWDRIVER = new ItemScrewdriver();
 
         ITEM_CANVAS = new ItemMod("canvas");

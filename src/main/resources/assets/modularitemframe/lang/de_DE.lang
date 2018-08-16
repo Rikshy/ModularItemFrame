@@ -12,6 +12,7 @@ item.modularitemframe:module_vacuum.name=Vacuum Modul
 item.modularitemframe:io.name=I/O Modul
 item.modularitemframe:module_trash_can.name=Mülleimer Modul
 item.modularitemframe:module_crafting_plus.name=Crafting Plus Modul
+item.modularitemframe:module_auto_crafting.name=Auto Crafting Modul
 item.modularitemframe:canvas.name=Leinwand
 
 modularitemframe.message.no_target=[ModularItemFrame] Keine Zielposition gesetzt - benutze dafür den Schraubenzieher
@@ -48,6 +49,7 @@ modularitemframe.module.vacuum=Vacuum
 modularitemframe.module.io=I/O
 modularitemframe.module.trash_can=Mülleimer
 modularitemframe.module.crafting_plus=Crafting Plus
+modularitemframe.module.auto_crafting=Auto Crafting
 
 modularitemframe.tooltip.module=Modul: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb
