@@ -1,14 +1,20 @@
 package de.shyrik.modularitemframe.api.utils;
 
+import com.teamwizardry.librarianlib.core.common.RecipeGeneratorHandler;
+import net.minecraft.client.util.RecipeItemHelper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -204,4 +210,28 @@ public class ItemUtils {
 	public static IItemHandlerModifiable getPlayerInv(@Nonnull EntityPlayer player) {
 		return (IItemHandlerModifiable) player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
 	}
+
+	public static IRecipe getRecipe(IItemHandler itemHandler, World world) {
+		InventoryCrafting craft = new InventoryCrafting(new Container() {
+			@Override
+			public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
+				return false;
+			}
+		}, 3 , 3);
+
+        for(int i = 0; i < 9; i++) {
+            ItemStack stack = itemHandler.getStackInSlot(i);
+
+            if(stack.isEmpty())
+                continue;
+
+            craft.setInventorySlotContents(i, stack.copy());
+        }
+
+        for(IRecipe recipe : ForgeRegistries.RECIPES)
+            if (recipe.matches(craft, world)) {
+                return recipe;
+            }
+        return null;
+    }
 }

@@ -94,7 +94,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
         final IItemHandlerModifiable playerInventory = ItemUtils.getPlayerInv(player);
         final IItemHandlerModifiable workingInv = getWorkingInventories(playerInventory);
 
-        if (recipe == null) reloadRecipe(player);
+        if (recipe == null) reloadRecipe();
 
         if (workingInv == null || recipe == null || recipe.getRecipeOutput().isEmpty() || !ItemUtils.canCraft(workingInv, recipe.getIngredients()))
             return;
@@ -118,13 +118,14 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
     }
 
     public boolean hasValidRecipe(@Nonnull EntityPlayer player) {
-        if (recipe == null) reloadRecipe(player);
+        if (recipe == null) reloadRecipe();
         return recipe != null && !recipe.getRecipeOutput().isEmpty();
     }
 
-    private void reloadRecipe(EntityPlayer player) {
-        FrameCrafting fc = new FrameCrafting(new ContainerCraftingFrame(null, ghostInventory, player, this), ghostInventory, 3, 3);
-        fc.onCraftMatrixChanged();
+    protected void reloadRecipe() {
+        recipe = ItemUtils.getRecipe(ghostInventory, tile.getWorld());
+        displayItem = recipe != null ? recipe.getRecipeOutput() : ItemStack.EMPTY;
+        tile.markDirty();
     }
 
     @Override
@@ -149,7 +150,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
             for (ItemStack stack : stacks) {
                 input.item(stack);
             }
-            probeInfo.horizontal().text("output:").item(recipe.getRecipeOutput());
+            //probeInfo.horizontal().text("output:").item(recipe.getRecipeOutput());
         }
     }
 
@@ -167,7 +168,6 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
         recipe = result.getRecipeUsed();
         tile.markDirty();
     }
-
 
     @Override
     public NBTTagCompound serializeNBT() {

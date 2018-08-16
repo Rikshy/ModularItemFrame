@@ -3,6 +3,7 @@ package de.shyrik.modularitemframe.common.container;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -20,30 +21,31 @@ public class ContainerCraftingFrame extends Container {
 	/**
 	 * The player inventory.
 	 */
-	private IItemHandlerModifiable playerInventory;
+	//private IItemHandlerModifiable playerInventory;
 	private FrameCrafting matrix;
 	private InventoryCraftResult craftResult = new InventoryCraftResult();
 	private EntityPlayer player;
 
-	public ContainerCraftingFrame(IItemHandlerModifiable playerInventory, IItemHandlerModifiable frameInventory, EntityPlayer player, IContainerCallbacks containerCallbacks) {
-		this.playerInventory = playerInventory;
+	public ContainerCraftingFrame(IItemHandlerModifiable playerInventory, @Nonnull IItemHandlerModifiable frameInventory, @Nonnull EntityPlayer player, @Nonnull IContainerCallbacks containerCallbacks) {
+		//this.playerInventory = playerInventory;
 		this.player = player;
 		this.callbacks = containerCallbacks;
 
 		matrix = new FrameCrafting(this, frameInventory, 3, 3);
 		matrix.onCraftMatrixChanged();
 
-		this.addSlotToContainer(new SlotCrafting(player, this.matrix, this.craftResult, 0, 124, 35) {
-			@Override
-			public boolean canTakeStack(EntityPlayer playerIn) {
-				return false;
-			}
-		});
-		for (int row = 0; row < FRAME_SLOTS_PER_ROW; ++row) {
-			for (int col = 0; col < FRAME_SLOTS_PER_ROW; ++col) {
-				addSlotToContainer(new GhostSlot(matrix, col + row * FRAME_SLOTS_PER_ROW, 30 + col * 18, 17 + row * 18));
-			}
-		}
+        this.addSlotToContainer(new SlotCrafting(player, this.matrix, this.craftResult, 0, 124, 35) {
+            @Override
+            public boolean canTakeStack(EntityPlayer playerIn) {
+                return false;
+            }
+        });
+        for (int row = 0; row < FRAME_SLOTS_PER_ROW; ++row) {
+            for (int col = 0; col < FRAME_SLOTS_PER_ROW; ++col) {
+                addSlotToContainer(new GhostSlot(matrix, col + row * FRAME_SLOTS_PER_ROW, 30 + col * 18, 17 + row * 18));
+            }
+        }
+
 
 		if (playerInventory != null) {
 			for (int row = 0; row < INV_ROWS; ++row) {
