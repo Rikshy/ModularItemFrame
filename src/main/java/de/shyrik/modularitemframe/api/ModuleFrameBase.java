@@ -145,14 +145,14 @@ public abstract class ModuleFrameBase implements INBTSerializable<NBTTagCompound
 	 * or destroyed.
 	 * If you want the module to drop, make sure to call the super method
 	 */
-	public void onRemove(@NotNull World worldIn, @NotNull BlockPos pos, @Nullable EntityPlayer playerIn) {
+	public void onRemove(@NotNull World worldIn, @NotNull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
 		Item item = Item.getByNameOrId(ModularItemFrame.MOD_ID + ":" + ModuleRegistry.getModuleId(tile.module.getClass()));
 		if (item instanceof ItemModule) {
 			ItemStack remain = new ItemStack(item);
 			if (playerIn != null)
 				remain = ItemUtils.giveStack(ItemUtils.getPlayerInv(playerIn), remain);
 			if (!remain.isEmpty())
-				ItemUtils.ejectStack(worldIn, tile.getPos(), tile.blockFacing(), remain);
+				ItemUtils.ejectStack(worldIn, tile.getPos(), facing, remain);
 		}
 	}
 

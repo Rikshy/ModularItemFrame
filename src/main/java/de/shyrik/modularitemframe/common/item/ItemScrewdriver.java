@@ -46,7 +46,7 @@ public class ItemScrewdriver extends ItemModTool {
 				if (readModeFromNBT(driver) == EnumMode.INTERACT) {
 					tile.module.screw(world, pos, player, driver);
 				} else {
-					tile.module.onRemove(world, pos, player);
+					tile.module.onRemove(world, pos, side, player);
 					tile.setModule(new ModuleEmpty());
 				}
 				tile.markDirty();

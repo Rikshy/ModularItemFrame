@@ -79,7 +79,7 @@ public class BlockModularFrame extends BlockModContainer implements IProbeInfoAc
 
 	@Override
 	public void breakBlock(@NotNull World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state) {
-		getTE(worldIn, pos).module.onRemove(worldIn, pos, null);
+		getTE(worldIn, pos).module.onRemove(worldIn, pos, state.getValue(FACING), null);
 		super.breakBlock(worldIn, pos, state);
 	}
 
