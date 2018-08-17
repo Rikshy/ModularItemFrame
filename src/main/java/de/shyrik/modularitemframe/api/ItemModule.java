@@ -32,7 +32,7 @@ public class ItemModule extends ItemMod {
             if (!world.isRemote && tile.acceptsModule()) {
                 ItemStack held = player.getHeldItem(hand);
                 tile.setModule(ModuleRegistry.createModuleInstance(((ItemModule) held.getItem()).moduleId));
-                held.setCount(held.getCount() - 1);
+                if (!player.isCreative()) held.shrink(1);
                 tile.markDirty();
             }
             return EnumActionResult.SUCCESS;

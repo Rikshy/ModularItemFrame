@@ -13,6 +13,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
+
 @TileRegister("modular_frame")
 public class TileModularFrame extends TileModTickable {
 
@@ -69,7 +71,7 @@ public class TileModularFrame extends TileModTickable {
 	}
 
 	@Override
-	public void writeCustomBytes(ByteBuf buf, boolean sync) {
+	public void writeCustomBytes(@Nonnull ByteBuf buf, boolean sync) {
 		if (module == null) CommonUtilMethods.writeNullSignature(buf);
 		else {
 			CommonUtilMethods.writeNonnullSignature(buf);
@@ -79,7 +81,7 @@ public class TileModularFrame extends TileModTickable {
 	}
 
 	@Override
-	public void readCustomBytes(ByteBuf buf) {
+	public void readCustomBytes(@Nonnull ByteBuf buf) {
 		if (CommonUtilMethods.hasNullSignature(buf)) module = null;
 		else {
 			module = ModuleRegistry.createModuleInstance(CommonUtilMethods.readString(buf));

@@ -194,7 +194,7 @@ public class ItemUtils {
 		int idx = listContainsItemStackEqual(list, stack);
 		if (idx >= 0) {
 			ItemStack listStack = list.get(idx);
-			listStack.setCount(listStack.getCount() + stack.getCount());
+			listStack.grow(stack.getCount());
 			return true;
 		}
 		return false;

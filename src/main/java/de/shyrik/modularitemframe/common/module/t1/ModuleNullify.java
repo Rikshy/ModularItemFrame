@@ -53,7 +53,7 @@ public class ModuleNullify extends ModuleFluid {
             if (ItemUtils.simpleAreStacksEqual(held, lastStack)) {
                 if (held.getCount() + lastStack.getCount() > lastStack.getMaxStackSize())
                     lastStack.setCount(lastStack.getMaxStackSize());
-                else lastStack.setCount(lastStack.getCount() + held.getCount());
+                else lastStack.grow(held.getCount());
             } else {
                 lastStack = held.copy();
             }

@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nonnull;
 
-public class ModuleFluidDropper extends ModuleFrameBase {
+public class ModuleFluidDispenser extends ModuleFrameBase {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
@@ -25,7 +25,7 @@ public class ModuleFluidDropper extends ModuleFrameBase {
 
     @Override
     public String getModuleName() {
-        return I18n.format("modularitemframe.module.fluid_dropper");
+        return I18n.format("modularitemframe.module.fluid_dispenser");
     }
 
     @Override

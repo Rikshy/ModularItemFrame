@@ -79,7 +79,7 @@ public class ModuleIO extends ModuleFrameBase {
                         else {
                             heldCopy.setCount(1);
                             ItemUtils.giveStack(handler, heldCopy);
-                            held.setCount(held.getCount() - 1);
+                            held.shrink(1);
 
                             lastStack = heldCopy;
                             lastClick = time;

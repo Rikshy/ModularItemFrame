@@ -22,7 +22,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 
-public class ModuleDrop extends ModuleFrameBase {
+public class ModuleDispense extends ModuleFrameBase {
 
     private static final String NBT_RANGE = "range";
 
@@ -36,7 +36,7 @@ public class ModuleDrop extends ModuleFrameBase {
 
     @Override
     public String getModuleName() {
-        return I18n.format("modularitemframe.module.drop");
+        return I18n.format("modularitemframe.module.dispense");
     }
 
     @Override
