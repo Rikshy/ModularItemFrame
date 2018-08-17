@@ -46,7 +46,5 @@ public class ModuleFluidDispenser extends ModuleFrameBase {
                 FluidUtil.tryPlaceFluid(null, world, pos.offset(facing.getOpposite()), handler, handler.drain(1000, false));
             }
         }
-
-
     }
 }

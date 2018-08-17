@@ -19,7 +19,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -73,16 +72,6 @@ public class ModuleVacuum extends ModuleFrameBase {
 
     @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return false;
-
-        ItemStack held = playerIn.getHeldItem(hand);
-        if (!playerIn.isSneaking() && !held.isEmpty()) {
-            IItemHandlerModifiable handler = getNeighborTileItemCap();
-            if (handler != null) {
-                ItemStack remain = ItemUtils.giveStack(handler, held);
-                held.setCount(remain.getCount());
-            }
-        }
         return false;
     }
 
