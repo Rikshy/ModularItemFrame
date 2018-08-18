@@ -42,19 +42,38 @@ public class ItemScrewdriver extends ItemModTool {
 		if (tmp instanceof TileModularFrame) {
 			if (!world.isRemote) {
 				TileModularFrame tile = (TileModularFrame) tmp;
-				ItemStack driver = player.getHeldItem(hand);
-				if (readModeFromNBT(driver) == EnumMode.INTERACT) {
-					tile.module.screw(world, pos, player, driver);
-				} else {
-					tile.module.onRemove(world, pos, side, player);
-					tile.setModule(new ModuleEmpty());
+				if (side.getOpposite() == tile.blockFacing()) {
+					ItemStack driver = player.getHeldItem(hand);
+					if (hitModule(side.getOpposite(), hitX, hitY, hitZ)) {
+                        if (readModeFromNBT(driver) == EnumMode.INTERACT) {
+                            tile.module.screw(world, pos, player, driver);
+                        } else {
+                            tile.module.onRemove(world, pos, side, player);
+                            tile.setModule(new ModuleEmpty());
+                        }
+                    }
+					tile.markDirty();
 				}
-				tile.markDirty();
 			}
 			return EnumActionResult.SUCCESS;
 		}
 		return super.onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
 	}
+
+	private boolean hitModule(EnumFacing side, float x, float y, float z) {
+        switch (side) {
+            case DOWN:
+            case UP:
+                return x > 0.17F && x < 0.83F && z > 0.17F && z < 0.83F;
+            case NORTH:
+            case SOUTH:
+                return x > 0.17F && x < 0.83F && y > 0.20F && y < 0.80F;
+            case WEST:
+            case EAST:
+                return z > 0.17F && z < 0.83F && y > 0.20F && y < 0.80F;
+        }
+        return false;
+    }
 
 	@Nonnull
 	@Override
