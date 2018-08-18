@@ -12,11 +12,10 @@ import java.util.List;
 
 public class ModuleXPVacuum extends ModuleXP {
 
-
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (experience >= MAX_XP) return;
-        if (world.getTotalWorldTime() % ConfigValues.VacuumCooldown != 0) return;
+        if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0) return;
 
         List<EntityXPOrb> entities = world.getEntitiesWithinAABB(EntityXPOrb.class, getVacuumBB(pos));
         for (EntityXPOrb entity : entities) {
@@ -27,7 +26,7 @@ public class ModuleXPVacuum extends ModuleXP {
     }
 
     private AxisAlignedBB getVacuumBB(@Nonnull BlockPos pos) {
-        int range = ConfigValues.MaxVacuumRange;
+        int range = ConfigValues.BaseVacuumRange + countRange;
         switch (tile.blockFacing()) {
             case DOWN:
                 return new AxisAlignedBB(pos.add(-range, 0, -range), pos.add(range, range, range));

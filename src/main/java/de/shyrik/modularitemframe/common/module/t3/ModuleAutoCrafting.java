@@ -1,5 +1,6 @@
 package de.shyrik.modularitemframe.common.module.t3;
 
+import de.shyrik.modularitemframe.api.UpgradeBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.common.module.t2.ModuleCraftingPlus;
 import net.minecraft.block.state.IBlockState;
@@ -33,7 +34,7 @@ public class ModuleAutoCrafting extends ModuleCraftingPlus {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (world.isRemote) return;
-        if (world.getTotalWorldTime() % 20 != 0) return;
+        if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0) return;
 
         EnumFacing facing = tile.blockFacing();
         TileEntity neighbor = tile.getNeighbor(facing);

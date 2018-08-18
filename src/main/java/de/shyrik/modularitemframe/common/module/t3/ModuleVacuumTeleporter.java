@@ -57,8 +57,8 @@ public class ModuleVacuumTeleporter extends ModuleBase {
                 TileEntity targetTile = tile.getWorld().getTileEntity(tmp);
                 if (!(targetTile instanceof TileModularFrame) || !((((TileModularFrame) targetTile).module instanceof ModuleDispenserTeleporter)))
                     playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.invalid_target"));
-                else if (tile.getPos().getDistance(tmp.getX(), tmp.getY(), tmp.getZ()) > ConfigValues.MaxTeleportRange) {
-                    playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.too_far", ConfigValues.MaxTeleportRange));
+                else if (tile.getPos().getDistance(tmp.getX(), tmp.getY(), tmp.getZ()) > ConfigValues.BaseTeleportRange + (countRange * 10)) {
+                    playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.too_far", ConfigValues.BaseTeleportRange + (countRange * 10)));
                 } else {
                     linkedLoc = tmp;
                     ((ModuleDispenserTeleporter) ((TileModularFrame) targetTile).module).linkedLoc = tile.getPos();
@@ -78,7 +78,8 @@ public class ModuleVacuumTeleporter extends ModuleBase {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (!hasValidConnection(world)) return;
-        if (world.getTotalWorldTime() % ConfigValues.VacuumCooldown != 0) return;
+        if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0)
+            return;
 
         List<EntityItem> entities = world.getEntitiesWithinAABB(EntityItem.class, getVacuumBB(pos));
         for (EntityItem entity : entities) {
@@ -119,6 +120,7 @@ public class ModuleVacuumTeleporter extends ModuleBase {
     }
 
     private AxisAlignedBB getVacuumBB(@Nonnull BlockPos pos) {
+        int range = ConfigValues.BaseVacuumRange + countRange;
         switch (tile.blockFacing()) {
             case DOWN:
                 return new AxisAlignedBB(pos.add(-5, 0, -5), pos.add(5, 5, 5));

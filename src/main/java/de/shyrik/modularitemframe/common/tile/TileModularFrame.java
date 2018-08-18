@@ -3,6 +3,8 @@ package de.shyrik.modularitemframe.common.tile;
 import com.teamwizardry.librarianlib.features.autoregister.TileRegister;
 import com.teamwizardry.librarianlib.features.base.block.tile.TileModTickable;
 import com.teamwizardry.librarianlib.features.kotlin.CommonUtilMethods;
+import de.shyrik.modularitemframe.api.UpgradeBase;
+import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.ModuleRegistry;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
@@ -14,6 +16,8 @@ import net.minecraft.util.EnumFacing;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 @TileRegister("modular_frame")
 public class TileModularFrame extends TileModTickable {
@@ -22,6 +26,7 @@ public class TileModularFrame extends TileModTickable {
 	private static final String NBTMODULEDATA = "framemoduledata";
 
 	public ModuleBase module;
+	public List<UpgradeBase> upgrades = new ArrayList<>();
 
 	public TileModularFrame() {
 		setModule(new ModuleEmpty());
@@ -31,6 +36,11 @@ public class TileModularFrame extends TileModTickable {
 		module = mod;
 		module.setTile(this);
 	}
+
+	public void addUpgrade(UpgradeBase up) {
+	    upgrades.add(up);
+	    module.onUpgradesChanged();
+    }
 
 	public EnumFacing blockFacing() {
 		return world.getBlockState(pos).getValue(BlockModularFrame.FACING);
@@ -43,6 +53,19 @@ public class TileModularFrame extends TileModTickable {
 	public boolean acceptsModule() {
 		return module instanceof ModuleEmpty;
 	}
+
+	public boolean acceptsUpgrade() {
+        return upgrades.size() <= ConfigValues.MaxFrameUpgrades;
+    }
+
+    public int countUpgradeOfType(Class<? extends UpgradeBase> clsUp) {
+	    int count = 0;
+	    for (UpgradeBase up : upgrades) {
+	        if (clsUp.isInstance(up))
+	            count++;
+        }
+        return count;
+    }
 
 	@Override
 	public void tick() {

@@ -92,8 +92,8 @@ public class ModuleTeleport extends ModuleBase {
                 TileEntity targetTile = tile.getWorld().getTileEntity(tmp);
                 if (!(targetTile instanceof TileModularFrame) || !((((TileModularFrame) targetTile).module instanceof ModuleTeleport)))
                     playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.invalid_target"));
-                else if (tile.getPos().getDistance(tmp.getX(), tmp.getY(), tmp.getZ()) > ConfigValues.MaxTeleportRange) {
-                    playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.too_far", ConfigValues.MaxTeleportRange));
+                else if (tile.getPos().getDistance(tmp.getX(), tmp.getY(), tmp.getZ()) > ConfigValues.BaseTeleportRange + (countRange * 10)) {
+                    playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.too_far", ConfigValues.BaseTeleportRange + (countRange * 10)));
                 } else {
                     linkedLoc = tmp;
                     ((ModuleTeleport) ((TileModularFrame) targetTile).module).linkedLoc = tile.getPos();

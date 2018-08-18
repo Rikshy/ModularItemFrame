@@ -37,7 +37,13 @@ import java.util.List;
 
 public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 
+    private static final String NBT_RANGE = "countrange";
+    private static final String NBT_SPEED = "countspeed";
+
 	protected TileModularFrame tile;
+
+	protected int countSpeed = 0;
+	protected int countRange = 0;
 
 	public void setTile(TileModularFrame te) {
 		tile = te;
@@ -156,6 +162,11 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 		}
 	}
 
+	public void onUpgradesChanged() {
+	    countRange = tile.countUpgradeOfType(UpgradeBase.UpgradeRange.class);
+	    countSpeed = tile.countUpgradeOfType(UpgradeBase.UpgradeSpeed.class);
+    }
+
 	/**
 	 * The One Probe information handling
 	 */
@@ -181,7 +192,10 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 */
 	@Override
 	public NBTTagCompound serializeNBT() {
-		return new NBTTagCompound();
+		NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setInteger(NBT_RANGE, countRange);
+        nbt.setInteger(NBT_SPEED, countSpeed);
+        return nbt;
 	}
 
 	/**
@@ -189,6 +203,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 */
 	@Override
 	public void deserializeNBT(NBTTagCompound nbtTagCompound) {
-
+        if (nbtTagCompound.hasKey(NBT_RANGE)) countRange = nbtTagCompound.getInteger(NBT_RANGE);
+        if (nbtTagCompound.hasKey(NBT_SPEED)) countSpeed = nbtTagCompound.getInteger(NBT_SPEED);
 	}
 }

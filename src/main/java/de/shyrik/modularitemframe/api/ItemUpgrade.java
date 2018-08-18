@@ -13,13 +13,13 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-public class ItemModule extends ItemMod {
+public class ItemUpgrade extends ItemMod {
 
-    public String moduleId;
+    private String upgradeId;
 
-    public ItemModule(@NotNull String name) {
+    public ItemUpgrade(@NotNull String name) {
         super(name);
-        moduleId = name;
+        upgradeId = name;
     }
 
     @Nonnull
@@ -28,10 +28,13 @@ public class ItemModule extends ItemMod {
         TileEntity tmp = world.getTileEntity(pos);
         if (tmp instanceof TileModularFrame) {
             TileModularFrame tile = (TileModularFrame) tmp;
-            if (!world.isRemote && tile.acceptsModule()) {
-                tile.setModule(ModuleRegistry.createModuleInstance(moduleId));
-                if (!player.isCreative()) player.getHeldItem(hand).shrink(1);
-                tile.markDirty();
+            if(!world.isRemote && tile.acceptsUpgrade()) {
+                UpgradeBase upgrade = UpgradeRegistry.createModuleInstance(upgradeId);
+                if (upgrade != null && tile.countUpgradeOfType(upgrade.getClass()) < upgrade.getMaxCount()) {
+                    tile.addUpgrade(upgrade);
+                    if (!player.isCreative()) player.getHeldItem(hand).shrink(1);
+                    tile.markDirty();
+                }
             }
             return EnumActionResult.SUCCESS;
         }

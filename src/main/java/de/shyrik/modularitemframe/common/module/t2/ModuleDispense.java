@@ -43,11 +43,11 @@ public class ModuleDispense extends ModuleBase {
     public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
         if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return;
 
-        if (!world.isRemote && ConfigValues.AddDropperRange > 0) {
+        if (!world.isRemote && countRange > 0) {
             if (playerIn.isSneaking()) range--;
             else range++;
-            if (range < 0) range = ConfigValues.AddDropperRange;
-            if (range > ConfigValues.AddDropperRange) range = 0;
+            if (range < 0) range = countRange;
+            if (range > countRange) range = 0;
             playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.range_change", range + 1));
             tile.markDirty();
         }
@@ -70,10 +70,10 @@ public class ModuleDispense extends ModuleBase {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (!world.isRemote) {
-            if (world.getTotalWorldTime() % 20 != 0) return;
+            if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0) return;
 
             EnumFacing facing = tile.blockFacing();
-            TileEntity tile = world.getTileEntity(pos.offset(facing, Math.min(range, ConfigValues.AddDropperRange) + 1));
+            TileEntity tile = world.getTileEntity(pos.offset(facing, Math.min(range, countRange) + 1));
             if (tile != null) {
                 IItemHandlerModifiable inv = (IItemHandlerModifiable) tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
                 if (inv != null) {

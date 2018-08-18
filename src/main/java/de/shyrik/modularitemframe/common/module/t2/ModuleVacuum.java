@@ -3,6 +3,7 @@ package de.shyrik.modularitemframe.common.module.t2;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleBase;
+import de.shyrik.modularitemframe.api.UpgradeBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -34,9 +35,9 @@ public class ModuleVacuum extends ModuleBase {
     private static final String NBT_RANGEZ = "rangez";
 
     private EnumMode mode = EnumMode.X;
-    private int rangeX = ConfigValues.MaxVacuumRange;
-    private int rangeY = ConfigValues.MaxVacuumRange;
-    private int rangeZ = ConfigValues.MaxVacuumRange;
+    private int rangeX = ConfigValues.BaseVacuumRange;
+    private int rangeY = ConfigValues.BaseVacuumRange;
+    private int rangeZ = ConfigValues.BaseVacuumRange;
 
     @Nonnull
     @Override
@@ -77,7 +78,8 @@ public class ModuleVacuum extends ModuleBase {
 
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
-        if (world.getTotalWorldTime() % ConfigValues.VacuumCooldown != 0) return;
+        if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0)
+            return;
 
         IItemHandlerModifiable handler = getNeighborTileItemCap();
         if (handler != null) {
@@ -144,22 +146,23 @@ public class ModuleVacuum extends ModuleBase {
     }
 
     private void adjustRange(@Nonnull EntityPlayer playerIn) {
-        if (ConfigValues.MaxVacuumRange > 1) {
+        int maxRange = ConfigValues.BaseVacuumRange + countSpeed;
+        if (maxRange > 1) {
             int r = 0;
             switch (mode) {
                 case X:
                     rangeX++;
-                    if (rangeX > ConfigValues.MaxVacuumRange) rangeX = 1;
+                    if (rangeX > maxRange) rangeX = 1;
                     r = rangeX;
                     break;
                 case Y:
                     rangeY++;
-                    if (rangeY > ConfigValues.MaxVacuumRange) rangeY = 1;
+                    if (rangeY > maxRange) rangeY = 1;
                     r = rangeY;
                     break;
                 case Z:
                     rangeZ++;
-                    if (rangeZ > ConfigValues.MaxVacuumRange) rangeZ = 1;
+                    if (rangeZ > maxRange) rangeZ = 1;
                     r = rangeZ;
                     break;
             }

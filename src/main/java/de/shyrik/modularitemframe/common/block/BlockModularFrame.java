@@ -1,6 +1,7 @@
 package de.shyrik.modularitemframe.common.block;
 
 import com.teamwizardry.librarianlib.features.base.block.tile.BlockModContainer;
+import de.shyrik.modularitemframe.api.UpgradeBase;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import mcjty.theoneprobe.api.IProbeHitData;
@@ -13,6 +14,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -21,6 +24,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -159,12 +163,27 @@ public class BlockModularFrame extends BlockModContainer implements IProbeInfoAc
 		return getDefaultState().withProperty(FACING, EnumFacing.getFront(meta & 7));
 	}
 
-	@Override
+    @Override
+    public float getExplosionResistance(World world, BlockPos pos, @javax.annotation.Nullable Entity exploder, Explosion explosion) {
+        return getTE(world, pos).countUpgradeOfType(UpgradeBase.UpgradeBlastResist.class) >= 1 ? 200F : 4F;
+    }
+
+    @Override
 	public boolean canPlaceBlockOnSide(@Nonnull World worldIn, @Nonnull BlockPos pos, EnumFacing side) {
 		return !worldIn.isAirBlock(pos.offset(side.getOpposite()));
 	}
 
-	@Override
+    @Override
+    public boolean canCreatureSpawn(@Nonnull IBlockState state, @Nonnull  IBlockAccess world, @Nonnull BlockPos pos, EntityLiving.SpawnPlacementType type) {
+        return false;
+    }
+
+    @Override
+    public boolean canPlaceTorchOnTop(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
+        return false;
+    }
+
+    @Override
 	public int getMetaFromState(IBlockState state) {
 		return state.getValue(FACING).getIndex();
 	}

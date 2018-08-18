@@ -24,7 +24,7 @@ public class ModuleTrashCan extends ModuleNullify {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (!world.isRemote) {
-            if (world.getTotalWorldTime() % 20 != 0) return;
+            if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0) return;
 
             EnumFacing facing = tile.blockFacing();
             TileEntity tile = world.getTileEntity(pos.offset(facing));
