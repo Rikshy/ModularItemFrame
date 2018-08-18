@@ -51,7 +51,7 @@ public class UpgradeRegistry {
      * @param upgradelass upgrade to look up
      * @return unique upgrade id
      */
-    public static String getModuleId(Class<? extends UpgradeBase> upgradeClass) {
+    public static String getUpgradeId(Class<? extends UpgradeBase> upgradeClass) {
         for (Map.Entry<String, Class<? extends UpgradeBase>> entry : upgrades.entrySet())
             if (entry.getValue() == upgradeClass) return entry.getKey();
         return "";

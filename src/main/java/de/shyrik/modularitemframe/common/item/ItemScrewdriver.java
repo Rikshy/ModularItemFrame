@@ -51,7 +51,8 @@ public class ItemScrewdriver extends ItemModTool {
                             tile.module.onRemove(world, pos, side, player);
                             tile.setModule(new ModuleEmpty());
                         }
-                    }
+                    } else
+                        tile.dropUpgrades(player, side);
 					tile.markDirty();
 				}
 			}
