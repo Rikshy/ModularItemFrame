@@ -1,6 +1,8 @@
 package de.shyrik.modularitemframe.common.module.t2;
 
+import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
+import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.common.module.t1.ModuleCrafting;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,12 +36,15 @@ public class ModuleCraftingPlus extends ModuleCrafting {
         if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return;
 
         if (!world.isRemote) {
-            if (ConfigValues.TankTransferRate > 0) {
+            if (playerIn.isSneaking()) {
                 int modeIdx = mode.getIndex() + 1;
                 if (modeIdx == EnumMode.values().length) modeIdx = 0;
                 mode = EnumMode.values()[modeIdx];
                 mode = EnumMode.values()[mode.getIndex() + 1 >= EnumMode.values().length ? 0 : mode.getIndex() + 1];
                 playerIn.sendMessage(new TextComponentTranslation(mode.getName()));
+            } else {
+                playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, world, pos.getX(), pos.getY(), pos.getZ());
+                tile.markDirty();
             }
         }
     }

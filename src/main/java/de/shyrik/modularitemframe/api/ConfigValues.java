@@ -21,7 +21,7 @@ public final class ConfigValues {
 	public static int TankTransferRate = 100;
 
 	@ConfigIntRange(min = 0, max = 1000)
-	@ConfigProperty(category = "general", comment = "Maximum teleport distance of the teleport module")
+	@ConfigProperty(category = "general", comment = "Base teleport distance of the teleport module")
 	public static int BaseTeleportRange = 64;
 
 	@ConfigIntRange(min = 1, max = 10)

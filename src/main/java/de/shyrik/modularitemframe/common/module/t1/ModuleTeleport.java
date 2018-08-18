@@ -89,6 +89,7 @@ public class ModuleTeleport extends ModuleBase {
         } else {
             if (nbt != null && nbt.hasKey(NBT_LINK)) {
                 BlockPos tmp = BlockPos.fromLong(nbt.getLong(NBT_LINK));
+                if (tile.getPos().getDistance(tmp.getX(), tmp.getY(), tmp.getZ()) < 1) return;
                 TileEntity targetTile = tile.getWorld().getTileEntity(tmp);
                 if (!(targetTile instanceof TileModularFrame) || !((((TileModularFrame) targetTile).module instanceof ModuleTeleport)))
                     playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.invalid_target"));

@@ -1,12 +1,14 @@
 package de.shyrik.modularitemframe.common.module.t3;
 
-import de.shyrik.modularitemframe.api.UpgradeBase;
+import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
+import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.common.module.t2.ModuleCraftingPlus;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -14,6 +16,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -24,6 +27,16 @@ public class ModuleAutoCrafting extends ModuleCraftingPlus {
     @Override
     public String getModuleName() {
         return I18n.format("modularitemframe.module.crafting_plus");
+    }
+
+    @Override
+    public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
+        if (playerIn instanceof FakePlayer) return;
+
+        if (!world.isRemote) {
+            playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, world, pos.getX(), pos.getY(), pos.getZ());
+            tile.markDirty();
+        }
     }
 
     @Override
