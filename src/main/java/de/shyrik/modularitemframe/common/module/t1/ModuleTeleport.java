@@ -2,7 +2,7 @@ package de.shyrik.modularitemframe.common.module.t1;
 
 import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ModuleFrameBase;
+import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ModuleTeleport extends ModuleFrameBase {
+public class ModuleTeleport extends ModuleBase {
 
     private static final String NBT_LINK = "linked_pos";
     private static final String NBT_LINKX = "linked_posX";

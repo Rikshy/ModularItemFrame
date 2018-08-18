@@ -1,7 +1,7 @@
 package de.shyrik.modularitemframe.common.module;
 
 import com.teamwizardry.librarianlib.features.base.block.tile.module.SerializableFluidTank;
-import de.shyrik.modularitemframe.api.ModuleFrameBase;
+import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import net.minecraft.client.Minecraft;
@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
-public abstract class ModuleFluid extends ModuleFrameBase {
+public abstract class ModuleFluid extends ModuleBase {
 
 	private static final String NBT_TANK = "tank";
 

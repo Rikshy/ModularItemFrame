@@ -2,7 +2,7 @@ package de.shyrik.modularitemframe.common.module.t2;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
-import de.shyrik.modularitemframe.api.ModuleFrameBase;
+import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ModuleVacuum extends ModuleFrameBase {
+public class ModuleVacuum extends ModuleBase {
 
     private static final String NBT_MODE = "rangemode";
     private static final String NBT_RANGEX = "rangex";

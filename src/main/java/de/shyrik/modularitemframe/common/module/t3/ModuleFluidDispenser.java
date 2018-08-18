@@ -1,6 +1,6 @@
 package de.shyrik.modularitemframe.common.module.t3;
 
-import de.shyrik.modularitemframe.api.ModuleFrameBase;
+import de.shyrik.modularitemframe.api.ModuleBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +16,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nonnull;
 
-public class ModuleFluidDispenser extends ModuleFrameBase {
+public class ModuleFluidDispenser extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {

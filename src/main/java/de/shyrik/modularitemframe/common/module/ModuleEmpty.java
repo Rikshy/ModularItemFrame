@@ -1,7 +1,7 @@
 package de.shyrik.modularitemframe.common.module;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ModuleFrameBase;
+import de.shyrik.modularitemframe.api.ModuleBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ModuleEmpty extends ModuleFrameBase {
+public class ModuleEmpty extends ModuleBase {
 
 	@Nonnull
 	@Override

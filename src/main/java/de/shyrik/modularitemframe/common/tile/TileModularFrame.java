@@ -3,7 +3,7 @@ package de.shyrik.modularitemframe.common.tile;
 import com.teamwizardry.librarianlib.features.autoregister.TileRegister;
 import com.teamwizardry.librarianlib.features.base.block.tile.TileModTickable;
 import com.teamwizardry.librarianlib.features.kotlin.CommonUtilMethods;
-import de.shyrik.modularitemframe.api.ModuleFrameBase;
+import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.ModuleRegistry;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.module.ModuleEmpty;
@@ -21,13 +21,13 @@ public class TileModularFrame extends TileModTickable {
 	private static final String NBTMODULE = "framemodule";
 	private static final String NBTMODULEDATA = "framemoduledata";
 
-	public ModuleFrameBase module;
+	public ModuleBase module;
 
 	public TileModularFrame() {
 		setModule(new ModuleEmpty());
 	}
 
-	public void setModule(ModuleFrameBase mod) {
+	public void setModule(ModuleBase mod) {
 		module = mod;
 		module.setTile(this);
 	}

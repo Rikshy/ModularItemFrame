@@ -2,7 +2,7 @@ package de.shyrik.modularitemframe.common.module.t1;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
-import de.shyrik.modularitemframe.api.ModuleFrameBase;
+import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import mcjty.theoneprobe.api.IProbeHitData;
@@ -27,7 +27,7 @@ import net.minecraftforge.fml.common.Optional;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ModuleItem extends ModuleFrameBase {
+public class ModuleItem extends ModuleBase {
 
     private static final String NBT_DISPLAY = "display";
     private static final String NBT_ROTATION = "rotation";

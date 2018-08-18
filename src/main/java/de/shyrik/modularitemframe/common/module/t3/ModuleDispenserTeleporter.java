@@ -1,7 +1,7 @@
 package de.shyrik.modularitemframe.common.module.t3;
 
 import de.shyrik.modularitemframe.api.ConfigValues;
-import de.shyrik.modularitemframe.api.ModuleFrameBase;
+import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 
-public class ModuleDispenserTeleporter extends ModuleFrameBase {
+public class ModuleDispenserTeleporter extends ModuleBase {
 
     private static final String NBT_LINK = "item_linked_pos";
     private static final String NBT_LINKX = "linked_posX";

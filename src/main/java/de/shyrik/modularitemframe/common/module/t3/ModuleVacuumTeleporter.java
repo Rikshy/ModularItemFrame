@@ -1,7 +1,7 @@
 package de.shyrik.modularitemframe.common.module.t3;
 
 import de.shyrik.modularitemframe.api.ConfigValues;
-import de.shyrik.modularitemframe.api.ModuleFrameBase;
+import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ModuleVacuumTeleporter extends ModuleFrameBase {
+public class ModuleVacuumTeleporter extends ModuleBase {
 
     private static final String NBT_LINK = "item_linked_pos";
     private static final String NBT_LINKX = "linked_posX";

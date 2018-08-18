@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ModuleFrameBase implements INBTSerializable<NBTTagCompound> {
+public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 
 	protected TileModularFrame tile;
 
