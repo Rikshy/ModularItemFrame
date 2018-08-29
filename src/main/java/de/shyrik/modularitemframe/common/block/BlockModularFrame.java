@@ -165,7 +165,7 @@ public class BlockModularFrame extends BlockModContainer implements IProbeInfoAc
 	}
 
     @Override
-    public float getExplosionResistance(World world, BlockPos pos, @javax.annotation.Nullable Entity exploder, Explosion explosion) {
+    public float getExplosionResistance(World world, BlockPos pos, @Nullable Entity exploder, Explosion explosion) {
         return getTE(world, pos).countUpgradeOfType(UpgradeBase.UpgradeBlastResist.class) >= 1 ? 200F : 4F;
     }
 

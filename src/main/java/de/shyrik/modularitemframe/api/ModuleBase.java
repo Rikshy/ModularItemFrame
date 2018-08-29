@@ -48,6 +48,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 
 	public void setTile(TileModularFrame te) {
 		tile = te;
+		onUpgradesChanged();
 	}
 
 	/**
