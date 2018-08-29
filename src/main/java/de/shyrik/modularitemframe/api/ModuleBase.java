@@ -44,6 +44,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 
 	protected int countSpeed = 0;
 	protected int countRange = 0;
+	protected int countCapacity = 0;
 
 	public void setTile(TileModularFrame te) {
 		tile = te;
@@ -165,6 +166,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	public void onUpgradesChanged() {
 	    countRange = tile.countUpgradeOfType(UpgradeBase.UpgradeRange.class);
 	    countSpeed = tile.countUpgradeOfType(UpgradeBase.UpgradeSpeed.class);
+	    countCapacity = tile.countUpgradeOfType(UpgradeBase.UpgradeCapacity.class);
     }
 
 	/**

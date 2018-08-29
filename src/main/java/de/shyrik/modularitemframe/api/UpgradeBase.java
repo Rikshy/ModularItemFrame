@@ -18,6 +18,13 @@ public abstract class UpgradeBase {
         }
     }
 
+    public class UpgradeCapacity extends UpgradeBase {
+        @Override
+        public int getMaxCount() {
+            return 5;
+        }
+    }
+
     public class UpgradeBlastResist extends UpgradeBase {
 
         @Override
