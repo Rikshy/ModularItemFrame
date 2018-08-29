@@ -1,4 +1,4 @@
-package de.shyrik.modularitemframe.common.module.t1;
+package de.shyrik.modularitemframe.common.module.t3;
 
 import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.ModularItemFrame;

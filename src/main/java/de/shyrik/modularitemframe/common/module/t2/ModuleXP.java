@@ -1,5 +1,6 @@
 package de.shyrik.modularitemframe.common.module.t2;
 
+import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.utils.XpUtils;
 import de.shyrik.modularitemframe.common.module.t1.ModuleItem;
 import mcjty.theoneprobe.api.IProbeHitData;
@@ -16,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
@@ -39,6 +41,12 @@ public class ModuleXP extends ModuleItem {
 
     public ModuleXP() {
         displayItem = new ItemStack(Items.EXPERIENCE_BOTTLE);
+    }
+
+    @Nonnull
+    @Override
+    public ResourceLocation innerTexture() {
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
     }
 
     @Override

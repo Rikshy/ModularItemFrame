@@ -10,6 +10,7 @@ import de.shyrik.modularitemframe.api.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.module.t1.*;
 import de.shyrik.modularitemframe.common.module.t2.*;
+import de.shyrik.modularitemframe.common.module.t3.*;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;

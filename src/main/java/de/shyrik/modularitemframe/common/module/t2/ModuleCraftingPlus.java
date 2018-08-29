@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
@@ -29,6 +30,12 @@ public class ModuleCraftingPlus extends ModuleCrafting {
     @Override
     public String getModuleName() {
         return I18n.format("modularitemframe.module.crafting_plus");
+    }
+
+    @Nonnull
+    @Override
+    public ResourceLocation innerTexture() {
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
     }
 
     @Override

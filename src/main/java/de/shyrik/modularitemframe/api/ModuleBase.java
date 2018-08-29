@@ -59,16 +59,27 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	@Nonnull
 	public abstract ResourceLocation frontTexture();
 
-	/**
-	 * Is called when the {@link FrameRenderer} wants to render the module for the first time.
-	 * @see #bakeModel(IModel)
-	 *
-	 * @return [Nonnull] {@link ResourceLocation} to the Texture
-	 */
-	@Nonnull
-	public ResourceLocation backTexture() {
-		return new ResourceLocation("minecraft", "blocks/log_birch_top");
-	}
+    /**
+     * Is called when the {@link FrameRenderer} wants to render the module for the first time.
+     * @see #bakeModel(IModel)
+     *
+     * @return [Nonnull] {@link ResourceLocation} to the Texture
+     */
+    @Nonnull
+    public ResourceLocation innerTexture() {
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/default_inner");
+    }
+
+    /**
+     * Is called when the {@link FrameRenderer} wants to render the module for the first time.
+     * @see #bakeModel(IModel)
+     *
+     * @return [Nonnull] {@link ResourceLocation} to the Texture
+     */
+    @Nonnull
+    public ResourceLocation backTexture() {
+        return new ResourceLocation("minecraft", "blocks/log_birch_top");
+    }
 
 	/**
 	 * TOP and WAILA are using this for display
@@ -96,6 +107,8 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 					return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(frontTexture().toString());
 				if (location.getResourcePath().contains("default_back"))
 					return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(backTexture().toString());
+				if (location.getResourcePath().contains("default_inner"))
+				    return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(innerTexture().toString());
 				return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
 			});
 			reloadModel = false;

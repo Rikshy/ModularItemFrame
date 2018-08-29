@@ -34,6 +34,12 @@ public class ModuleDispense extends ModuleBase {
         return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/drop_frame_bg");
     }
 
+    @Nonnull
+    @Override
+    public ResourceLocation innerTexture() {
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
+    }
+
     @Override
     public String getModuleName() {
         return I18n.format("modularitemframe.module.dispense");

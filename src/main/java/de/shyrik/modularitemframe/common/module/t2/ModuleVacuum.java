@@ -47,6 +47,12 @@ public class ModuleVacuum extends ModuleBase {
 
     @Nonnull
     @Override
+    public ResourceLocation innerTexture() {
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
+    }
+
+    @Nonnull
+    @Override
     public ResourceLocation backTexture() {
         return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/vacuum_bg");
     }
