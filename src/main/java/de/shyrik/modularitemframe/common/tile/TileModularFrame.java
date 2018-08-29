@@ -86,6 +86,7 @@ public class TileModularFrame extends TileModTickable {
 
 	@Override
 	public void tick() {
+		if (world.getTileEntity(pos) != this) return;
 		module.tick(world, pos);
 	}
 
