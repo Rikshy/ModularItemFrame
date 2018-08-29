@@ -20,13 +20,15 @@ public class EventHandler {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public static void registerTex(TextureStitchEvent.Pre event) {
+		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hardest_inner"));
+		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner"));
 		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/crafting_frame_bg"));
 		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg"));
 		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/nullify_frame_bg"));
-		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank_frame_bg"));
 		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/drop_frame_bg"));
 		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/vacuum_bg"));
 		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/io"));
+		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank"));
 	}
 
 	@SubscribeEvent

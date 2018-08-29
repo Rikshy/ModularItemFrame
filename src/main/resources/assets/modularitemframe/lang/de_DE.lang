@@ -1,17 +1,17 @@
 tile.modularitemframe:modular_frame.name=Modularer Rahmen
 
 item.modularitemframe:screwdriver.name=Schraubendreher
-item.modularitemframe:module_item.name=Item Modul
-item.modularitemframe:module_craft.name=Crafting Modul
-item.modularitemframe:module_nullify.name=Nullify Modul
+item.modularitemframe:module_t1_item.name=Item Modul
+item.modularitemframe:module_t1_craft.name=Crafting Modul
+item.modularitemframe:module_t1_nullify.name=Nullify Modul
+item.modularitemframe:module_t1_tank.name=Tank Modul
+item.modularitemframe:module_t1_io.name=I/O Modul
 item.modularitemframe:module_tele.name=Teleport Modul
-item.modularitemframe:module_tank.name=Tank Modul
 item.modularitemframe:module_dispense.name=Spender Modul
 item.modularitemframe:module_xp.name=XP Modul
 item.modularitemframe:module_vacuum.name=Vacuum Modul
-item.modularitemframe:module_io.name=I/O Modul
 item.modularitemframe:module_trash_can.name=Mülleimer Modul
-item.modularitemframe:module_crafting_plus.name=Crafting Plus Modul
+item.modularitemframe:module_craft_plus.name=Crafting Plus Modul
 item.modularitemframe:module_auto_crafting.name=Auto Crafting Modul
 item.modularitemframe:module_fluid_dispenser.name=Flüssigkeit Spender Module
 item.modularitemframe:canvas.name=Leinwand
