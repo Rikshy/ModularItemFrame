@@ -30,12 +30,12 @@ public class ModuleIO extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg");
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/io");
     }
 
     @Override
     public String getModuleName() {
-        return I18n.format("modularitemframe.module.access");
+        return I18n.format("modularitemframe.module.io");
     }
 
     @Override

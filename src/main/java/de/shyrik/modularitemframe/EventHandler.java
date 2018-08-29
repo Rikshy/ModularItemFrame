@@ -26,6 +26,7 @@ public class EventHandler {
 		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank_frame_bg"));
 		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/drop_frame_bg"));
 		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/vacuum_bg"));
+		event.getMap().registerSprite(new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/io"));
 	}
 
 	@SubscribeEvent
