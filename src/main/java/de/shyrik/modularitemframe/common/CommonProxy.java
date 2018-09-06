@@ -50,14 +50,14 @@ public class CommonProxy {
         MODULE_TANK = ModuleRegistry.registerCreate("module_t1_tank", ModuleTank.class);
         //Tier 2
         MODULE_CRAFTINGPLUS = ModuleRegistry.registerCreate("module_t2_craft_plus", ModuleCraftingPlus.class);
-        MODULE_DROP = ModuleRegistry.registerCreate("module_dispense", ModuleDispense.class);
-        MODULE_XP = ModuleRegistry.registerCreate("module_xp", ModuleXP.class);
-        MODULE_VACUUM = ModuleRegistry.registerCreate("module_vacuum", ModuleVacuum.class);
+        MODULE_DROP = ModuleRegistry.registerCreate("module_t2_dispense", ModuleDispense.class);
+        MODULE_XP = ModuleRegistry.registerCreate("module_t2_xp", ModuleXP.class);
+        MODULE_VACUUM = ModuleRegistry.registerCreate("module_t2_vacuum", ModuleVacuum.class);
         //MODULE_TRASHCAN = ModuleRegistry.registerCreate("module_trash_can", ModuleTrashCan.class);
 
         //Tier 3
         //MODULE_AUTOCRAFTING = ModuleRegistry.registerCreate("module_crafting_plus", ModuleAutoCrafting.class);
-        MODULE_TELE = ModuleRegistry.registerCreate("module_tele", ModuleTeleport.class);
+        MODULE_TELE = ModuleRegistry.registerCreate("module_t3_tele", ModuleTeleport.class);
 
 
         SCREWDRIVER = new ItemScrewdriver();

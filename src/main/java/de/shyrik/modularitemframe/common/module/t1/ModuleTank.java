@@ -1,5 +1,6 @@
 package de.shyrik.modularitemframe.common.module.t1;
 
+import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.common.module.ModuleFluid;
 import mcjty.theoneprobe.api.IProbeHitData;
@@ -42,7 +43,7 @@ public class ModuleTank extends ModuleFluid {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return new ResourceLocation("minecraft:blocks/cauldron_inner");
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank");
     }
 
     @Override
