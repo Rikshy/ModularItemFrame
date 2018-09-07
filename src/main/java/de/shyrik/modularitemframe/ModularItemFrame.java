@@ -28,15 +28,8 @@ public class ModularItemFrame {
     public static final String SERVER_PROXY = "de.shyrik.modularitemframe.common.CommonProxy";
 
     public static final CreativeTabs TAB = new CreativeTabs("modularitemframe") {
-        @Nonnull
         @Override
-        public ItemStack getTabIconItem() {
-            return new ItemStack(Registrar.SCREWDRIVER);
-        }
-
-        @Nonnull
-        @Override
-        public ItemStack getIconItemStack() {
+        public ItemStack createIcon() {
             return new ItemStack(Registrar.SCREWDRIVER);
         }
     };

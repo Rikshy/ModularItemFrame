@@ -103,11 +103,11 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	public IBakedModel bakeModel(IModel model) {
 		if (bakedModel == null || reloadModel) {
 			bakedModel = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, location -> {
-				if (location.getResourcePath().contains("default_front"))
+				if (location.getPath().contains("default_front"))
 					return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(frontTexture().toString());
-				if (location.getResourcePath().contains("default_back"))
+				if (location.getPath().contains("default_back"))
 					return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(backTexture().toString());
-				if (location.getResourcePath().contains("default_inner"))
+				if (location.getPath().contains("default_inner"))
 				    return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(innerTexture().toString());
 				return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
 			});

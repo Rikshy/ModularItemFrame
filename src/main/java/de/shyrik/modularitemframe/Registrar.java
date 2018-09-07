@@ -82,7 +82,7 @@ public class Registrar {
 
             SCREWDRIVER = new ItemScrewdriver(),
 
-            ITEM_CANVAS = new Item().setRegistryName(new ResourceLocation(ModularItemFrame.MOD_ID, "canvas")).setUnlocalizedName(ModularItemFrame.MOD_ID + ":canvas").setCreativeTab(ModularItemFrame.TAB)
+            ITEM_CANVAS = new Item().setRegistryName(new ResourceLocation(ModularItemFrame.MOD_ID, "canvas")).setTranslationKey(ModularItemFrame.MOD_ID + ":canvas").setCreativeTab(ModularItemFrame.TAB)
     );
 
     @SubscribeEvent

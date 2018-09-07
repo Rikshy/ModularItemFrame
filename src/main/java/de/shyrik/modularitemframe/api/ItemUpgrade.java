@@ -21,7 +21,7 @@ public class ItemUpgrade extends Item {
     public ItemUpgrade(@Nonnull String name) {
         super();
         setRegistryName(new ResourceLocation(ModularItemFrame.MOD_ID, name));
-        setUnlocalizedName(name);
+        setTranslationKey(name);
         setCreativeTab(ModularItemFrame.TAB);
         upgradeId = name;
     }

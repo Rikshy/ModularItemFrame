@@ -27,7 +27,7 @@ public class ItemScrewdriver extends ItemTool {
 	public ItemScrewdriver() {
 		super(ToolMaterial.IRON, new HashSet<>());
 		setRegistryName(loc);
-		setUnlocalizedName(loc.toString());
+		setTranslationKey(loc.toString());
 		setCreativeTab(ModularItemFrame.TAB);
 	}
 

@@ -159,27 +159,27 @@ public class ItemUtils {
 
 		switch (facing) {
 			case UP:
-				position = position.addVector(0.0D, -0.25D, 0.0D);
+				position = position.add(0.0D, -0.25D, 0.0D);
 				break;
 			case DOWN:
-				position = position.addVector(0.0D, -0.25D, 0.0D);
-				velocity = velocity.addVector(0.0D, 0.2D, 0.0D);
+				position = position.add(0.0D, -0.25D, 0.0D);
+				velocity = velocity.add(0.0D, 0.2D, 0.0D);
 				break;
 			case NORTH:
-				position = position.addVector(0.0D, -0.5D, -0.25D);
-				velocity = velocity.addVector(0.0D, 0.0D, 0.2D);
+				position = position.add(0.0D, -0.5D, -0.25D);
+				velocity = velocity.add(0.0D, 0.0D, 0.2D);
 				break;
 			case EAST:
-				position = position.addVector(0.25D, -0.5D, 0.0D);
-				velocity = velocity.addVector(-0.2D, 0.0D, 0.0D);
+				position = position.add(0.25D, -0.5D, 0.0D);
+				velocity = velocity.add(-0.2D, 0.0D, 0.0D);
 				break;
 			case WEST:
-				position = position.addVector(-0.25D, -0.5D, 0.0D);
-				velocity = velocity.addVector(0.2D, 0.0D, 0.0D);
+				position = position.add(-0.25D, -0.5D, 0.0D);
+				velocity = velocity.add(0.2D, 0.0D, 0.0D);
 				break;
 			case SOUTH:
-				position = position.addVector(0.0D, -0.5D, 0.25D);
-				velocity = velocity.addVector(0.0D, 0.0D, -0.2D);
+				position = position.add(0.0D, -0.5D, 0.25D);
+				velocity = velocity.add(0.0D, 0.0D, -0.2D);
 				break;
 		}
 

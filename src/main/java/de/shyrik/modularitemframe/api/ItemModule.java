@@ -19,7 +19,7 @@ public class ItemModule extends Item {
     public ResourceLocation moduleId;
 
     public ItemModule(@Nonnull ResourceLocation loc) {
-        setUnlocalizedName(loc.toString());
+        setTranslationKey(loc.toString());
         setRegistryName(loc);
         setCreativeTab(ModularItemFrame.TAB);
         moduleId = loc;

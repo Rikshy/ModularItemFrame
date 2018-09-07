@@ -47,7 +47,7 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
 
 	public BlockModularFrame() {
 		super(Material.WOOD);
-		setUnlocalizedName(ID.toString());
+		setTranslationKey(ID.toString());
 		setRegistryName(ID);
 		setHardness(2.0F);
 		setResistance(4.0F);
@@ -156,7 +156,7 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
 	@Nonnull
 	@SuppressWarnings("deprecation")
 	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(FACING, EnumFacing.getFront(meta & 7));
+		return getDefaultState().withProperty(FACING, EnumFacing.byIndex(meta & 7));
 	}
 
     @Override
