@@ -1,7 +1,7 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "modularitemframe:module_item"
+    "item": "modularitemframe:module_t1_item"
   },
   "pattern": [
     " C ",

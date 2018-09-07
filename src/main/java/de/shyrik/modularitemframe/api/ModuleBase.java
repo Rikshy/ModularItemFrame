@@ -28,7 +28,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.Optional;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -104,11 +103,11 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	public IBakedModel bakeModel(IModel model) {
 		if (bakedModel == null || reloadModel) {
 			bakedModel = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, location -> {
-				if (location.getResourcePath().contains("default_front"))
+				if (location.getPath().contains("default_front"))
 					return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(frontTexture().toString());
-				if (location.getResourcePath().contains("default_back"))
+				if (location.getPath().contains("default_back"))
 					return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(backTexture().toString());
-				if (location.getResourcePath().contains("default_inner"))
+				if (location.getPath().contains("default_inner"))
 				    return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(innerTexture().toString());
 				return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
 			});
@@ -166,8 +165,8 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 * or destroyed.
 	 * If you want the module to drop, make sure to call the super method
 	 */
-	public void onRemove(@NotNull World worldIn, @NotNull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
-		Item item = Item.getByNameOrId(ModularItemFrame.MOD_ID + ":" + ModuleRegistry.getModuleId(tile.module.getClass()));
+	public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
+		Item item = Item.getByNameOrId(ModuleRegistry.getModuleId(tile.module.getClass()).toString());
 		if (item instanceof ItemModule) {
 			ItemStack remain = new ItemStack(item);
 			if (playerIn != null)

@@ -1,32 +1,34 @@
 package de.shyrik.modularitemframe.common.item;
 
-import com.teamwizardry.librarianlib.features.base.item.ItemModTool;
+import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.common.module.ModuleEmpty;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.HashSet;
 import java.util.List;
 
-public class ItemScrewdriver extends ItemModTool {
+public class ItemScrewdriver extends ItemTool {
 	private static final String NBT_MODE = "mode";
+	public static final ResourceLocation loc = new ResourceLocation(ModularItemFrame.MOD_ID, "screwdriver");
 
 	public ItemScrewdriver() {
-		super("screwdriver", ToolMaterial.IRON, "wrench");
-		setMaxStackSize(1);
+		super(ToolMaterial.IRON, new HashSet<>());
+		setRegistryName(loc);
+		setTranslationKey(loc.toString());
+		setCreativeTab(ModularItemFrame.TAB);
 	}
 
     @Override

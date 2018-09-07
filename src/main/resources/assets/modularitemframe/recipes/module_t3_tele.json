@@ -1,7 +1,7 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "modularitemframe:module_drop"
+    "item": "modularitemframe:module_t3_tele"
   },
   "pattern": [
     " C ",
@@ -10,7 +10,8 @@
   ],
   "key": {
     "#": {
-      "item": "minecraft:dropper"
+      "type": "forge:ore_dict",
+      "ore": "enderpearl"
     },
     "C": {
       "item": "modularitemframe:canvas"

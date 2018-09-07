@@ -28,27 +28,25 @@ minecraft {
     makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     replace '@GRADLE:VERSION@', "$mod_version"
-    replace 'required-before:librarianlib', 'required-before:librarianlib@' + liblib_version
 
     replaceIn 'ModularItemFrame.java'
 }
 
 repositories {
     mavenCentral()
-    maven { url = "http://maven.bluexin.be/repository/snapshots/" }
     maven { url = "http://dvs1.progwml6.com/files/maven" }
     maven { url = "http://maven.tterrag.com/" }
-    maven { url = "http://maven.blamejared.com" }
-    maven { url = 'http://maven.mcmoddev.com' }
+    //maven { url = "http://maven.blamejared.com" }
+    //maven { url = 'http://maven.mcmoddev.com' }
     maven { url = 'http://tehnut.info/maven' }
+    maven { url = "http://maven.amadornes.com/" }
 }
 
 dependencies {
-    compile "com.teamwizardry.librarianlib:librarianlib-1.12.2:$liblib_version-SNAPSHOT:deobf"
-
     deobfCompile "mezz.jei:jei_1.12.2:$jei_version:api"
     deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:1.12-$top_version"
     deobfCompile "mcp.mobius.waila:Hwyla:$hwyla_version" + "_1.12.2:api"
+    //deobfCompile "MCMultiPart2:MCMultiPart:$mcmp_version"
     //compile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-$ct_version"
     //compile "net.darkhax.tesla:Tesla-1.12.2:$tesla_version"
 
@@ -73,6 +71,18 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+}
+
+tasks.build.dependsOn('sourceJar', 'deobfJar')
+
+artifacts {
+    archives deobfJar
+    archives sourceJar
 }
 
 idea {

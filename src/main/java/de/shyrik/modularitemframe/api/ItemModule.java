@@ -1,31 +1,35 @@
 package de.shyrik.modularitemframe.api;
 
-import com.teamwizardry.librarianlib.features.base.item.ItemMod;
+import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 
-public class ItemModule extends ItemMod {
+public class ItemModule extends Item {
 
-    public String moduleId;
+    public ResourceLocation moduleId;
 
-    public ItemModule(@NotNull String name) {
-        super(name);
-        moduleId = name;
+    public ItemModule(@Nonnull ResourceLocation loc) {
+        setTranslationKey(loc.toString());
+        setRegistryName(loc);
+        setCreativeTab(ModularItemFrame.TAB);
+        moduleId = loc;
     }
 
     @Nonnull
     @Override
     public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
         TileEntity tmp = world.getTileEntity(pos);
+
         if (tmp instanceof TileModularFrame) {
             TileModularFrame tile = (TileModularFrame) tmp;
             if (!world.isRemote && tile.acceptsModule()) {

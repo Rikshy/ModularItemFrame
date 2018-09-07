@@ -1,6 +1,5 @@
 package de.shyrik.modularitemframe.common.module;
 
-import com.teamwizardry.librarianlib.features.base.block.tile.module.SerializableFluidTank;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
@@ -9,12 +8,13 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 
 public abstract class ModuleFluid extends ModuleBase {
 
 	private static final String NBT_TANK = "tank";
 
-	public SerializableFluidTank tank = new SerializableFluidTank(1000);
+	public FluidTank tank = new FluidTank(1000);
 
 	@Override
 	public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
@@ -58,13 +58,13 @@ public abstract class ModuleFluid extends ModuleBase {
 	@Override
 	public NBTTagCompound serializeNBT() {
 		NBTTagCompound compound = super.serializeNBT();
-		compound.setTag(NBT_TANK, tank.serializeNBT());
+		compound.setTag(NBT_TANK, tank.writeToNBT(new NBTTagCompound()));
 		return compound;
 	}
 
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt) {
 		super.deserializeNBT(nbt);
-		if (nbt.hasKey(NBT_TANK)) tank.deserializeNBT(nbt.getCompoundTag(NBT_TANK));
+		if (nbt.hasKey(NBT_TANK)) tank.readFromNBT(nbt.getCompoundTag(NBT_TANK));
 	}
 }

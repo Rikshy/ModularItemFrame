@@ -1,7 +1,6 @@
 package de.shyrik.modularitemframe.api;
 
-import org.jetbrains.annotations.Nullable;
-
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
