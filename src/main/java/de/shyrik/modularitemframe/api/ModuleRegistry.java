@@ -1,13 +1,15 @@
 package de.shyrik.modularitemframe.api;
 
-import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ModuleRegistry {
 
-	private static Map<String, Class<? extends ModuleBase>> modules = new HashMap<>();
+	private static Map<ResourceLocation, Class<? extends ModuleBase>> modules = new HashMap<>();
 
 	/**
 	 * registers a module class
@@ -16,8 +18,8 @@ public class ModuleRegistry {
 	 *
 	 * @throws IllegalArgumentException when id is duplicated
 	 */
-	public static void register(String id, Class<? extends ModuleBase> moduleClass) {
-		if(modules.containsKey(id))
+	public static void register(ResourceLocation id, Class<? extends ModuleBase> moduleClass) {
+		if (modules.keySet().stream().filter(r -> r.toString().equals(id.toString())).findAny().map(modules::get).isPresent())
 			throw new IllegalArgumentException("[ModularItemFrame] module key already exists!");
 		modules.put(id, moduleClass);
 	}
@@ -28,7 +30,7 @@ public class ModuleRegistry {
 	 * @param moduleClass module to register
 	 * @return new {@link ItemModule} instance
 	 */
-	public static ItemModule registerCreate(String id, Class<? extends ModuleBase> moduleClass) {
+	public static ItemModule registerCreate(ResourceLocation id, Class<? extends ModuleBase> moduleClass) {
 		register(id, moduleClass);
 		return new ItemModule(id);
 	}
@@ -39,7 +41,7 @@ public class ModuleRegistry {
 	 * @return created instance
 	 */
 	@Nullable
-	public static ModuleBase createModuleInstance(String id) {
+	public static ModuleBase createModuleInstance(ResourceLocation id) {
 		try {
 			return modules.get(id).newInstance();
 		} catch (Exception ex) {
@@ -52,9 +54,9 @@ public class ModuleRegistry {
 	 * @param moduleClass module to look up
 	 * @return unique module id
 	 */
-	public static String getModuleId(Class<? extends ModuleBase> moduleClass) {
-		for (Map.Entry<String, Class<? extends ModuleBase>> entry : modules.entrySet())
+	public static ResourceLocation getModuleId(Class<? extends ModuleBase> moduleClass) {
+		for (Map.Entry<ResourceLocation, Class<? extends ModuleBase>> entry : modules.entrySet())
 			if (entry.getValue() == moduleClass) return entry.getKey();
-		return "";
+		return null;
 	}
 }

@@ -26,7 +26,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -134,7 +133,7 @@ public class ModuleTeleport extends ModuleBase {
     }
 
     @Override
-    public void onRemove(@NotNull World worldIn, @NotNull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
+    public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
         if(hasValidConnection(worldIn, null)) {
             ((ModuleTeleport)((TileModularFrame) worldIn.getTileEntity(linkedLoc)).module).linkedLoc = null;
         }

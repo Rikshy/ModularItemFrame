@@ -22,7 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -109,7 +108,7 @@ public class ModuleXP extends ModuleItem {
     }
 
     @Override
-    public void onRemove(@NotNull World worldIn, @NotNull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
+    public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
         super.onRemove(worldIn, pos, facing, playerIn);
         if (playerIn == null || playerIn instanceof FakePlayer)
             worldIn.spawnEntity(new EntityXPOrb(worldIn, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, experience));

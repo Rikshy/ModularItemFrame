@@ -1,17 +1,18 @@
 package de.shyrik.modularitemframe.common.block;
 
-import com.teamwizardry.librarianlib.features.base.block.tile.BlockModContainer;
+import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.UpgradeBase;
-import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoAccessor;
 import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -19,27 +20,21 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
-public class BlockModularFrame extends BlockModContainer implements IProbeInfoAccessor {
+public class BlockModularFrame extends BlockContainer implements IProbeInfoAccessor {
 
-	public static final PropertyEnum<EnumFacing> FACING = PropertyEnum.create("facing", EnumFacing.class);
+    public static final PropertyDirection FACING = PropertyDirection.create("facing");
 
 	private static final AxisAlignedBB UP_AABB = new AxisAlignedBB(0.125D, 1.0D, 0.125D, 0.875D, 0.895D, 0.875D);
 	private static final AxisAlignedBB DOWN_AABB = new AxisAlignedBB(0.125D, 0.0D, 0.125D, 0.875D, 0.11D, 0.875D);
@@ -48,23 +43,23 @@ public class BlockModularFrame extends BlockModContainer implements IProbeInfoAc
 	private static final AxisAlignedBB EAST_AABB = new AxisAlignedBB(0.895D, 0.125D, 0.125D, 1.0D, 0.875D, 0.875D);
 	private static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.0D, 0.125D, 0.125D, 0.11D, 0.875D, 0.875D);
 
+	public static final ResourceLocation ID = new ResourceLocation(ModularItemFrame.MOD_ID,"modular_frame");
+
 	public BlockModularFrame() {
-		super("modular_frame", Material.WOOD);
+		super(Material.WOOD);
+		setUnlocalizedName(ID.toString());
+		setRegistryName(ID);
 		setHardness(2.0F);
 		setResistance(4.0F);
 		setSoundType(SoundType.WOOD);
+		setCreativeTab(ModularItemFrame.TAB);
 
 		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void initModel() {
-		ClientRegistry.bindTileEntitySpecialRenderer(TileModularFrame.class, new FrameRenderer());
-	}
-
-	@Nullable
+    @Nullable
 	@Override
-	public TileEntity createTileEntity(@NotNull World world, @NotNull IBlockState state) {
+	public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
 		return new TileModularFrame();
 	}
 
@@ -83,7 +78,7 @@ public class BlockModularFrame extends BlockModContainer implements IProbeInfoAc
 	}
 
 	@Override
-	public void breakBlock(@NotNull World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state) {
+	public void breakBlock(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
         getTE(worldIn, pos).module.onRemove(worldIn, pos, state.getValue(FACING), null);
         getTE(worldIn, pos).dropUpgrades(null, state.getValue(FACING));
 		super.breakBlock(worldIn, pos, state);
@@ -174,7 +169,7 @@ public class BlockModularFrame extends BlockModContainer implements IProbeInfoAc
 		return !worldIn.isAirBlock(pos.offset(side.getOpposite()));
 	}
 
-    @Override
+	@Override
     public boolean canCreatureSpawn(@Nonnull IBlockState state, @Nonnull  IBlockAccess world, @Nonnull BlockPos pos, EntityLiving.SpawnPlacementType type) {
         return false;
     }
@@ -200,9 +195,22 @@ public class BlockModularFrame extends BlockModContainer implements IProbeInfoAc
 		}
 	}
 
-	@Override
+	/*@Override
 	@Nonnull
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, FACING);
-	}
+	}*/
+
+    @Override
+    protected BlockStateContainer createBlockState()
+    {
+        return new BlockStateContainer(this, new IProperty[] {FACING});
+    }
+
+	@Nonnull
+    @Override
+    @SuppressWarnings("deprecation")
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.MODEL;
+    }
 }

@@ -28,7 +28,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.Optional;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -166,8 +165,8 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 * or destroyed.
 	 * If you want the module to drop, make sure to call the super method
 	 */
-	public void onRemove(@NotNull World worldIn, @NotNull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
-		Item item = Item.getByNameOrId(ModularItemFrame.MOD_ID + ":" + ModuleRegistry.getModuleId(tile.module.getClass()));
+	public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
+		Item item = Item.getByNameOrId(ModuleRegistry.getModuleId(tile.module.getClass()).toString());
 		if (item instanceof ItemModule) {
 			ItemStack remain = new ItemStack(item);
 			if (playerIn != null)

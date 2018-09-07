@@ -1,7 +1,5 @@
 package de.shyrik.modularitemframe.api.utils;
 
-import com.teamwizardry.librarianlib.core.common.RecipeGeneratorHandler;
-import net.minecraft.client.util.RecipeItemHelper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

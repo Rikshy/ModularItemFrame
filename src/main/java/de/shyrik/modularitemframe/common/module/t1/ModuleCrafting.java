@@ -71,15 +71,15 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return false;
 
-        if (!worldIn.isRemote) {
             if (!hasValidRecipe(playerIn))
                 playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, worldIn, pos.getX(), pos.getY(), pos.getZ());
             else {
-                if (playerIn.isSneaking()) craft(playerIn, true);
-                else craft(playerIn, false);
+                if (!worldIn.isRemote) {
+                    if (playerIn.isSneaking()) craft(playerIn, true);
+                    else craft(playerIn, false);
+                }
             }
             tile.markDirty();
-        }
         return true;
     }
 

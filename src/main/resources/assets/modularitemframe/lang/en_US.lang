@@ -57,4 +57,4 @@ modularitemframe.tooltip.tankmode=Tankmode: %s
 modularitemframe.tooltip.tele_valid=Valid location: %s
 modularitemframe.tooltip.xp_level=%d Level
 
-item_group.modularitemframe=ModularItemFrame
+itemGroup.modularitemframe=ModularItemFrame
