@@ -1,10 +1,9 @@
 package de.shyrik.modularitemframe.common.block;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ItemModule;
-import de.shyrik.modularitemframe.api.ItemUpgrade;
+import de.shyrik.modularitemframe.common.item.ItemModule;
+import de.shyrik.modularitemframe.common.item.ItemUpgrade;
 import de.shyrik.modularitemframe.api.UpgradeBase;
-import de.shyrik.modularitemframe.api.UpgradeRegistry;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import mcjty.theoneprobe.api.IProbeHitData;

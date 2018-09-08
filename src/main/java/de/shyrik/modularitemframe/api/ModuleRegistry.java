@@ -1,6 +1,7 @@
 package de.shyrik.modularitemframe.api;
 
 
+import de.shyrik.modularitemframe.common.item.ItemModule;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;

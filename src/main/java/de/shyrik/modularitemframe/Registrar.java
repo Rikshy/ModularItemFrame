@@ -1,7 +1,7 @@
 package de.shyrik.modularitemframe;
 
 import com.google.common.collect.ImmutableList;
-import de.shyrik.modularitemframe.api.ItemModule;
+import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.api.ModuleRegistry;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;

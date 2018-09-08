@@ -1,8 +1,8 @@
 package de.shyrik.modularitemframe.common.compat;
 
 import de.shyrik.modularitemframe.Registrar;
-import de.shyrik.modularitemframe.api.ItemModule;
-import de.shyrik.modularitemframe.api.ItemUpgrade;
+import de.shyrik.modularitemframe.common.item.ItemModule;
+import de.shyrik.modularitemframe.common.item.ItemUpgrade;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;

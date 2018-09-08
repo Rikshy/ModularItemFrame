@@ -1,4 +1,4 @@
-package de.shyrik.modularitemframe.api;
+package de.shyrik.modularitemframe.common.item;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
 import net.minecraft.item.Item;

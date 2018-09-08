@@ -1,5 +1,7 @@
 package de.shyrik.modularitemframe.api;
 
+import de.shyrik.modularitemframe.common.item.ItemUpgrade;
+
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
