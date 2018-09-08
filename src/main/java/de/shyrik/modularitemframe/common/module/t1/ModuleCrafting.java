@@ -5,7 +5,6 @@ import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
-import de.shyrik.modularitemframe.common.container.FrameCrafting;
 import de.shyrik.modularitemframe.common.container.IContainerCallbacks;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;

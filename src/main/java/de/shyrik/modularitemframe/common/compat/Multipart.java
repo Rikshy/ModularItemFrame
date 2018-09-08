@@ -2,6 +2,7 @@ package de.shyrik.modularitemframe.common.compat;
 
 import de.shyrik.modularitemframe.Registrar;
 import de.shyrik.modularitemframe.api.ItemModule;
+import de.shyrik.modularitemframe.api.ItemUpgrade;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
@@ -111,6 +112,14 @@ public class Multipart implements IMCMPAddon {
                     tile.setModule((ItemModule) handItem.getItem());
                     if (!playerIn.isCreative()) playerIn.getHeldItem(hand).shrink(1);
                     tile.markDirty();
+                }
+                moveHand = true;
+            } else if (handItem.getItem() instanceof ItemUpgrade) {
+                if (!worldIn.isRemote && tile.acceptsUpgrade()) {
+                    if (tile.tryAddUpgrade((ItemUpgrade) handItem.getItem())) {
+                        if (!playerIn.isCreative()) playerIn.getHeldItem(hand).shrink(1);
+                        tile.markDirty();
+                    }
                 }
                 moveHand = true;
             }

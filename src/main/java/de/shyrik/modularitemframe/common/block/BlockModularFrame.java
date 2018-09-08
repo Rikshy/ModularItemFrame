@@ -2,9 +2,10 @@ package de.shyrik.modularitemframe.common.block;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ItemModule;
+import de.shyrik.modularitemframe.api.ItemUpgrade;
 import de.shyrik.modularitemframe.api.UpgradeBase;
+import de.shyrik.modularitemframe.api.UpgradeRegistry;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
-import de.shyrik.modularitemframe.common.module.ModuleEmpty;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -81,7 +82,7 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
         TileModularFrame tile = getTE(worldIn, pos);
         ItemStack handItem = playerIn.getHeldItem(hand);
 
-	    if (handItem.getItem() instanceof ItemScrewdriver) {
+        if (handItem.getItem() instanceof ItemScrewdriver) {
             if (!worldIn.isRemote) {
                 if (facing.getOpposite() == state.getValue(FACING)) {
                     if (hitModule(facing.getOpposite(), hitX, hitY, hitZ)) {
@@ -93,19 +94,24 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
                 }
             }
             moveHand = true;
-        }
-        else if (handItem.getItem() instanceof ItemModule) {
+        } else if (handItem.getItem() instanceof ItemModule) {
             if (!worldIn.isRemote && tile.acceptsModule()) {
                 tile.setModule((ItemModule) handItem.getItem());
                 if (!playerIn.isCreative()) playerIn.getHeldItem(hand).shrink(1);
                 tile.markDirty();
             }
             moveHand = true;
-        }
-        else
-            moveHand = tile.module.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
+        } else if (handItem.getItem() instanceof ItemUpgrade) {
+            if (!worldIn.isRemote && tile.acceptsUpgrade()) {
+                if (tile.tryAddUpgrade((ItemUpgrade) handItem.getItem())) {
+                    if (!playerIn.isCreative()) playerIn.getHeldItem(hand).shrink(1);
+                    tile.markDirty();
+                }
+            }
+            moveHand = true;
+        } else moveHand = tile.module.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
         return moveHand;
-	}
+    }
 
     public static boolean hitModule(EnumFacing side, float x, float y, float z) {
         switch (side) {

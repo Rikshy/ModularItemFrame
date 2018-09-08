@@ -16,8 +16,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -47,9 +45,14 @@ public class TileModularFrame extends TileEntity implements ITickable {
 		module.setTile(this);
 	}
 
-	public void addUpgrade(UpgradeBase up) {
-	    upgrades.add(up);
-	    module.onUpgradesChanged();
+	public boolean tryAddUpgrade(ItemUpgrade upgrade) {
+        UpgradeBase up = UpgradeRegistry.createModuleInstance(upgrade.upgradeId);
+        if (up != null && countUpgradeOfType(up.getClass()) < up.getMaxCount()) {
+            upgrades.add(up);
+            module.onUpgradesChanged();
+            return true;
+        }
+        return false;
     }
 
 	public EnumFacing blockFacing() {

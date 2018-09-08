@@ -9,8 +9,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-import javax.annotation.Nonnull;
-
 @Mod(
         modid = ModularItemFrame.MOD_ID,
         name = ModularItemFrame.MOD_NAME,
