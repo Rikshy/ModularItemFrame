@@ -69,6 +69,7 @@ public class Registrar {
             MODULE_ITEM = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t1_item"), ModuleItem.class),
             MODULE_NULL = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t1_nullify"), ModuleNullify.class),
             MODULE_TANK = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t1_tank"), ModuleTank.class),
+
             //Tier 2
             MODULE_CRAFTINGPLUS = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_craft_plus"), ModuleCraftingPlus.class),
             MODULE_DROP = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_dispense"), ModuleDispense.class),
@@ -87,8 +88,7 @@ public class Registrar {
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
-        for (Block block : ALL_BLOCKS)
-            event.getRegistry().register(block);
+        event.getRegistry().registerAll(ALL_BLOCKS.toArray(new Block[0]));
 
         GameRegistry.registerTileEntity(TileModularFrame.class, new ResourceLocation(ModularItemFrame.MOD_ID,"modular_frame"));
     }
@@ -97,8 +97,7 @@ public class Registrar {
     public static void registerItems(RegistryEvent.Register<Item> event) {
         for (Block block : ALL_BLOCKS)
             event.getRegistry().register(new ItemBlock(block).setRegistryName(Objects.requireNonNull(block.getRegistryName())));
-        for (Item item : ALL_ITEMS)
-            event.getRegistry().register(item);
+        event.getRegistry().registerAll(ALL_ITEMS.toArray(new Item[0]));
     }
 
     @SubscribeEvent
