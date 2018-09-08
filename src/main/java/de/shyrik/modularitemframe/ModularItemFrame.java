@@ -22,7 +22,7 @@ public class ModularItemFrame {
     public static final String MOD_ID = "modularitemframe";
     public static final String MOD_NAME = "Modular Item Frame";
     public static final String VERSION = "@GRADLE:VERSION@";
-    public static final String DEPENDENCIES = "";
+    public static final String DEPENDENCIES = "after:mcmultipart;";
 
     public static final String CLIENT_PROXY = "de.shyrik.modularitemframe.client.ClientProxy";
     public static final String SERVER_PROXY = "de.shyrik.modularitemframe.common.CommonProxy";
