@@ -1,17 +1,13 @@
 package de.shyrik.modularitemframe.common.item;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.common.module.ModuleEmpty;
-import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
@@ -22,7 +18,7 @@ import java.util.List;
 
 public class ItemScrewdriver extends ItemTool {
 	private static final String NBT_MODE = "mode";
-	public static final ResourceLocation loc = new ResourceLocation(ModularItemFrame.MOD_ID, "screwdriver");
+	private static final ResourceLocation loc = new ResourceLocation(ModularItemFrame.MOD_ID, "screwdriver");
 
 	public ItemScrewdriver() {
 		super(ToolMaterial.IRON, new HashSet<>());
@@ -35,47 +31,6 @@ public class ItemScrewdriver extends ItemTool {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
         tooltip.add("Mode: " + readModeFromNBT(stack).getName());
-    }
-
-    @Nonnull
-	@Override
-	public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-		TileEntity tmp = world.getTileEntity(pos);
-		if (tmp instanceof TileModularFrame) {
-			if (!world.isRemote) {
-				TileModularFrame tile = (TileModularFrame) tmp;
-				if (side.getOpposite() == tile.blockFacing()) {
-					ItemStack driver = player.getHeldItem(hand);
-					if (hitModule(side.getOpposite(), hitX, hitY, hitZ)) {
-                        if (readModeFromNBT(driver) == EnumMode.INTERACT) {
-                            tile.module.screw(world, pos, player, driver);
-                        } else {
-                            tile.module.onRemove(world, pos, side, player);
-                            tile.setModule(new ModuleEmpty());
-                        }
-                    } else
-                        tile.dropUpgrades(player, side);
-					tile.markDirty();
-				}
-			}
-			return EnumActionResult.SUCCESS;
-		}
-		return super.onItemUseFirst(player, world, pos, side, hitX, hitY, hitZ, hand);
-	}
-
-	private boolean hitModule(EnumFacing side, float x, float y, float z) {
-        switch (side) {
-            case DOWN:
-            case UP:
-                return x > 0.17F && x < 0.83F && z > 0.17F && z < 0.83F;
-            case NORTH:
-            case SOUTH:
-                return x > 0.17F && x < 0.83F && y > 0.20F && y < 0.80F;
-            case WEST:
-            case EAST:
-                return z > 0.17F && z < 0.83F && y > 0.20F && y < 0.80F;
-        }
-        return false;
     }
 
 	@Nonnull
@@ -94,14 +49,18 @@ public class ItemScrewdriver extends ItemTool {
 		return new ActionResult<>(result, playerIn.getHeldItem(handIn));
 	}
 
-	private void writeModeToNbt(ItemStack stack, EnumMode mode) {
+	public static EnumMode getMode(ItemStack driver) {
+        return readModeFromNBT(driver);
+    }
+
+	private static void writeModeToNbt(ItemStack stack, EnumMode mode) {
 		NBTTagCompound nbt = stack.getTagCompound();
 		if (nbt == null) nbt = new NBTTagCompound();
 		nbt.setInteger(NBT_MODE, mode.getIndex());
 		stack.setTagCompound(nbt);
 	}
 
-	private EnumMode readModeFromNBT(ItemStack stack) {
+	private static EnumMode readModeFromNBT(ItemStack stack) {
 		NBTTagCompound nbt = stack.getTagCompound();
 		EnumMode mode = EnumMode.REMOVE;
 		if (nbt == null) writeModeToNbt(stack, mode);

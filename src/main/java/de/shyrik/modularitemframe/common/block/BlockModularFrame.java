@@ -1,7 +1,10 @@
 package de.shyrik.modularitemframe.common.block;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
+import de.shyrik.modularitemframe.api.ItemModule;
 import de.shyrik.modularitemframe.api.UpgradeBase;
+import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
+import de.shyrik.modularitemframe.common.module.ModuleEmpty;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -18,6 +21,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -73,8 +77,50 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
 
 	@Override
 	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-		return getTE(worldIn, pos).module.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
+        boolean moveHand;
+        TileModularFrame tile = getTE(worldIn, pos);
+        ItemStack handItem = playerIn.getHeldItem(hand);
+
+	    if (handItem.getItem() instanceof ItemScrewdriver) {
+            if (!worldIn.isRemote) {
+                if (facing.getOpposite() == state.getValue(FACING)) {
+                    if (hitModule(facing.getOpposite(), hitX, hitY, hitZ)) {
+                        if (ItemScrewdriver.getMode(handItem) == ItemScrewdriver.EnumMode.INTERACT) {
+                            tile.module.screw(worldIn, pos, playerIn, handItem);
+                        } else tile.dropModule(facing, playerIn);
+                    } else tile.dropUpgrades(playerIn, facing);
+                    tile.markDirty();
+                }
+            }
+            moveHand = true;
+        }
+        else if (handItem.getItem() instanceof ItemModule) {
+            if (!worldIn.isRemote && tile.acceptsModule()) {
+                tile.setModule((ItemModule) handItem.getItem());
+                if (!playerIn.isCreative()) playerIn.getHeldItem(hand).shrink(1);
+                tile.markDirty();
+            }
+            moveHand = true;
+        }
+        else
+            moveHand = tile.module.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
+        return moveHand;
 	}
+
+    public static boolean hitModule(EnumFacing side, float x, float y, float z) {
+        switch (side) {
+            case DOWN:
+            case UP:
+                return x > 0.17F && x < 0.83F && z > 0.17F && z < 0.83F;
+            case NORTH:
+            case SOUTH:
+                return x > 0.17F && x < 0.83F && y > 0.20F && y < 0.80F;
+            case WEST:
+            case EAST:
+                return z > 0.17F && z < 0.83F && y > 0.20F && y < 0.80F;
+        }
+        return false;
+    }
 
 	@Override
 	public void breakBlock(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {

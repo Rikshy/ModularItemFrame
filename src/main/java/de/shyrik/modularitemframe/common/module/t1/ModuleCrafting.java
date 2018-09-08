@@ -72,7 +72,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
         if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return false;
 
             if (!hasValidRecipe(playerIn))
-                playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, worldIn, pos.getX(), pos.getY(), pos.getZ());
+                playerIn.openGui(ModularItemFrame.instance, GuiHandler.getMetaGuiId(GuiHandler.CRAFTING_FRAME, facing), worldIn, pos.getX(), pos.getY(), pos.getZ());
             else {
                 if (!worldIn.isRemote) {
                     if (playerIn.isSneaking()) craft(playerIn, true);

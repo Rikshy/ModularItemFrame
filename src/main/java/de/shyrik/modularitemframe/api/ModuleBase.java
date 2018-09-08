@@ -163,17 +163,8 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	/**
 	 * Called when module is removed with the {@link de.shyrik.modularitemframe.common.item.ItemScrewdriver screwdriver}
 	 * or destroyed.
-	 * If you want the module to drop, make sure to call the super method
 	 */
 	public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
-		Item item = Item.getByNameOrId(ModuleRegistry.getModuleId(tile.module.getClass()).toString());
-		if (item instanceof ItemModule) {
-			ItemStack remain = new ItemStack(item);
-			if (playerIn != null)
-				remain = ItemUtils.giveStack(ItemUtils.getPlayerInv(playerIn), remain);
-			if (!remain.isEmpty())
-				ItemUtils.ejectStack(worldIn, tile.getPos(), facing, remain);
-		}
 	}
 
 	public void onUpgradesChanged() {

@@ -16,6 +16,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -35,6 +37,10 @@ public class TileModularFrame extends TileEntity implements ITickable {
 	public TileModularFrame() {
 		setModule(new ModuleEmpty());
 	}
+
+	public void setModule(ItemModule module) {
+        setModule(ModuleRegistry.createModuleInstance(module.moduleId));
+    }
 
 	public void setModule(ModuleBase mod) {
 		module = mod;
@@ -69,6 +75,21 @@ public class TileModularFrame extends TileEntity implements ITickable {
 	            count++;
         }
         return count;
+    }
+
+    public void dropModule(@Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
+        ResourceLocation moduleLoc = ModuleRegistry.getModuleId(module.getClass());
+        if (moduleLoc == null) return;
+
+        Item item = Item.getByNameOrId(moduleLoc.toString());
+        if (item instanceof ItemModule) {
+            ItemStack remain = new ItemStack(item);
+            if (playerIn != null) remain = ItemUtils.giveStack(ItemUtils.getPlayerInv(playerIn), remain);
+            if (!remain.isEmpty()) ItemUtils.ejectStack(world, pos, facing, remain);
+            module.onRemove(world, pos, facing, playerIn);
+            setModule(new ModuleEmpty());
+            markDirty();
+        }
     }
 
     public void dropUpgrades(@Nullable EntityPlayer playerIn, @Nonnull EnumFacing facing) {
