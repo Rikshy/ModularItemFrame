@@ -1,7 +1,6 @@
 package de.shyrik.modularitemframe;
 
 import com.google.common.collect.ImmutableList;
-import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.api.ModuleRegistry;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
@@ -32,59 +31,42 @@ import java.util.Objects;
 @Mod.EventBusSubscriber
 public class Registrar {
 
-    //@GameRegistry.ObjectHolder(ModularItemFrame.MOD_ID + ":modular_frame")
     public static BlockModularFrame FRAME_MODULAR;
-
-    //Tier 1
-    //@GameRegistry.ObjectHolder(ModularItemFrame.MOD_ID + ":module_t1_craft")
-    public static ItemModule MODULE_CRAFT;
-    public static ItemModule MODULE_IO;
-    public static ItemModule MODULE_ITEM;
-    public static ItemModule MODULE_NULL;
-    public static ItemModule MODULE_TANK;
-
-    //Tier 2
-    public static ItemModule MODULE_CRAFTINGPLUS;
-    public static ItemModule MODULE_DROP;
-    public static ItemModule MODULE_XP;
-    public static ItemModule MODULE_VACUUM;
-    public static ItemModule MODULE_TRASHCAN;
-
-    //Tier 3
-    public static ItemModule MODULE_TELE;
-    //public static ItemModule MODULE_AUTOCRAFTING;
-
     public static ItemScrewdriver SCREWDRIVER;
 
-    public static Item ITEM_CANVAS;
+    public static List<Block> ALL_BLOCKS;
+    public static List<Item> ALL_ITEMS;
 
-    public static List<Block> ALL_BLOCKS = ImmutableList.of(
-            FRAME_MODULAR = new BlockModularFrame()
-    );
+    //just so i cna collapse it :)
+    static {
 
-    public static List<Item> ALL_ITEMS = ImmutableList.of(
-            //Tier 1
-            MODULE_CRAFT = ModuleRegistry.registerCreate( new ResourceLocation(ModularItemFrame.MOD_ID,"module_t1_craft"), ModuleCrafting.class),
-            MODULE_IO = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t1_io"), ModuleIO.class),
-            MODULE_ITEM = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t1_item"), ModuleItem.class),
-            MODULE_NULL = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t1_nullify"), ModuleNullify.class),
-            MODULE_TANK = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t1_tank"), ModuleTank.class),
+        ALL_BLOCKS = ImmutableList.of(
+                FRAME_MODULAR = new BlockModularFrame()
+        );
 
-            //Tier 2
-            MODULE_CRAFTINGPLUS = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_craft_plus"), ModuleCraftingPlus.class),
-            MODULE_DROP = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_dispense"), ModuleDispense.class),
-            MODULE_XP = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_xp"), ModuleXP.class),
-            MODULE_VACUUM = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_vacuum"), ModuleVacuum.class),
-            MODULE_TRASHCAN = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_trashcan"), ModuleTrashCan.class),
+        ALL_ITEMS = ImmutableList.of(SCREWDRIVER = new ItemScrewdriver(),
 
-            //Tier 3
-            //MODULE_AUTOCRAFTING = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_crafting_plus"), ModuleAutoCrafting.class);
-            MODULE_TELE = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t3_tele"), ModuleTeleport.class),
+                //Canvas
+                new Item().setRegistryName(new ResourceLocation(ModularItemFrame.MOD_ID, "canvas")).setTranslationKey(ModularItemFrame.MOD_ID + ":canvas").setCreativeTab(ModularItemFrame.TAB),
 
-            SCREWDRIVER = new ItemScrewdriver(),
+                //Tier 1
+                ModuleRegistry.registerCreate(ModuleCrafting.LOC, ModuleCrafting.class),
+                ModuleRegistry.registerCreate(ModuleIO.LOC, ModuleIO.class),
+                ModuleRegistry.registerCreate(ModuleItem.LOC, ModuleItem.class),
+                ModuleRegistry.registerCreate(ModuleNullify.LOC, ModuleNullify.class),
+                ModuleRegistry.registerCreate(ModuleTank.LOC, ModuleTank.class),
 
-            ITEM_CANVAS = new Item().setRegistryName(new ResourceLocation(ModularItemFrame.MOD_ID, "canvas")).setTranslationKey(ModularItemFrame.MOD_ID + ":canvas").setCreativeTab(ModularItemFrame.TAB)
-    );
+                //Tier 2
+                ModuleRegistry.registerCreate(ModuleCraftingPlus.LOC, ModuleCraftingPlus.class),
+                ModuleRegistry.registerCreate(ModuleDispense.LOC, ModuleDispense.class),
+                ModuleRegistry.registerCreate(ModuleXP.LOC, ModuleXP.class),
+                ModuleRegistry.registerCreate(ModuleVacuum.LOC, ModuleVacuum.class),
+                ModuleRegistry.registerCreate(ModuleTrashCan.LOC, ModuleTrashCan.class),
+
+                //Tier 3
+                //MODULE_AUTOCRAFTING = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_crafting_plus"), ModuleAutoCrafting.class);
+                ModuleRegistry.registerCreate(ModuleTeleport.LOC, ModuleTeleport.class));
+    }
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {

@@ -29,6 +29,7 @@ import java.util.List;
 
 public class ModuleVacuum extends ModuleBase {
 
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_vacuum");
     private static final String NBT_MODE = "rangemode";
     private static final String NBT_RANGEX = "rangex";
     private static final String NBT_RANGEY = "rangey";

@@ -33,6 +33,8 @@ import java.util.List;
 
 public class ModuleTeleport extends ModuleBase {
 
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t3_tele");
+
     private static final String NBT_LINK = "linked_pos";
     private static final String NBT_LINKX = "linked_posX";
     private static final String NBT_LINKY = "linked_posY";

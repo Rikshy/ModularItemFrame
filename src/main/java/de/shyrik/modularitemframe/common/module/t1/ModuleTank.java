@@ -32,6 +32,7 @@ import java.util.List;
 
 public class ModuleTank extends ModuleFluid {
 
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t1_tank");
     private static final String NBT_MODE = "tankmode";
 
     public EnumMode mode = EnumMode.NONE;

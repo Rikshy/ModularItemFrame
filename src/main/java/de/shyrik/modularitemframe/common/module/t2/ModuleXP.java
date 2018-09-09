@@ -30,6 +30,7 @@ import java.util.List;
 //thx openblocks and enderio
 public class ModuleXP extends ModuleItem {
 
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_xp");
     protected static final int MAX_XP = 21862;
 
     private static final String NBT_XP = "xp";
