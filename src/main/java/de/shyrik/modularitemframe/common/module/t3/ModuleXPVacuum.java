@@ -1,5 +1,6 @@
 package de.shyrik.modularitemframe.common.module.t3;
 
+import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.module.t2.ModuleXP;
@@ -13,6 +14,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ModuleXPVacuum extends ModuleXP {
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t3_xpvaruum");
 
     @Nonnull
     @Override

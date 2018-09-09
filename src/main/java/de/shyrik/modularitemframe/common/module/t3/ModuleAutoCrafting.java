@@ -26,6 +26,8 @@ import javax.annotation.Nonnull;
 
 public class ModuleAutoCrafting extends ModuleCraftingPlus {
 
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t3_auto_crafting");
+
     @Nonnull
     @Override
     public ResourceLocation innerTexture() {

@@ -19,6 +19,7 @@ item.modularitemframe:module_t3_auto_crafting.name=Auto Crafting Module
 item.modularitemframe:module_t3_fluid_dispenser.name=Fluid Dispenser Module
 item.modularitemframe:module_t3_itemtelein.name=Item Teleporter In Module
 item.modularitemframe:module_t3_itemteleout.name=Item Teleporter Out Module
+item.modularitemframe:module_t3_xpvaruum.name=XP Vacuum Module
 
 modularitemframe.message.no_target=[ModularItemFrame] No target location set - use the screwdriver
 modularitemframe.message.invalid_target=[ModularItemFrame] No Ender Frame at target location

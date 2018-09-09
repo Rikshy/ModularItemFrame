@@ -19,6 +19,7 @@ item.modularitemframe:module_t3_auto_crafting.name=Auto Crafting Modul
 item.modularitemframe:module_t3_fluid_dispenser.name=Flüssigkeit Spender Module
 item.modularitemframe:module_t3_itemtelein.name=Item Teleporter In Modul
 item.modularitemframe:module_t3_itemteleout.name=Item Teleporter Out Modul
+item.modularitemframe:module_t3_xpvaruum.name=XP Vacuum Modul
 
 modularitemframe.message.no_target=[ModularItemFrame] Keine Zielposition gesetzt - benutze dafür den Schraubenzieher
 modularitemframe.message.invalid_target=[ModularItemFrame] Kein Ender Rahmen an der Zielposition
