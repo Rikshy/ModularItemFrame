@@ -34,6 +34,7 @@ public class FrameRenderer extends TileEntitySpecialRenderer<TileModularFrame> {
 	@Override
 	public void render(TileModularFrame te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		GlStateManager.pushMatrix();
+		GlStateManager.disableCull();
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		IBakedModel modelFrame = getBakedModels(te);
@@ -50,6 +51,7 @@ public class FrameRenderer extends TileEntitySpecialRenderer<TileModularFrame> {
 		Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(modelFrame, 1.0F, 1, 1, 1);
 
 		GlStateManager.disableBlend();
+		GlStateManager.enableCull();
 		GlStateManager.popMatrix();
 
 		te.module.specialRendering(this, x, y, z, partialTicks, destroyStage, alpha);

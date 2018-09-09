@@ -2,7 +2,9 @@ package de.shyrik.modularitemframe.common.module.t1;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
-import de.shyrik.modularitemframe.common.module.ModuleFluid;
+import de.shyrik.modularitemframe.api.ModuleBase;
+import de.shyrik.modularitemframe.api.utils.RenderUtils;
+import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
@@ -10,6 +12,9 @@ import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -22,6 +27,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -30,16 +37,14 @@ import net.minecraftforge.fml.common.Optional;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class ModuleTank extends ModuleFluid {
+public class ModuleTank extends ModuleBase {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t1_tank");
     private static final String NBT_MODE = "tankmode";
+    private static final String NBT_TANK = "tank";
 
     public EnumMode mode = EnumMode.NONE;
-
-    public ModuleTank() {
-        tank.setCapacity(ConfigValues.TankFrameCapacity);
-    }
+    private FluidTank tank = new FluidTank(ConfigValues.TankFrameCapacity);
 
     @Nonnull
     @Override
@@ -47,10 +52,60 @@ public class ModuleTank extends ModuleFluid {
         return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank");
     }
 
+    @Nonnull
+    @Override
+    public ResourceLocation backTexture() {
+        return super.backTexture();//new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank");
+    }
+
     @Override
     public String getModuleName() {
         return I18n.format("modularitemframe.module.tank");
     }
+
+    @Override
+    public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        if (tank != null && tank.getFluid() != null && tank.getFluidAmount() > 0) {
+            GlStateManager.pushMatrix();
+            GlStateManager.enableBlend();
+
+            FluidStack fluid = tank.getFluid();
+            double amount = (double) tank.getFluidAmount() / (double) tank.getCapacity();
+            int color = fluid.getFluid().getColor(fluid);
+            final TextureAtlasSprite still = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(fluid.getFluid().getStill(fluid).toString());
+            final TextureAtlasSprite flowing = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(fluid.getFluid().getFlowing(fluid).toString());
+
+            RenderUtils.translateAgainstPlayer(tile.getPos(), false);
+
+            switch (tile.blockFacing()) {
+                case UP:
+                    RenderUtils.renderFluid(fluid, tile.getPos(), 0.16d, 0.92d, 0.16d, 0.0d, 0.0d, 0.0d, 0.67d, 0.05d, amount * 0.67d, color, still, flowing);
+                    break;
+                case DOWN:
+                    RenderUtils.renderFluid(fluid, tile.getPos(), 0.16d, 0.03d, 0.16d, 0.0d, 0.0d, 0.0d, 0.67d, 0.05d, amount * 0.67d, color, still, flowing);
+                    RenderUtils.renderFluid(fluid, tile.getPos(), 0.16d, -0.01d, 0.16d, 0.0d, 0.0d, 0.0d, 0.67d, 0.05d, amount * 0.67d, color, still, flowing);
+                    break;
+                case NORTH: //done
+                    RenderUtils.renderFluid(fluid, tile.getPos(), 0.16d, 0.16d, 0.035d, 0.0d, 0.0d, 0.0d, 0.67d, amount * 0.67d, 0.05d, color, still, flowing);
+                    RenderUtils.renderFluid(fluid, tile.getPos(), 0.16d, 0.16d, -0.01d, 0.0d, 0.0d, 0.0d, 0.67d, amount * 0.67d, 0.05d, color, still, flowing);
+                    break;
+                case EAST:
+                    RenderUtils.renderFluid(fluid, tile.getPos(), 0.92d, 0.16d, 0.16d, 0.0d, 0.0d, 0.0d, 0.05d, amount * 0.67d, 0.67d, color, still, flowing);
+                    RenderUtils.renderFluid(fluid, tile.getPos(), 0.951d, 0.16d, 0.16d, 0.0d, 0.0d, 0.0d, 0.05d, amount * 0.67d, 0.67d, color, still, flowing);
+                    break;
+                case WEST: //done
+                    RenderUtils.renderFluid(fluid, tile.getPos(), 0.03d, 0.16d, 0.16d, 0.0d, 0.0d, 0.0d, 0.05d, amount * 0.67d, 0.67d, color, still, flowing);
+                    RenderUtils.renderFluid(fluid, tile.getPos(), -0.01d, 0.16d, 0.16d, 0.0d, 0.0d, 0.0d, 0.05d, amount * 0.67d, 0.67d, color, still, flowing);
+                    break;
+                case SOUTH: //done
+                    RenderUtils.renderFluid(fluid, tile.getPos(), 0.16d, 0.16d, 0.92d, 0.0d, 0.0d, 0.0d, 0.67d, amount * 0.67d, 0.05d, color, still, flowing);
+                    break;
+            }
+            GlStateManager.disableBlend();
+            GlStateManager.popMatrix();
+        }
+    }
+
 
     @Override
     public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
@@ -118,12 +173,14 @@ public class ModuleTank extends ModuleFluid {
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = super.serializeNBT();
         nbt.setInteger(NBT_MODE, mode.getIndex());
+        nbt.setTag(NBT_TANK, tank.writeToNBT(new NBTTagCompound()));
         return nbt;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
+        if (nbt.hasKey(NBT_TANK)) tank.readFromNBT(nbt.getCompoundTag(NBT_TANK));
         if (nbt.hasKey(NBT_MODE))
             mode = ConfigValues.TankTransferRate > 0 ? EnumMode.VALUES[nbt.getInteger(NBT_MODE)] : EnumMode.NONE;
     }
