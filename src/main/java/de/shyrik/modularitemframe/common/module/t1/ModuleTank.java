@@ -40,6 +40,7 @@ import java.util.List;
 public class ModuleTank extends ModuleBase {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1_tank");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_tank");
     private static final String NBT_MODE = "tankmode";
     private static final String NBT_TANK = "tank";
 
@@ -49,7 +50,7 @@ public class ModuleTank extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_tank");
+        return BG_LOC;
     }
 
     @Nonnull

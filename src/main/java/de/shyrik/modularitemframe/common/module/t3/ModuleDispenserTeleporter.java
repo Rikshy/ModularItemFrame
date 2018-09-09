@@ -3,6 +3,7 @@ package de.shyrik.modularitemframe.common.module.t3;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleBase;
+import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -21,6 +22,7 @@ import javax.annotation.Nonnull;
 
 public class ModuleDispenserTeleporter extends ModuleBase {
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t3_itemteleout");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t3_itemteleout");
 
     private static final String NBT_LINK = "item_linked_pos";
     private static final String NBT_LINKX = "linked_posX";
@@ -32,13 +34,13 @@ public class ModuleDispenserTeleporter extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t3_itemteleout");
+        return BG_LOC;
     }
 
     @Nonnull
     @Override
     public ResourceLocation innerTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hardest_inner");
+        return BlockModularFrame.INNER_HARDEST_LOC;
     }
 
     @Override

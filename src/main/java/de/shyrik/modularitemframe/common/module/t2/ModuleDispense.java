@@ -4,6 +4,7 @@ import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
+import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,6 +26,7 @@ import javax.annotation.Nonnull;
 public class ModuleDispense extends ModuleBase {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2_dispense");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_dispense");
     private static final String NBT_RANGE = "range";
 
     public int range = 0;
@@ -32,13 +34,13 @@ public class ModuleDispense extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_dispense");
+        return BG_LOC;
     }
 
     @Nonnull
     @Override
     public ResourceLocation innerTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
+        return BlockModularFrame.INNER_HARD_LOC;
     }
 
     @Override

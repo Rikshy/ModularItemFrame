@@ -22,6 +22,8 @@ import javax.annotation.Nonnull;
 public class ModuleIO extends ModuleBase {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1_io");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/io");
+
     private static final String NBT_LAST = "lastclick";
     private static final String NBT_LASTSTACK = "laststack";
 
@@ -31,7 +33,7 @@ public class ModuleIO extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/io");
+        return BG_LOC;
     }
 
     @Override

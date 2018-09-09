@@ -4,6 +4,7 @@ import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
+import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.item.EntityItem;
@@ -29,6 +30,7 @@ import java.util.List;
 public class ModuleVacuum extends ModuleBase {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2_vacuum");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_vacuum");
     private static final String NBT_MODE = "rangemode";
     private static final String NBT_RANGEX = "rangex";
     private static final String NBT_RANGEY = "rangey";
@@ -42,13 +44,13 @@ public class ModuleVacuum extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_vacuum");
+        return BG_LOC;
     }
 
     @Nonnull
     @Override
     public ResourceLocation innerTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
+        return BlockModularFrame.INNER_HARD_LOC;
     }
 
     @Override

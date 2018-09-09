@@ -3,6 +3,7 @@ package de.shyrik.modularitemframe.common.module.t2;
 import com.google.common.collect.ImmutableList;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleBase;
+import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,11 +25,14 @@ import java.util.List;
 public class ModuleTrashCan extends ModuleBase {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2_trashcan");
+    public static final ResourceLocation BG_LOC1 = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_1");
+    public static final ResourceLocation BG_LOC2 = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_2");
+    public static final ResourceLocation BG_LOC3 = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_3");
 
     private List<ResourceLocation> frontTex = ImmutableList.of(
-            new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_1"),
-            new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_2"),
-            new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_3")
+            BG_LOC1,
+            BG_LOC2,
+            BG_LOC3
     );
     private int texIndex = 0;
 
@@ -41,7 +45,7 @@ public class ModuleTrashCan extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation innerTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
+        return BlockModularFrame.INNER_HARD_LOC;
     }
 
     @Override

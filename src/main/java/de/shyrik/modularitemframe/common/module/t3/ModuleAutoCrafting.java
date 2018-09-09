@@ -3,6 +3,7 @@ package de.shyrik.modularitemframe.common.module.t3;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.client.gui.GuiHandler;
+import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.module.t2.ModuleCraftingPlus;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -28,7 +29,7 @@ public class ModuleAutoCrafting extends ModuleCraftingPlus {
     @Nonnull
     @Override
     public ResourceLocation innerTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hardest_inner");
+        return BlockModularFrame.INNER_HARDEST_LOC;
     }
 
     @Override

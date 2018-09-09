@@ -3,6 +3,7 @@ package de.shyrik.modularitemframe.common.module.t2;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.XpUtils;
+import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
@@ -30,24 +31,25 @@ import java.util.List;
 public class ModuleXP extends ModuleBase {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_xp");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"blocks/module_t2_xp");
     protected static final int MAX_XP = 21862;
 
     private static final String NBT_XP = "xp";
     private static final String NBT_LEVEL = "level";
 
-    public int experience;
-    public int levels;
+    protected int experience;
+    protected int levels;
 
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_xp");
+        return BG_LOC;
     }
 
     @Nonnull
     @Override
     public ResourceLocation innerTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
+        return BlockModularFrame.INNER_HARD_LOC;
     }
 
     @Override

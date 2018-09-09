@@ -35,6 +35,7 @@ import java.util.List;
 public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1_craft");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_crafting");
     private static final String NBT_GHOSTINVENTORY = "ghostinventory";
 
     protected IRecipe recipe;
@@ -49,7 +50,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_crafting");
+        return BG_LOC;
     }
 
     @Override

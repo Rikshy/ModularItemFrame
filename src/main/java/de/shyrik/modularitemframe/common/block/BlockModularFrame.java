@@ -3,7 +3,6 @@ package de.shyrik.modularitemframe.common.block;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemUpgrade;
-import de.shyrik.modularitemframe.api.UpgradeBase;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import de.shyrik.modularitemframe.common.upgrade.Upgrades;
@@ -54,6 +53,9 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
     private static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.0D, 0.125D, 0.125D, 0.11D, 0.875D, 0.875D);
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "modular_frame");
+    public static final ResourceLocation INNER_DEF_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
+    public static final ResourceLocation INNER_HARD_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
+    public static final ResourceLocation INNER_HARDEST_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hardest_inner");
 
     public BlockModularFrame() {
         super(Material.WOOD);

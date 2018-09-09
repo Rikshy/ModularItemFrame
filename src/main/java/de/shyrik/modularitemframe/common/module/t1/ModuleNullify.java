@@ -32,6 +32,7 @@ import javax.annotation.Nonnull;
 public class ModuleNullify extends ModuleBase {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1_nullify");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_null");
     private static final String NBT_LASTSTACK = "laststack";
 
     private ItemStack lastStack = ItemStack.EMPTY;
@@ -89,7 +90,7 @@ public class ModuleNullify extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_null");
+        return BG_LOC;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package de.shyrik.modularitemframe.common.module.t3;
 
-import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleBase;
+import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +28,7 @@ public class ModuleFluidDispenser extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation innerTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hardest_inner");
+        return BlockModularFrame.INNER_HARDEST_LOC;
     }
 
     @Override

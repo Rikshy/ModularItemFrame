@@ -1,7 +1,7 @@
 package de.shyrik.modularitemframe.common.module.t3;
 
-import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
+import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.module.t2.ModuleXP;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.util.ResourceLocation;
@@ -17,7 +17,7 @@ public class ModuleXPVacuum extends ModuleXP {
     @Nonnull
     @Override
     public ResourceLocation innerTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hardest_inner");
+        return BlockModularFrame.INNER_HARDEST_LOC;
     }
 
     @Override

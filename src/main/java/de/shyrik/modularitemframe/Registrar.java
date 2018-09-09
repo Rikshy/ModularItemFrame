@@ -38,6 +38,7 @@ public class Registrar {
 
     public static List<Block> ALL_BLOCKS;
     public static List<Item> ALL_ITEMS;
+    private static List<ResourceLocation> CUSTOM_TEX;
 
     //just so i cna collapse it :)
     static {
@@ -67,7 +68,29 @@ public class Registrar {
                 //MODULE_AUTOCRAFTING = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_crafting_plus"), ModuleAutoCrafting.class);
                 ModuleRegistry.registerCreate(ModuleTeleport.LOC, ModuleTeleport.class),
                 ModuleRegistry.registerCreate(ModuleVacuumTeleporter.LOC, ModuleVacuumTeleporter.class),
-                ModuleRegistry.registerCreate(ModuleDispenserTeleporter.LOC, ModuleDispenserTeleporter.class));
+                ModuleRegistry.registerCreate(ModuleDispenserTeleporter.LOC, ModuleDispenserTeleporter.class)
+        );
+
+        CUSTOM_TEX = ImmutableList.of(
+                BlockModularFrame.INNER_HARDEST_LOC,
+                BlockModularFrame.INNER_HARD_LOC,
+
+                ModuleIO.BG_LOC,
+                ModuleCrafting.BG_LOC,
+                ModuleItem.BG_LOC,
+                ModuleNullify.BG_LOC,
+                ModuleTank.BG_LOC,
+
+                ModuleDispense.BG_LOC,
+                ModuleVacuum.BG_LOC,
+                ModuleTrashCan.BG_LOC1,
+                ModuleTrashCan.BG_LOC2,
+                ModuleTrashCan.BG_LOC3,
+                ModuleXP.BG_LOC,
+
+                ModuleVacuumTeleporter.BG_LOC,
+                ModuleDispenserTeleporter.BG_LOC
+        );
     }
 
     @SubscribeEvent
@@ -97,27 +120,7 @@ public class Registrar {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void registerTex(TextureStitchEvent.Pre event) {
-        List<ResourceLocation> tex = ImmutableList.of(
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hardest_inner"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner"),
-
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/io"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_crafting"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_item"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_null"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_tank"),
-
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_dispense"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_vacuum"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_1"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_2"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_3"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_xp"),
-
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t3_itemtelein"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t3_itemteleout"));
-
-        for (ResourceLocation rl : tex)
+        for (ResourceLocation rl : CUSTOM_TEX)
             event.getMap().registerSprite(rl);
     }
 }

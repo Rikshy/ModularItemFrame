@@ -28,6 +28,7 @@ import java.util.List;
 public class ModuleVacuumTeleporter extends ModuleBase {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t3_itemtelein");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t3_itemtelein");
 
     private static final String NBT_LINK = "item_linked_pos";
     private static final String NBT_LINKX = "linked_posX";
@@ -39,13 +40,13 @@ public class ModuleVacuumTeleporter extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t3_itemtelein");
+        return BG_LOC;
     }
 
     @Nonnull
     @Override
     public ResourceLocation innerTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hardest_inner");
+        return BlockModularFrame.INNER_HARDEST_LOC;
     }
 
     @Override

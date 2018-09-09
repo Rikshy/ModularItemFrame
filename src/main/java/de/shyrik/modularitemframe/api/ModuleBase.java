@@ -2,6 +2,7 @@ package de.shyrik.modularitemframe.api;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
+import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.module.t1.ModuleItem;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import de.shyrik.modularitemframe.common.upgrade.Upgrades;
@@ -66,7 +67,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
      */
     @Nonnull
     public ResourceLocation innerTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/default_inner");
+        return BlockModularFrame.INNER_DEF_LOC;
     }
 
     /**
