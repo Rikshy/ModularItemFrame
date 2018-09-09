@@ -222,7 +222,7 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
 
     @Override
 	public boolean canPlaceBlockOnSide(@Nonnull World worldIn, @Nonnull BlockPos pos, EnumFacing side) {
-		return !worldIn.isAirBlock(pos.offset(side.getOpposite()));
+		return !worldIn.isBlockFullCube(pos.offset(side.getOpposite()));
 	}
 
 	@Override
