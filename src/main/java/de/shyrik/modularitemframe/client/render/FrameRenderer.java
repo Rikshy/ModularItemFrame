@@ -18,75 +18,75 @@ import org.lwjgl.opengl.GL11;
  */
 public class FrameRenderer extends TileEntitySpecialRenderer<TileModularFrame> {
 
-	private IModel model = null;
+    private IModel model = null;
 
-	private IBakedModel getBakedModels(TileModularFrame te) {
-		if (model == null) {
-			try {
-				model = ModelLoaderRegistry.getModel(new ResourceLocation(ModularItemFrame.MOD_ID, "block/modular_frame"));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return te.module.bakeModel(model);
-	}
+    private IBakedModel getBakedModels(TileModularFrame te) {
+        if (model == null) {
+            try {
+                model = ModelLoaderRegistry.getModel(new ResourceLocation(ModularItemFrame.MOD_ID, "block/modular_frame"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return te.module.bakeModel(model);
+    }
 
-	@Override
-	public void render(TileModularFrame te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		GlStateManager.pushMatrix();
-		GlStateManager.disableCull();
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		IBakedModel modelFrame = getBakedModels(te);
+    @Override
+    public void render(TileModularFrame te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        GlStateManager.pushMatrix();
+        GlStateManager.disableCull();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        IBakedModel modelFrame = getBakedModels(te);
 
-		bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		if (Minecraft.isAmbientOcclusionEnabled()) GlStateManager.shadeModel(GL11.GL_SMOOTH);
-		else GlStateManager.shadeModel(GL11.GL_FLAT);
+        bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        if (Minecraft.isAmbientOcclusionEnabled()) GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        else GlStateManager.shadeModel(GL11.GL_FLAT);
 
 
-		GlStateManager.translate(x, y, z); // Translate pad to coords here
-		GlStateManager.disableRescaleNormal();
-		rotateFrameOnFacing(te.blockFacing(), 0);
+        GlStateManager.translate(x, y, z); // Translate pad to coords here
+        GlStateManager.disableRescaleNormal();
+        rotateFrameOnFacing(te.blockFacing(), 0);
 
-		Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(modelFrame, 1.0F, 1, 1, 1);
+        Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(modelFrame, 1.0F, 1, 1, 1);
 
-		GlStateManager.disableBlend();
-		GlStateManager.enableCull();
-		GlStateManager.popMatrix();
+        GlStateManager.disableBlend();
+        GlStateManager.enableCull();
+        GlStateManager.popMatrix();
 
-		te.module.specialRendering(this, x, y, z, partialTicks, destroyStage, alpha);
-	}
+        te.module.specialRendering(this, x, y, z, partialTicks, destroyStage, alpha);
+    }
 
-	public void bindTex(ResourceLocation location) {
-		bindTexture(location);
-	}
+    public void bindTex(ResourceLocation location) {
+        bindTexture(location);
+    }
 
-	private void rotateFrameOnFacing(EnumFacing facing, int rotation) {
-		int r = Math.abs(rotation);
-		switch (facing) {
-			case NORTH:
-				break;
-			case SOUTH:
-				GlStateManager.translate(1.0F, 0.0F, 1.0F);
-				GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-				break;
-			case WEST:
-				GlStateManager.translate(0.0F, 0F, 1.0F);
-				GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
-				break;
-			case EAST:
-				GlStateManager.translate(1.0F, 0.0F, 0.0F);
-				GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
-				break;
-			case DOWN:
-				GlStateManager.translate(0.0F, 0.0F, 1.0F);
-				GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
-				break;
-			case UP:
-				GlStateManager.translate(0.0F, 1.0F, 0.0F);
-				GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
-		}
-		GlStateManager.rotate(rotation * 90.0F, 0.0F, 0.0F, 1.0F);
-		GlStateManager.translate((r == 1 || r == 2) ? -1 : 0, (r == 3 || r == 2) ? -1 : 0, 0);
-	}
+    private void rotateFrameOnFacing(EnumFacing facing, int rotation) {
+        int r = Math.abs(rotation);
+        switch (facing) {
+            case NORTH:
+                break;
+            case SOUTH:
+                GlStateManager.translate(1.0F, 0.0F, 1.0F);
+                GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+                break;
+            case WEST:
+                GlStateManager.translate(0.0F, 0F, 1.0F);
+                GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
+                break;
+            case EAST:
+                GlStateManager.translate(1.0F, 0.0F, 0.0F);
+                GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
+                break;
+            case DOWN:
+                GlStateManager.translate(0.0F, 0.0F, 1.0F);
+                GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
+                break;
+            case UP:
+                GlStateManager.translate(0.0F, 1.0F, 0.0F);
+                GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
+        }
+        GlStateManager.rotate(rotation * 90.0F, 0.0F, 0.0F, 1.0F);
+        GlStateManager.translate((r == 1 || r == 2) ? -1 : 0, (r == 3 || r == 2) ? -1 : 0, 0);
+    }
 }

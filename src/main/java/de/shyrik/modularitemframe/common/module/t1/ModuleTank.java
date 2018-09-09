@@ -39,7 +39,7 @@ import java.util.List;
 
 public class ModuleTank extends ModuleBase {
 
-    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t1_tank");
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1_tank");
     private static final String NBT_MODE = "tankmode";
     private static final String NBT_TANK = "tank";
 
@@ -134,8 +134,8 @@ public class ModuleTank extends ModuleBase {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (!world.isRemote && mode != EnumMode.NONE && ConfigValues.TankTransferRate > 0) {
-            if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0)
-                return;
+            if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0) return;
+
             EnumFacing facing = tile.blockFacing();
             TileEntity tile = world.getTileEntity(pos.offset(facing));
             if (tile != null) {
@@ -186,7 +186,9 @@ public class ModuleTank extends ModuleBase {
     }
 
     public enum EnumMode {
-        NONE(0, "modularitemframe.message.tank_mode_change.no"), DRAIN(1, "modularitemframe.message.tank_mode_change.in"), PUSH(2, "modularitemframe.message.tank_mode_change.out");
+        NONE(0, "modularitemframe.message.tank_mode_change.no"),
+        DRAIN(1, "modularitemframe.message.tank_mode_change.in"),
+        PUSH(2, "modularitemframe.message.tank_mode_change.out");
 
         public static final EnumMode[] VALUES = new EnumMode[3];
 

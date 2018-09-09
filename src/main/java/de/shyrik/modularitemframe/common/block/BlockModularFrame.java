@@ -6,6 +6,7 @@ import de.shyrik.modularitemframe.common.item.ItemUpgrade;
 import de.shyrik.modularitemframe.api.UpgradeBase;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
+import de.shyrik.modularitemframe.common.upgrade.Upgrades;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoAccessor;
@@ -18,13 +19,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemHangingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -41,7 +39,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 @Mod.EventBusSubscriber
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
@@ -49,44 +46,44 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
 
     public static final PropertyDirection FACING = PropertyDirection.create("facing");
 
-	private static final AxisAlignedBB UP_AABB = new AxisAlignedBB(0.125D, 1.0D, 0.125D, 0.875D, 0.895D, 0.875D);
-	private static final AxisAlignedBB DOWN_AABB = new AxisAlignedBB(0.125D, 0.0D, 0.125D, 0.875D, 0.11D, 0.875D);
-	private static final AxisAlignedBB NORTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 0.0D, 0.875D, 0.875D, 0.11D);
-	private static final AxisAlignedBB SOUTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 1.0D, 0.875D, 0.875D, 0.895D);
-	private static final AxisAlignedBB EAST_AABB = new AxisAlignedBB(0.895D, 0.125D, 0.125D, 1.0D, 0.875D, 0.875D);
-	private static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.0D, 0.125D, 0.125D, 0.11D, 0.875D, 0.875D);
+    private static final AxisAlignedBB UP_AABB = new AxisAlignedBB(0.125D, 1.0D, 0.125D, 0.875D, 0.895D, 0.875D);
+    private static final AxisAlignedBB DOWN_AABB = new AxisAlignedBB(0.125D, 0.0D, 0.125D, 0.875D, 0.11D, 0.875D);
+    private static final AxisAlignedBB NORTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 0.0D, 0.875D, 0.875D, 0.11D);
+    private static final AxisAlignedBB SOUTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 1.0D, 0.875D, 0.875D, 0.895D);
+    private static final AxisAlignedBB EAST_AABB = new AxisAlignedBB(0.895D, 0.125D, 0.125D, 1.0D, 0.875D, 0.875D);
+    private static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.0D, 0.125D, 0.125D, 0.11D, 0.875D, 0.875D);
 
-	public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"modular_frame");
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "modular_frame");
 
-	public BlockModularFrame() {
-		super(Material.WOOD);
-		setTranslationKey(LOC.toString());
-		setRegistryName(LOC);
-		setHardness(2.0F);
-		setResistance(4.0F);
-		setSoundType(SoundType.WOOD);
-		setCreativeTab(ModularItemFrame.TAB);
+    public BlockModularFrame() {
+        super(Material.WOOD);
+        setTranslationKey(LOC.toString());
+        setRegistryName(LOC);
+        setHardness(2.0F);
+        setResistance(4.0F);
+        setSoundType(SoundType.WOOD);
+        setCreativeTab(ModularItemFrame.TAB);
 
-		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-	}
+        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+    }
 
     @Nullable
-	@Override
-	public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
-		return new TileModularFrame();
-	}
+    @Override
+    public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
+        return new TileModularFrame();
+    }
 
-	private TileModularFrame getTE(@Nonnull World world, @Nonnull BlockPos pos) {
-		return (TileModularFrame) world.getTileEntity(pos);
-	}
+    private TileModularFrame getTE(@Nonnull World world, @Nonnull BlockPos pos) {
+        return (TileModularFrame) world.getTileEntity(pos);
+    }
 
-	@Override
-	public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
-		getTE(worldIn, pos).module.onBlockClicked(worldIn, pos, playerIn);
-	}
+    @Override
+    public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
+        getTE(worldIn, pos).module.onBlockClicked(worldIn, pos, playerIn);
+    }
 
-	@Override
-	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+    @Override
+    public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
         boolean moveHand;
         TileModularFrame tile = getTE(worldIn, pos);
         ItemStack handItem = playerIn.getHeldItem(hand);
@@ -139,51 +136,51 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
 
     @SubscribeEvent
     public static void onPlayerInteracted(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getWorld().getBlockState(event.getPos()).getBlock() instanceof BlockModularFrame){
+        if (event.getWorld().getBlockState(event.getPos()).getBlock() instanceof BlockModularFrame) {
             event.setUseBlock(Event.Result.ALLOW);
         }
     }
 
-	@Override
-	public void breakBlock(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
+    @Override
+    public void breakBlock(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
         getTE(worldIn, pos).module.onRemove(worldIn, pos, state.getValue(FACING), null);
         getTE(worldIn, pos).dropUpgrades(null, state.getValue(FACING));
-		super.breakBlock(worldIn, pos, state);
-	}
+        super.breakBlock(worldIn, pos, state);
+    }
 
-	@Override
-	@Optional.Method(modid = "theoneprobe")
-	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-		getTE(world, data.getPos()).module.addProbeInfo(mode, probeInfo, player, world, blockState, data);
-	}
+    @Override
+    @Optional.Method(modid = "theoneprobe")
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+        getTE(world, data.getPos()).module.addProbeInfo(mode, probeInfo, player, world, blockState, data);
+    }
 
-	@Override
-	@SuppressWarnings("deprecation")
-	public boolean isFullBlock(IBlockState state) {
-		return false;
-	}
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean isFullBlock(IBlockState state) {
+        return false;
+    }
 
-	@Override
-	@SuppressWarnings("deprecation")
-	public boolean isFullCube(IBlockState state) {
-		return false;
-	}
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
 
-	@Override
-	@SuppressWarnings("deprecation")
-	public boolean isOpaqueCube(IBlockState state) {
-		return false;
-	}
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
 
-	@Override
-	public boolean isPassable(IBlockAccess worldIn, BlockPos pos) {
-		return true;
-	}
+    @Override
+    public boolean isPassable(IBlockAccess worldIn, BlockPos pos) {
+        return true;
+    }
 
-	@Override
-	public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
-		return layer == BlockRenderLayer.TRANSLUCENT || layer == BlockRenderLayer.CUTOUT;
-	}
+    @Override
+    public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
+        return layer == BlockRenderLayer.TRANSLUCENT || layer == BlockRenderLayer.CUTOUT;
+    }
 
     @Nullable
     @Override
@@ -198,54 +195,54 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
     }
 
     @Override
-	@Nonnull
-	@SuppressWarnings("deprecation")
-	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		switch (state.getValue(FACING)) {
-			case UP:
-				return UP_AABB;
-			case DOWN:
-				return DOWN_AABB;
-			case NORTH:
-				return NORTH_AABB;
-			case SOUTH:
-				return SOUTH_AABB;
-			case EAST:
-				return EAST_AABB;
-			case WEST:
-				return WEST_AABB;
-		}
-		return FULL_BLOCK_AABB;
-	}
-
-	@Override
-	@SuppressWarnings("deprecation")
-	public @Nonnull
-	IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		return this.getStateFromMeta(meta).withProperty(FACING, facing.getOpposite());
-	}
-
-	@Override
-	@Nonnull
-	@SuppressWarnings("deprecation")
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(FACING, EnumFacing.byIndex(meta & 7));
-	}
-
-    @Override
-    public float getExplosionResistance(World world, BlockPos pos, @Nullable Entity exploder, Explosion explosion) {
-        return getTE(world, pos).countUpgradeOfType(UpgradeBase.UpgradeBlastResist.class) >= 1 ? 200F : 4F;
+    @Nonnull
+    @SuppressWarnings("deprecation")
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        switch (state.getValue(FACING)) {
+            case UP:
+                return UP_AABB;
+            case DOWN:
+                return DOWN_AABB;
+            case NORTH:
+                return NORTH_AABB;
+            case SOUTH:
+                return SOUTH_AABB;
+            case EAST:
+                return EAST_AABB;
+            case WEST:
+                return WEST_AABB;
+        }
+        return FULL_BLOCK_AABB;
     }
 
     @Override
-	public boolean canPlaceBlockOnSide(@Nonnull World worldIn, @Nonnull BlockPos pos, EnumFacing side) {
-	    BlockPos adjacent = pos.offset(side.getOpposite());
-	    IBlockState state = worldIn.getBlockState(adjacent);
-		return state.isSideSolid(worldIn, adjacent, side) || state.getMaterial().isSolid() && !BlockRedstoneDiode.isDiode(state);
-	}
+    @SuppressWarnings("deprecation")
+    public @Nonnull
+    IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+        return this.getStateFromMeta(meta).withProperty(FACING, facing.getOpposite());
+    }
 
-	@Override
-    public boolean canCreatureSpawn(@Nonnull IBlockState state, @Nonnull  IBlockAccess world, @Nonnull BlockPos pos, EntityLiving.SpawnPlacementType type) {
+    @Override
+    @Nonnull
+    @SuppressWarnings("deprecation")
+    public IBlockState getStateFromMeta(int meta) {
+        return getDefaultState().withProperty(FACING, EnumFacing.byIndex(meta & 7));
+    }
+
+    @Override
+    public float getExplosionResistance(World world, BlockPos pos, @Nullable Entity exploder, Explosion explosion) {
+        return getTE(world, pos).countUpgradeOfType(Upgrades.UpgradeBlastResist.class) >= 1 ? 200F : 4F;
+    }
+
+    @Override
+    public boolean canPlaceBlockOnSide(@Nonnull World worldIn, @Nonnull BlockPos pos, EnumFacing side) {
+        BlockPos adjacent = pos.offset(side.getOpposite());
+        IBlockState state = worldIn.getBlockState(adjacent);
+        return state.isSideSolid(worldIn, adjacent, side) || state.getMaterial().isSolid() && !BlockRedstoneDiode.isDiode(state);
+    }
+
+    @Override
+    public boolean canCreatureSpawn(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EntityLiving.SpawnPlacementType type) {
         return false;
     }
 
@@ -255,29 +252,28 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
     }
 
     @Override
-	public int getMetaFromState(IBlockState state) {
-		return state.getValue(FACING).getIndex();
-	}
-
-	@Override
-	@SuppressWarnings("deprecation")
-	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-		BlockPos attachedPos = pos.offset(state.getValue(FACING));
-
-		if (worldIn.isAirBlock(attachedPos)) {
-			dropBlockAsItem(worldIn, pos, state, 0);
-			worldIn.setBlockToAir(pos);
-		}
-	}
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(FACING).getIndex();
+    }
 
     @Override
-	@Nonnull
-    protected BlockStateContainer createBlockState()
-    {
+    @SuppressWarnings("deprecation")
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        BlockPos attachedPos = pos.offset(state.getValue(FACING));
+
+        if (worldIn.isAirBlock(attachedPos)) {
+            dropBlockAsItem(worldIn, pos, state, 0);
+            worldIn.setBlockToAir(pos);
+        }
+    }
+
+    @Override
+    @Nonnull
+    protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING);
     }
 
-	@Nonnull
+    @Nonnull
     @Override
     @SuppressWarnings("deprecation")
     public EnumBlockRenderType getRenderType(IBlockState state) {

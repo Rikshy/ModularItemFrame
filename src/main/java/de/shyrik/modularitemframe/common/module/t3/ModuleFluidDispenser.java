@@ -45,12 +45,12 @@ public class ModuleFluidDispenser extends ModuleBase {
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (world.getTotalWorldTime() % (60 - 10 * countSpeed) == 0) return;
         EnumFacing facing = tile.blockFacing();
-        if(!world.isAirBlock(pos.offset(facing.getOpposite()))) return;
+        if (!world.isAirBlock(pos.offset(facing.getOpposite()))) return;
 
         TileEntity neighbor = tile.getNeighbor(facing);
-        if(neighbor != null) {
+        if (neighbor != null) {
             IFluidHandler handler = neighbor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
-            if(handler!=null) {
+            if (handler != null) {
                 FluidUtil.tryPlaceFluid(null, world, pos.offset(facing.getOpposite()), handler, handler.drain(1000, false));
             }
         }

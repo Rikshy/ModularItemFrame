@@ -23,7 +23,7 @@ import java.util.List;
 
 public class ModuleTrashCan extends ModuleBase {
 
-    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_trashcan");
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2_trashcan");
 
     private List<ResourceLocation> frontTex = ImmutableList.of(
             new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_1"),
@@ -74,7 +74,7 @@ public class ModuleTrashCan extends ModuleBase {
                 }
             }
         } else {
-            if(world.getTotalWorldTime() % 10 == 0) {
+            if (world.getTotalWorldTime() % 10 == 0) {
                 texIndex = texIndex < frontTex.size() - 1 ? texIndex + 1 : 0;
                 reloadModel = true;
             }

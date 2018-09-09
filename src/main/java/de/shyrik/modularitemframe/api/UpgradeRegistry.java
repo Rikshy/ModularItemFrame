@@ -12,7 +12,7 @@ public class UpgradeRegistry {
     /**
      * registers a upgrade class
      * @param id unique id
-     * @param moduleClass upgrade to register
+     * @param upgradeClass upgrade to register
      *
      * @throws IllegalArgumentException when id is duplicated
      */
@@ -25,11 +25,11 @@ public class UpgradeRegistry {
     /**
      * Registers the upgrade class and creates a new {@link ItemUpgrade} instance
      * @param id unique id
-     * @param moduleClass upgrade to register
+     * @param upgradeClass upgrade to register
      * @return new {@link ItemUpgrade} instance
      */
-    public static ItemUpgrade registerCreate(String id, Class<? extends UpgradeBase> moduleClass) {
-        register(id, moduleClass);
+    public static ItemUpgrade registerCreate(String id, Class<? extends UpgradeBase> upgradeClass) {
+        register(id, upgradeClass);
         return new ItemUpgrade(id);
     }
 

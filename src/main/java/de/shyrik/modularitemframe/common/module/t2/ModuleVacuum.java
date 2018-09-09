@@ -3,7 +3,6 @@ package de.shyrik.modularitemframe.common.module.t2;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleBase;
-import de.shyrik.modularitemframe.api.UpgradeBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
@@ -29,7 +28,7 @@ import java.util.List;
 
 public class ModuleVacuum extends ModuleBase {
 
-    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_vacuum");
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2_vacuum");
     private static final String NBT_MODE = "rangemode";
     private static final String NBT_RANGEX = "rangex";
     private static final String NBT_RANGEY = "rangey";
@@ -85,8 +84,7 @@ public class ModuleVacuum extends ModuleBase {
 
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
-        if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0)
-            return;
+        if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0) return;
 
         IItemHandlerModifiable handler = getNeighborTileItemCap();
         if (handler != null) {

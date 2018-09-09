@@ -88,8 +88,7 @@ public class ModuleVacuumTeleporter extends ModuleBase {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (!hasValidConnection(world)) return;
-        if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0)
-            return;
+        if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0) return;
 
         List<EntityItem> entities = world.getEntitiesWithinAABB(EntityItem.class, getVacuumBB(pos));
         for (EntityItem entity : entities) {
@@ -122,9 +121,9 @@ public class ModuleVacuumTeleporter extends ModuleBase {
     }
 
     private boolean hasValidConnection(@Nonnull World world) {
-        if (linkedLoc == null)
-            return false;
-        if (!(world.getTileEntity(linkedLoc) instanceof TileModularFrame) || !(((TileModularFrame) world.getTileEntity(linkedLoc)).module instanceof ModuleDispenserTeleporter))
+        if (linkedLoc == null) return false;
+        TileEntity tile = world.getTileEntity(linkedLoc);
+        if (!(tile instanceof TileModularFrame) || !(((TileModularFrame) tile).module instanceof ModuleDispenserTeleporter))
             return false;
         return true;
     }

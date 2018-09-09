@@ -28,26 +28,26 @@ import java.util.List;
 
 public class TileModularFrame extends TileEntity implements ITickable {
 
-	private static final String NBTMODULE = "framemodule";
-	private static final String NBTMODULEDATA = "framemoduledata";
+    private static final String NBTMODULE = "framemodule";
+    private static final String NBTMODULEDATA = "framemoduledata";
 
-	public ModuleBase module;
-	public List<UpgradeBase> upgrades = new ArrayList<>();
+    public ModuleBase module;
+    public List<UpgradeBase> upgrades = new ArrayList<>();
 
-	public TileModularFrame() {
-		setModule(new ModuleEmpty());
-	}
+    public TileModularFrame() {
+        setModule(new ModuleEmpty());
+    }
 
-	public void setModule(ItemModule module) {
+    public void setModule(ItemModule module) {
         setModule(ModuleRegistry.createModuleInstance(module.moduleId));
     }
 
-	public void setModule(ModuleBase mod) {
-		module = mod;
-		module.setTile(this);
-	}
+    public void setModule(ModuleBase mod) {
+        module = mod;
+        module.setTile(this);
+    }
 
-	public boolean tryAddUpgrade(ItemUpgrade upgrade) {
+    public boolean tryAddUpgrade(ItemUpgrade upgrade) {
         UpgradeBase up = UpgradeRegistry.createModuleInstance(upgrade.upgradeId);
         if (up != null && countUpgradeOfType(up.getClass()) < up.getMaxCount()) {
             upgrades.add(up);
@@ -57,27 +57,26 @@ public class TileModularFrame extends TileEntity implements ITickable {
         return false;
     }
 
-	public EnumFacing blockFacing() {
-		return world.getBlockState(pos).getValue(BlockModularFrame.FACING);
-	}
+    public EnumFacing blockFacing() {
+        return world.getBlockState(pos).getValue(BlockModularFrame.FACING);
+    }
 
-	public TileEntity getNeighbor(EnumFacing facing) {
-		return world.getTileEntity(pos.offset(facing));
-	}
+    public TileEntity getNeighbor(EnumFacing facing) {
+        return world.getTileEntity(pos.offset(facing));
+    }
 
-	public boolean acceptsModule() {
-		return module instanceof ModuleEmpty;
-	}
+    public boolean acceptsModule() {
+        return module instanceof ModuleEmpty;
+    }
 
-	public boolean acceptsUpgrade() {
+    public boolean acceptsUpgrade() {
         return upgrades.size() <= ConfigValues.MaxFrameUpgrades;
     }
 
     public int countUpgradeOfType(Class<? extends UpgradeBase> clsUp) {
-	    int count = 0;
-	    for (UpgradeBase up : upgrades) {
-	        if (clsUp.isInstance(up))
-	            count++;
+        int count = 0;
+        for (UpgradeBase up : upgrades) {
+            if (clsUp.isInstance(up)) count++;
         }
         return count;
     }
@@ -89,8 +88,10 @@ public class TileModularFrame extends TileEntity implements ITickable {
         Item item = Item.getByNameOrId(moduleLoc.toString());
         if (item instanceof ItemModule) {
             ItemStack remain = new ItemStack(item);
+
             if (playerIn != null) remain = ItemUtils.giveStack(ItemUtils.getPlayerInv(playerIn), remain);
             if (!remain.isEmpty()) ItemUtils.ejectStack(world, pos, facing, remain);
+
             module.onRemove(world, pos, facing, playerIn);
             setModule(new ModuleEmpty());
             markDirty();
@@ -98,15 +99,13 @@ public class TileModularFrame extends TileEntity implements ITickable {
     }
 
     public void dropUpgrades(@Nullable EntityPlayer playerIn, @Nonnull EnumFacing facing) {
-	    for (UpgradeBase up : upgrades) {
+        for (UpgradeBase up : upgrades) {
 
             Item item = Item.getByNameOrId(ModularItemFrame.MOD_ID + ":" + UpgradeRegistry.getUpgradeId(up.getClass()));
             if (item instanceof ItemUpgrade) {
                 ItemStack remain = new ItemStack(item);
-                if (playerIn != null)
-                    remain = ItemUtils.giveStack(ItemUtils.getPlayerInv(playerIn), remain);
-                if (!remain.isEmpty())
-                    ItemUtils.ejectStack(world, pos, facing, remain);
+                if (playerIn != null) remain = ItemUtils.giveStack(ItemUtils.getPlayerInv(playerIn), remain);
+                if (!remain.isEmpty()) ItemUtils.ejectStack(world, pos, facing, remain);
             }
         }
     }
@@ -121,60 +120,60 @@ public class TileModularFrame extends TileEntity implements ITickable {
     }
 
     @Override
-	public void update() {
-		if (world.getTileEntity(pos) != this) return;
-		module.tick(world, pos);
-	}
+    public void update() {
+        if (world.getTileEntity(pos) != this) return;
+        module.tick(world, pos);
+    }
 
-	@Override
-	public void handleUpdateTag(@Nonnull NBTTagCompound tag) {
-		super.handleUpdateTag(tag);
-		markDirty();
-	}
+    @Override
+    public void handleUpdateTag(@Nonnull NBTTagCompound tag) {
+        super.handleUpdateTag(tag);
+        markDirty();
+    }
 
-	@Nonnull
-	@Override
-	public NBTTagCompound getUpdateTag() {
-		return writeToNBT(new NBTTagCompound());
-	}
+    @Nonnull
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return writeToNBT(new NBTTagCompound());
+    }
 
-	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound nbt = writeToNBT(new NBTTagCompound());
-		return new SPacketUpdateTileEntity(getPos(), -999, nbt);
-	}
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        NBTTagCompound nbt = writeToNBT(new NBTTagCompound());
+        return new SPacketUpdateTileEntity(getPos(), -999, nbt);
+    }
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
-		super.onDataPacket(net, packet);
-		readFromNBT(packet.getNbtCompound());
-	}
-
-
-	@Nonnull
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		compound = super.writeToNBT(compound);
-		ResourceLocation moduleLoc = ModuleRegistry.getModuleId(module.getClass());
-		compound.setString(NBTMODULE, moduleLoc != null ? moduleLoc.toString() : "" );
-		compound.setTag(NBTMODULEDATA, module.serializeNBT());
-		return compound;
-	}
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+        super.onDataPacket(net, packet);
+        readFromNBT(packet.getNbtCompound());
+    }
 
 
-	@Override
-	public void readFromNBT(@Nonnull NBTTagCompound cmp) {
-		super.readFromNBT(cmp);
-		ResourceLocation moduleLoc = ModuleRegistry.getModuleId(module.getClass());
-		if (moduleLoc != null && moduleLoc.toString().equals(cmp.getString(NBTMODULE))) {
-			module.deserializeNBT(cmp.getCompoundTag(NBTMODULEDATA));
-		} else {
-			module = ModuleRegistry.createModuleInstance(new ResourceLocation(cmp.getString(NBTMODULE)));
-			if (module == null) module = new ModuleEmpty();
-			module.deserializeNBT(cmp.getCompoundTag(NBTMODULEDATA));
-			module.setTile(this);
-			cmp.removeTag(NBTMODULEDATA);
-		}
-	}
+    @Nonnull
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        compound = super.writeToNBT(compound);
+        ResourceLocation moduleLoc = ModuleRegistry.getModuleId(module.getClass());
+        compound.setString(NBTMODULE, moduleLoc != null ? moduleLoc.toString() : "");
+        compound.setTag(NBTMODULEDATA, module.serializeNBT());
+        return compound;
+    }
+
+
+    @Override
+    public void readFromNBT(@Nonnull NBTTagCompound cmp) {
+        super.readFromNBT(cmp);
+        ResourceLocation moduleLoc = ModuleRegistry.getModuleId(module.getClass());
+        if (moduleLoc != null && moduleLoc.toString().equals(cmp.getString(NBTMODULE))) {
+            module.deserializeNBT(cmp.getCompoundTag(NBTMODULEDATA));
+        } else {
+            module = ModuleRegistry.createModuleInstance(new ResourceLocation(cmp.getString(NBTMODULE)));
+            if (module == null) module = new ModuleEmpty();
+            module.deserializeNBT(cmp.getCompoundTag(NBTMODULEDATA));
+            module.setTile(this);
+            cmp.removeTag(NBTMODULEDATA);
+        }
+    }
 }

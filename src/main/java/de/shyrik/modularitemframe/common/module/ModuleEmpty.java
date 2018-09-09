@@ -15,25 +15,25 @@ import javax.annotation.Nonnull;
 
 public class ModuleEmpty extends ModuleBase {
 
-	@Nonnull
-	@Override
-	public ResourceLocation frontTexture() {
-		return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/default_front");
-	}
+    @Nonnull
+    @Override
+    public ResourceLocation frontTexture() {
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/default_front");
+    }
 
-	@Nonnull
-	@Override
-	public ResourceLocation backTexture() {
-		return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/default_back");
-	}
+    @Nonnull
+    @Override
+    public ResourceLocation backTexture() {
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/default_back");
+    }
 
-	@Override
-	public String getModuleName() {
-		return I18n.format("modularitemframe.module.empty");
-	}
+    @Override
+    public String getModuleName() {
+        return I18n.format("modularitemframe.module.empty");
+    }
 
-	@Override
-	public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-		return false;
-	}
+    @Override
+    public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+        return false;
+    }
 }

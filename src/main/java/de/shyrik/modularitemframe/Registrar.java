@@ -42,9 +42,7 @@ public class Registrar {
     //just so i cna collapse it :)
     static {
 
-        ALL_BLOCKS = ImmutableList.of(
-                FRAME_MODULAR = new BlockModularFrame()
-        );
+        ALL_BLOCKS = ImmutableList.of(FRAME_MODULAR = new BlockModularFrame());
 
         ALL_ITEMS = ImmutableList.of(SCREWDRIVER = new ItemScrewdriver(),
 
@@ -69,8 +67,7 @@ public class Registrar {
                 //MODULE_AUTOCRAFTING = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_crafting_plus"), ModuleAutoCrafting.class);
                 ModuleRegistry.registerCreate(ModuleTeleport.LOC, ModuleTeleport.class),
                 ModuleRegistry.registerCreate(ModuleVacuumTeleporter.LOC, ModuleVacuumTeleporter.class),
-                ModuleRegistry.registerCreate(ModuleDispenserTeleporter.LOC, ModuleDispenserTeleporter.class)
-        );
+                ModuleRegistry.registerCreate(ModuleDispenserTeleporter.LOC, ModuleDispenserTeleporter.class));
     }
 
     @SubscribeEvent
@@ -119,8 +116,7 @@ public class Registrar {
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/xp_bg"),
 
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tele_dispense_bg"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tele_vacuum")
-        );
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tele_vacuum"));
 
         for (ResourceLocation rl : tex)
             event.getMap().registerSprite(rl);

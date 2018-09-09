@@ -56,8 +56,7 @@ public class Multipart implements IMCMPAddon {
 
     @net.minecraftforge.fml.common.Optional.Method(modid = "mcmultipart")
     private static Optional<TileEntity> getPartTile(World world, BlockPos pos, EnumFacing face) {
-        return MultipartHelper.getPartTile(world, pos, EnumFaceSlot.fromFace(face))
-                .map(IMultipartTile::getTileEntity);
+        return MultipartHelper.getPartTile(world, pos, EnumFaceSlot.fromFace(face)).map(IMultipartTile::getTileEntity);
     }
 
     public class PartBlock implements IMultipart {
@@ -80,14 +79,14 @@ public class Multipart implements IMCMPAddon {
 
         @Override
         public void onPartClicked(IPartInfo part, EntityPlayer player, RayTraceResult hit) {
-            ((TileModularFrame)part.getTile().getTileEntity()).module.onBlockClicked(part.getActualWorld(), part.getPartPos(), player);
+            ((TileModularFrame) part.getTile().getTileEntity()).module.onBlockClicked(part.getActualWorld(), part.getPartPos(), player);
         }
 
         @Override
         public boolean onPartActivated(IPartInfo part, EntityPlayer playerIn, EnumHand hand, RayTraceResult hit) {
             boolean moveHand;
-            TileModularFrame tile = (TileModularFrame)part.getTile().getTileEntity();
-            EnumFacing facing = ((EnumFaceSlot)part.getSlot()).getFacing();
+            TileModularFrame tile = (TileModularFrame) part.getTile().getTileEntity();
+            EnumFacing facing = ((EnumFaceSlot) part.getSlot()).getFacing();
             ItemStack handItem = playerIn.getHeldItem(hand);
             World worldIn = part.getActualWorld();
             BlockPos pos = hit.getBlockPos();
@@ -122,8 +121,7 @@ public class Multipart implements IMCMPAddon {
                     }
                 }
                 moveHand = true;
-            }
-            else
+            } else
                 moveHand = tile.module.onBlockActivated(worldIn, pos, part.getState(), playerIn, hand, hit.sideHit, x, y, z);
             return moveHand;
         }
@@ -144,7 +142,7 @@ public class Multipart implements IMCMPAddon {
         private TileModularFrame tile;
 
         public PartTile(TileEntity tile) {
-            this.tile = (TileModularFrame)tile;
+            this.tile = (TileModularFrame) tile;
         }
 
         @Override

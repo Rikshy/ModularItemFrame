@@ -31,7 +31,7 @@ import javax.annotation.Nonnull;
 
 public class ModuleNullify extends ModuleBase {
 
-    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t1_nullify");
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1_nullify");
     private static final String NBT_LASTSTACK = "laststack";
 
     private ItemStack lastStack = ItemStack.EMPTY;

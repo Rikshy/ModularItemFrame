@@ -29,12 +29,12 @@ import java.util.List;
 
 public class ModuleItem extends ModuleBase {
 
-    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t1_item");
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1_item");
     private static final String NBT_DISPLAY = "display";
     private static final String NBT_ROTATION = "rotation";
 
-    public int rotation = 0;
-    public ItemStack displayItem = ItemStack.EMPTY;
+    private int rotation = 0;
+    protected ItemStack displayItem = ItemStack.EMPTY;
 
     @Nonnull
     public ResourceLocation frontTexture() {

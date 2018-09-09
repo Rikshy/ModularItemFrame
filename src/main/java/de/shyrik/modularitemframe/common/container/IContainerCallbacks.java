@@ -7,18 +7,18 @@ import net.minecraft.inventory.InventoryCraftResult;
 
 public interface IContainerCallbacks {
 
-	/**
-	 * Is this usable by the specified player?
-	 *
-	 * @param player The player
-	 * @return Is this usable by the specified player?
-	 */
-	boolean isUsableByPlayer(EntityPlayer player);
+    /**
+     * Is this usable by the specified player?
+     *
+     * @param player The player
+     * @return Is this usable by the specified player?
+     */
+    boolean isUsableByPlayer(EntityPlayer player);
 
-	/**
-	 * Called when a {@link Container} is changed.
-	 *
-	 * @param result The crafting result
-	 */
-	void onContainerCraftingResultChanged(InventoryCraftResult result);
+    /**
+     * Called when a {@link Container} is changed.
+     *
+     * @param result The crafting result
+     */
+    void onContainerCraftingResultChanged(InventoryCraftResult result);
 }

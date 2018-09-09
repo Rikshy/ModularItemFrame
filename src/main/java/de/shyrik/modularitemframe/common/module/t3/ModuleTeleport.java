@@ -33,14 +33,14 @@ import java.util.List;
 
 public class ModuleTeleport extends ModuleBase {
 
-    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t3_tele");
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t3_tele");
 
     private static final String NBT_LINK = "linked_pos";
     private static final String NBT_LINKX = "linked_posX";
     private static final String NBT_LINKY = "linked_posY";
     private static final String NBT_LINKZ = "linked_posZ";
 
-    public BlockPos linkedLoc = null;
+    private BlockPos linkedLoc = null;
 
     @Nonnull
     @Override
@@ -115,8 +115,7 @@ public class ModuleTeleport extends ModuleBase {
         else return worldIn.isAirBlock(linkedLoc.offset(EnumFacing.UP));
     }
 
-    public boolean hasValidConnection(@Nonnull World world, @Nullable EntityPlayer player) {
-
+    private boolean hasValidConnection(@Nonnull World world, @Nullable EntityPlayer player) {
         if (linkedLoc == null) {
             if (player != null) player.sendMessage(new TextComponentTranslation("modularitemframe.message.no_target"));
             return false;
@@ -136,10 +135,9 @@ public class ModuleTeleport extends ModuleBase {
 
     @Override
     public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
-        if(hasValidConnection(worldIn, null)) {
-            ((ModuleTeleport)((TileModularFrame) worldIn.getTileEntity(linkedLoc)).module).linkedLoc = null;
+        if (hasValidConnection(worldIn, null)) {
+            ((ModuleTeleport) ((TileModularFrame) worldIn.getTileEntity(linkedLoc)).module).linkedLoc = null;
         }
-
         super.onRemove(worldIn, pos, facing, playerIn);
     }
 

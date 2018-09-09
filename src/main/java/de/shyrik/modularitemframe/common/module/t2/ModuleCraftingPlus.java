@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 
 public class ModuleCraftingPlus extends ModuleCrafting {
 
-    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_craft_plus");
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2_craft_plus");
     private static final String NBT_MODE = "cpmode";
 
     public EnumMode mode = EnumMode.PLAYER;
@@ -84,12 +84,12 @@ public class ModuleCraftingPlus extends ModuleCrafting {
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_MODE))
-            mode = EnumMode.values()[nbt.getInteger(NBT_MODE)];
+        if (nbt.hasKey(NBT_MODE)) mode = EnumMode.values()[nbt.getInteger(NBT_MODE)];
     }
 
     public enum EnumMode {
-        PLAYER(0, "modularitemframe.message.crafting_plus.player"), NO_PLAYER(1, "modularitemframe.message.crafting_plus.no_player");
+        PLAYER(0, "modularitemframe.message.crafting_plus.player"),
+        NO_PLAYER(1, "modularitemframe.message.crafting_plus.no_player");
 
         private final int index;
         private final String name;

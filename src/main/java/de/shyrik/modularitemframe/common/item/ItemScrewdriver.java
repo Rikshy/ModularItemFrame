@@ -17,15 +17,15 @@ import java.util.HashSet;
 import java.util.List;
 
 public class ItemScrewdriver extends ItemTool {
-	private static final String NBT_MODE = "mode";
-	private static final ResourceLocation loc = new ResourceLocation(ModularItemFrame.MOD_ID, "screwdriver");
+    private static final String NBT_MODE = "mode";
+    private static final ResourceLocation loc = new ResourceLocation(ModularItemFrame.MOD_ID, "screwdriver");
 
-	public ItemScrewdriver() {
-		super(ToolMaterial.IRON, new HashSet<>());
-		setRegistryName(loc);
-		setTranslationKey(loc.toString());
-		setCreativeTab(ModularItemFrame.TAB);
-	}
+    public ItemScrewdriver() {
+        super(ToolMaterial.IRON, new HashSet<>());
+        setRegistryName(loc);
+        setTranslationKey(loc.toString());
+        setCreativeTab(ModularItemFrame.TAB);
+    }
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
@@ -33,67 +33,67 @@ public class ItemScrewdriver extends ItemTool {
         tooltip.add("Mode: " + readModeFromNBT(stack).getName());
     }
 
-	@Nonnull
-	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand handIn) {
-		EnumActionResult result = EnumActionResult.PASS;
-		if (!worldIn.isRemote && playerIn.isSneaking()) {
-			ItemStack driver = playerIn.getHeldItem(handIn);
-			EnumMode mode = readModeFromNBT(driver);
-			mode = EnumMode.VALUES[mode.getIndex() + 1 >= EnumMode.values().length ? 0 : mode.getIndex() + 1];
-			writeModeToNbt(driver, mode);
-			playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.screw_mode_change", mode.getName()));
+    @Nonnull
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand handIn) {
+        EnumActionResult result = EnumActionResult.PASS;
+        if (!worldIn.isRemote && playerIn.isSneaking()) {
+            ItemStack driver = playerIn.getHeldItem(handIn);
+            EnumMode mode = readModeFromNBT(driver);
+            mode = EnumMode.VALUES[mode.getIndex() + 1 >= EnumMode.values().length ? 0 : mode.getIndex() + 1];
+            writeModeToNbt(driver, mode);
+            playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.screw_mode_change", mode.getName()));
 
-			result = EnumActionResult.SUCCESS;
-		}
-		return new ActionResult<>(result, playerIn.getHeldItem(handIn));
-	}
+            result = EnumActionResult.SUCCESS;
+        }
+        return new ActionResult<>(result, playerIn.getHeldItem(handIn));
+    }
 
-	public static EnumMode getMode(ItemStack driver) {
+    public static EnumMode getMode(ItemStack driver) {
         return readModeFromNBT(driver);
     }
 
-	private static void writeModeToNbt(ItemStack stack, EnumMode mode) {
-		NBTTagCompound nbt = stack.getTagCompound();
-		if (nbt == null) nbt = new NBTTagCompound();
-		nbt.setInteger(NBT_MODE, mode.getIndex());
-		stack.setTagCompound(nbt);
-	}
+    private static void writeModeToNbt(ItemStack stack, EnumMode mode) {
+        NBTTagCompound nbt = stack.getTagCompound();
+        if (nbt == null) nbt = new NBTTagCompound();
+        nbt.setInteger(NBT_MODE, mode.getIndex());
+        stack.setTagCompound(nbt);
+    }
 
-	private static EnumMode readModeFromNBT(ItemStack stack) {
-		NBTTagCompound nbt = stack.getTagCompound();
-		EnumMode mode = EnumMode.REMOVE;
-		if (nbt == null) writeModeToNbt(stack, mode);
-		else if (nbt.hasKey(NBT_MODE)) mode = EnumMode.VALUES[nbt.getInteger(NBT_MODE)];
-		return mode;
-	}
+    private static EnumMode readModeFromNBT(ItemStack stack) {
+        NBTTagCompound nbt = stack.getTagCompound();
+        EnumMode mode = EnumMode.REMOVE;
+        if (nbt == null) writeModeToNbt(stack, mode);
+        else if (nbt.hasKey(NBT_MODE)) mode = EnumMode.VALUES[nbt.getInteger(NBT_MODE)];
+        return mode;
+    }
 
-	public enum EnumMode {
-		REMOVE(0, "modularitemframe.message.screw_mode_change.rem"),
-		INTERACT(1, "modularitemframe.message.screw_mode_change.inter");
-		//ROTATE(2, "modularitemframe.message.screw_mode_change.rot");
+    public enum EnumMode {
+        REMOVE(0, "modularitemframe.message.screw_mode_change.rem"),
+        INTERACT(1, "modularitemframe.message.screw_mode_change.inter");
+        //ROTATE(2, "modularitemframe.message.screw_mode_change.rot");
 
-		public static final EnumMode[] VALUES = new EnumMode[3];
+        public static final EnumMode[] VALUES = new EnumMode[3];
 
-		private final int index;
-		private final String name;
+        private final int index;
+        private final String name;
 
-		EnumMode(int indexIn, String nameIn) {
-			index = indexIn;
-			name = nameIn;
-		}
+        EnumMode(int indexIn, String nameIn) {
+            index = indexIn;
+            name = nameIn;
+        }
 
-		public int getIndex() {
-			return this.index;
-		}
+        public int getIndex() {
+            return this.index;
+        }
 
-		public String getName() {
-			return I18n.format(this.name);
-		}
+        public String getName() {
+            return I18n.format(this.name);
+        }
 
-		static {
-			for (EnumMode enummode : values())
-				VALUES[enummode.index] = enummode;
-		}
-	}
+        static {
+            for (EnumMode enummode : values())
+                VALUES[enummode.index] = enummode;
+        }
+    }
 }

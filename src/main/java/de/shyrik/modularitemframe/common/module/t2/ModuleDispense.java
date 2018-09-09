@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
 
 public class ModuleDispense extends ModuleBase {
 
-    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_dispense");
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2_dispense");
     private static final String NBT_RANGE = "range";
 
     public int range = 0;

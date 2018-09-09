@@ -1,10 +1,10 @@
 package de.shyrik.modularitemframe.api;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.module.t1.ModuleItem;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
+import de.shyrik.modularitemframe.common.upgrade.Upgrades;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
@@ -17,7 +17,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -168,9 +167,9 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	}
 
 	public void onUpgradesChanged() {
-	    countRange = tile.countUpgradeOfType(UpgradeBase.UpgradeRange.class);
-	    countSpeed = tile.countUpgradeOfType(UpgradeBase.UpgradeSpeed.class);
-	    countCapacity = tile.countUpgradeOfType(UpgradeBase.UpgradeCapacity.class);
+	    countRange = tile.countUpgradeOfType(Upgrades.UpgradeRange.class);
+	    countSpeed = tile.countUpgradeOfType(Upgrades.UpgradeSpeed.class);
+	    countCapacity = tile.countUpgradeOfType(Upgrades.UpgradeCapacity.class);
     }
 
 	/**

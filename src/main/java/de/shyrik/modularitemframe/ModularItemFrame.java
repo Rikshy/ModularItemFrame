@@ -11,8 +11,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
         modid = ModularItemFrame.MOD_ID,
         name = ModularItemFrame.MOD_NAME,
         version = ModularItemFrame.VERSION,
-        dependencies = ModularItemFrame.DEPENDENCIES
-)
+        dependencies = ModularItemFrame.DEPENDENCIES)
 public class ModularItemFrame {
 
     public static final String MOD_ID = "modularitemframe";
