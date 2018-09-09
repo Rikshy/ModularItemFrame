@@ -1,12 +1,16 @@
 package de.shyrik.modularitemframe.common.module.t2;
 
+import com.google.common.collect.ImmutableList;
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.common.module.t1.ModuleNullify;
+import de.shyrik.modularitemframe.api.ModuleBase;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -15,8 +19,22 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
-public class ModuleTrashCan extends ModuleNullify {
+public class ModuleTrashCan extends ModuleBase {
+
+    private List<ResourceLocation> frontTex = ImmutableList.of(
+            new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_1"),
+            new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_2"),
+            new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_3")
+    );
+    private int texIndex = 0;
+
+    @Nonnull
+    @Override
+    public ResourceLocation frontTexture() {
+        return frontTex.get(texIndex);
+    }
 
     @Nonnull
     @Override
@@ -27,6 +45,11 @@ public class ModuleTrashCan extends ModuleNullify {
     @Override
     public String getModuleName() {
         return I18n.format("modularitemframe.module.trash_can");
+    }
+
+    @Override
+    public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+        return false;
     }
 
     @Override
@@ -47,6 +70,11 @@ public class ModuleTrashCan extends ModuleNullify {
                         }
                     }
                 }
+            }
+        } else {
+            if(world.getTotalWorldTime() % 10 == 0) {
+                texIndex = texIndex < frontTex.size() - 1 ? texIndex + 1 : 0;
+                reloadModel = true;
             }
         }
     }

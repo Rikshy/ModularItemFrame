@@ -48,7 +48,7 @@ public class Registrar {
     public static ItemModule MODULE_DROP;
     public static ItemModule MODULE_XP;
     public static ItemModule MODULE_VACUUM;
-    //public static ItemModule MODULE_TRASHCAN;
+    public static ItemModule MODULE_TRASHCAN;
 
     //Tier 3
     public static ItemModule MODULE_TELE;
@@ -75,7 +75,7 @@ public class Registrar {
             MODULE_DROP = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_dispense"), ModuleDispense.class),
             MODULE_XP = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_xp"), ModuleXP.class),
             MODULE_VACUUM = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_vacuum"), ModuleVacuum.class),
-            //MODULE_TRASHCAN = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_trash_can"), ModuleTrashCan.class);
+            MODULE_TRASHCAN = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_trashcan"), ModuleTrashCan.class),
 
             //Tier 3
             //MODULE_AUTOCRAFTING = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_crafting_plus"), ModuleAutoCrafting.class);
@@ -119,10 +119,13 @@ public class Registrar {
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/crafting_frame_bg"),
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg"),
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/nullify_frame_bg"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/drop_frame_bg"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/dispense_bg"),
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/vacuum_bg"),
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/io"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank")
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_1"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_2"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_3")
         );
 
         for (ResourceLocation rl : tex)
