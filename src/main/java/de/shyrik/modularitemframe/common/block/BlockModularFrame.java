@@ -12,6 +12,7 @@ import mcjty.theoneprobe.api.IProbeInfoAccessor;
 import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockRedstoneDiode;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
@@ -21,6 +22,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemHangingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -222,7 +225,9 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
 
     @Override
 	public boolean canPlaceBlockOnSide(@Nonnull World worldIn, @Nonnull BlockPos pos, EnumFacing side) {
-		return !worldIn.isBlockFullCube(pos.offset(side.getOpposite()));
+	    BlockPos adjacent = pos.offset(side.getOpposite());
+	    IBlockState state = worldIn.getBlockState(adjacent);
+		return state.isSideSolid(worldIn, adjacent, side) || state.getMaterial().isSolid() && !BlockRedstoneDiode.isDiode(state);
 	}
 
 	@Override
