@@ -1,11 +1,9 @@
 package de.shyrik.modularitemframe.api;
 
-import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.module.t1.ModuleItem;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
-import de.shyrik.modularitemframe.common.upgrade.Upgrades;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
@@ -36,18 +34,10 @@ import java.util.List;
 
 public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 
-    private static final String NBT_RANGE = "countrange";
-    private static final String NBT_SPEED = "countspeed";
-
 	protected TileModularFrame tile;
-
-	protected int countSpeed = 0;
-	protected int countRange = 0;
-	protected int countCapacity = 0;
 
 	public void setTile(TileModularFrame te) {
 		tile = te;
-		onUpgradesChanged();
 	}
 
 	/**
@@ -167,12 +157,6 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
 	}
 
-	public void onUpgradesChanged() {
-	    countRange = tile.countUpgradeOfType(Upgrades.UpgradeRange.class);
-	    countSpeed = tile.countUpgradeOfType(Upgrades.UpgradeSpeed.class);
-	    countCapacity = tile.countUpgradeOfType(Upgrades.UpgradeCapacity.class);
-    }
-
 	/**
 	 * The One Probe information handling
 	 */
@@ -198,10 +182,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 */
 	@Override
 	public NBTTagCompound serializeNBT() {
-		NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setInteger(NBT_RANGE, countRange);
-        nbt.setInteger(NBT_SPEED, countSpeed);
-        return nbt;
+		return new NBTTagCompound();
 	}
 
 	/**
@@ -209,7 +190,5 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 */
 	@Override
 	public void deserializeNBT(NBTTagCompound nbtTagCompound) {
-        if (nbtTagCompound.hasKey(NBT_RANGE)) countRange = nbtTagCompound.getInteger(NBT_RANGE);
-        if (nbtTagCompound.hasKey(NBT_SPEED)) countSpeed = nbtTagCompound.getInteger(NBT_SPEED);
 	}
 }

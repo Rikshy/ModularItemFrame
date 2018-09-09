@@ -5,7 +5,7 @@ import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemUpgrade;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
-import de.shyrik.modularitemframe.common.upgrade.Upgrades;
+import de.shyrik.modularitemframe.common.upgrade.UpgradeBlastResist;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.IProbeInfoAccessor;
@@ -184,7 +184,7 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
         return layer == BlockRenderLayer.TRANSLUCENT || layer == BlockRenderLayer.CUTOUT;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
@@ -233,7 +233,7 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
 
     @Override
     public float getExplosionResistance(World world, BlockPos pos, @Nullable Entity exploder, Explosion explosion) {
-        return getTE(world, pos).countUpgradeOfType(Upgrades.UpgradeBlastResist.class) >= 1 ? 200F : 4F;
+        return getTE(world, pos).countUpgradeOfType(UpgradeBlastResist.class) >= 1 ? 200F : 4F;
     }
 
     @Override

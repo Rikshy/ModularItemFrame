@@ -66,6 +66,7 @@ public class ModuleVacuumTeleporter extends ModuleBase {
             if (nbt != null && nbt.hasKey(NBT_LINK)) {
                 BlockPos tmp = BlockPos.fromLong(nbt.getLong(NBT_LINK));
                 TileEntity targetTile = tile.getWorld().getTileEntity(tmp);
+                int countRange = tile.getRangeUpCount();
                 if (!(targetTile instanceof TileModularFrame) || !((((TileModularFrame) targetTile).module instanceof ModuleDispenserTeleporter)))
                     playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.invalid_target"));
                 else if (tile.getPos().getDistance(tmp.getX(), tmp.getY(), tmp.getZ()) > ConfigValues.BaseTeleportRange + (countRange * 10)) {
@@ -89,7 +90,7 @@ public class ModuleVacuumTeleporter extends ModuleBase {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (!hasValidConnection(world)) return;
-        if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0) return;
+        if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
         List<EntityItem> entities = world.getEntitiesWithinAABB(EntityItem.class, getVacuumBB(pos));
         for (EntityItem entity : entities) {
@@ -130,7 +131,7 @@ public class ModuleVacuumTeleporter extends ModuleBase {
     }
 
     private AxisAlignedBB getVacuumBB(@Nonnull BlockPos pos) {
-        int range = ConfigValues.BaseVacuumRange + countRange;
+        int range = ConfigValues.BaseVacuumRange + tile.getRangeUpCount();
         switch (tile.blockFacing()) {
             case DOWN:
                 return new AxisAlignedBB(pos.add(-5, 0, -5), pos.add(5, 5, 5));

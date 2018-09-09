@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ModuleRegistry {
 
@@ -20,7 +21,7 @@ public class ModuleRegistry {
      * @throws IllegalArgumentException when id is duplicated
      */
     public static void register(ResourceLocation id, Class<? extends ModuleBase> moduleClass) {
-        if (modules.keySet().stream().filter(r -> r.toString().equals(id.toString())).findAny().map(modules::get).isPresent())
+        if (get(id).isPresent())
             throw new IllegalArgumentException("[ModularItemFrame] module key already exists!");
         modules.put(id, moduleClass);
     }
@@ -45,11 +46,15 @@ public class ModuleRegistry {
      */
     @Nullable
     public static ModuleBase createModuleInstance(ResourceLocation id) {
-        try {
-            return modules.get(id).newInstance();
-        } catch (Exception ex) {
-            return null;
+        Optional<Class<? extends ModuleBase>> mod = get(id);
+        if (mod.isPresent()) {
+            try {
+                return modules.get(id).newInstance();
+            } catch (Exception ex) {
+                return null;
+            }
         }
+        return null;
     }
 
     /**
@@ -62,5 +67,9 @@ public class ModuleRegistry {
         for (Map.Entry<ResourceLocation, Class<? extends ModuleBase>> entry : modules.entrySet())
             if (entry.getValue() == moduleClass) return entry.getKey();
         return null;
+    }
+
+    private static Optional<Class<? extends ModuleBase>> get(ResourceLocation id) {
+        return modules.keySet().stream().filter(r -> r.toString().equals(id.toString())).findAny().map(modules::get);
     }
 }

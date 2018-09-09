@@ -8,13 +8,13 @@ import javax.annotation.Nonnull;
 
 public class ItemUpgrade extends Item {
 
-    public String upgradeId;
+    public ResourceLocation upgradeId;
 
-    public ItemUpgrade(@Nonnull String name) {
+    public ItemUpgrade(@Nonnull ResourceLocation location) {
         super();
-        setRegistryName(new ResourceLocation(ModularItemFrame.MOD_ID, name));
-        setTranslationKey(name);
+        setRegistryName(location);
+        setTranslationKey(location.toString());
         setCreativeTab(ModularItemFrame.TAB);
-        upgradeId = name;
+        upgradeId = location;
     }
 }

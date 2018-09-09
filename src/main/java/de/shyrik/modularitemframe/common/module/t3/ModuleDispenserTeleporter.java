@@ -61,6 +61,7 @@ public class ModuleDispenserTeleporter extends ModuleBase {
             if (nbt != null && nbt.hasKey(NBT_LINK)) {
                 BlockPos tmp = BlockPos.fromLong(nbt.getLong(NBT_LINK));
                 TileEntity targetTile = tile.getWorld().getTileEntity(tmp);
+                int countRange = tile.getRangeUpCount();
                 if (!(targetTile instanceof TileModularFrame) || !((((TileModularFrame) targetTile).module instanceof ModuleVacuumTeleporter)))
                     playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.invalid_target"));
                 else if (tile.getPos().getDistance(tmp.getX(), tmp.getY(), tmp.getZ()) > ConfigValues.BaseTeleportRange + (countRange * 10)) {

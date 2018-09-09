@@ -7,11 +7,15 @@ import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemUpgrade;
 import de.shyrik.modularitemframe.common.module.ModuleEmpty;
+import de.shyrik.modularitemframe.common.upgrade.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -30,31 +34,51 @@ public class TileModularFrame extends TileEntity implements ITickable {
 
     private static final String NBTMODULE = "framemodule";
     private static final String NBTMODULEDATA = "framemoduledata";
+    private static final String NBTUPGRADES = "upgrades";
 
     public ModuleBase module;
-    public List<UpgradeBase> upgrades = new ArrayList<>();
+    private List<UpgradeBase> upgrades = new ArrayList<>();
 
     public TileModularFrame() {
         setModule(new ModuleEmpty());
     }
 
     public void setModule(ItemModule module) {
-        setModule(ModuleRegistry.createModuleInstance(module.moduleId));
+        this.module = ModuleRegistry.createModuleInstance(module.moduleId);
     }
 
-    public void setModule(ModuleBase mod) {
+    private void setModule(ModuleBase mod) {
         module = mod;
         module.setTile(this);
     }
 
     public boolean tryAddUpgrade(ItemUpgrade upgrade) {
-        UpgradeBase up = UpgradeRegistry.createModuleInstance(upgrade.upgradeId);
+        UpgradeBase up = UpgradeRegistry.createUpgradeInstance(upgrade.upgradeId);
         if (up != null && countUpgradeOfType(up.getClass()) < up.getMaxCount()) {
             upgrades.add(up);
-            module.onUpgradesChanged();
             return true;
         }
         return false;
+    }
+
+    public int getSpeedUpCount() {
+        return countUpgradeOfType(UpgradeSpeed.class);
+    }
+
+    public int getRangeUpCount() {
+        return countUpgradeOfType(UpgradeRange.class);
+    }
+
+    public int getCapacityUpCount() {
+        return countUpgradeOfType(UpgradeCapacity.class);
+    }
+
+    public int countUpgradeOfType(Class<? extends UpgradeBase> clsUp) {
+        int count = 0;
+        for (UpgradeBase up : upgrades) {
+            if (clsUp.isInstance(up)) count++;
+        }
+        return count;
     }
 
     public EnumFacing blockFacing() {
@@ -71,14 +95,6 @@ public class TileModularFrame extends TileEntity implements ITickable {
 
     public boolean acceptsUpgrade() {
         return upgrades.size() <= ConfigValues.MaxFrameUpgrades;
-    }
-
-    public int countUpgradeOfType(Class<? extends UpgradeBase> clsUp) {
-        int count = 0;
-        for (UpgradeBase up : upgrades) {
-            if (clsUp.isInstance(up)) count++;
-        }
-        return count;
     }
 
     public void dropModule(@Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
@@ -150,7 +166,6 @@ public class TileModularFrame extends TileEntity implements ITickable {
         readFromNBT(packet.getNbtCompound());
     }
 
-
     @Nonnull
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
@@ -158,9 +173,16 @@ public class TileModularFrame extends TileEntity implements ITickable {
         ResourceLocation moduleLoc = ModuleRegistry.getModuleId(module.getClass());
         compound.setString(NBTMODULE, moduleLoc != null ? moduleLoc.toString() : "");
         compound.setTag(NBTMODULEDATA, module.serializeNBT());
+
+        NBTTagList upgradeList = new NBTTagList();
+        for ( UpgradeBase up : upgrades) {
+            ResourceLocation upLoc = UpgradeRegistry.getUpgradeId(up.getClass());
+            if(upLoc != null)
+                upgradeList.appendTag(new NBTTagString(upLoc.toString()));
+        }
+        compound.setTag(NBTUPGRADES, upgradeList);
         return compound;
     }
-
 
     @Override
     public void readFromNBT(@Nonnull NBTTagCompound cmp) {
@@ -174,6 +196,10 @@ public class TileModularFrame extends TileEntity implements ITickable {
             module.deserializeNBT(cmp.getCompoundTag(NBTMODULEDATA));
             module.setTile(this);
             cmp.removeTag(NBTMODULEDATA);
+        }
+        upgrades = new ArrayList<>();
+        for (NBTBase sub : cmp.getTagList(NBTUPGRADES, 8)) {
+            upgrades.add(UpgradeRegistry.createUpgradeInstance(new ResourceLocation(((NBTTagString)sub).getString())));
         }
     }
 }

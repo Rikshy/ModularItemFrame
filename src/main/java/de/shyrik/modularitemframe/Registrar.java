@@ -2,15 +2,15 @@ package de.shyrik.modularitemframe;
 
 import com.google.common.collect.ImmutableList;
 import de.shyrik.modularitemframe.api.ModuleRegistry;
+import de.shyrik.modularitemframe.api.UpgradeRegistry;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.module.t1.*;
 import de.shyrik.modularitemframe.common.module.t2.*;
-import de.shyrik.modularitemframe.common.module.t3.ModuleDispenserTeleporter;
-import de.shyrik.modularitemframe.common.module.t3.ModuleTeleport;
-import de.shyrik.modularitemframe.common.module.t3.ModuleVacuumTeleporter;
+import de.shyrik.modularitemframe.common.module.t3.*;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
+import de.shyrik.modularitemframe.common.upgrade.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -43,32 +43,42 @@ public class Registrar {
     //just so i cna collapse it :)
     static {
 
-        ALL_BLOCKS = ImmutableList.of(FRAME_MODULAR = new BlockModularFrame());
+        ALL_BLOCKS = ImmutableList.of(
+                FRAME_MODULAR = new BlockModularFrame()
+        );
 
-        ALL_ITEMS = ImmutableList.of(SCREWDRIVER = new ItemScrewdriver(),
+        ALL_ITEMS = ImmutableList.of(
+                SCREWDRIVER = new ItemScrewdriver(),
 
-                //Canvas
-                new Item().setRegistryName(new ResourceLocation(ModularItemFrame.MOD_ID, "canvas")).setTranslationKey(ModularItemFrame.MOD_ID + ":canvas").setCreativeTab(ModularItemFrame.TAB),
+            //Canvas
+            new Item().setRegistryName(new ResourceLocation(ModularItemFrame.MOD_ID, "canvas")).setTranslationKey(ModularItemFrame.MOD_ID + ":canvas").setCreativeTab(ModularItemFrame.TAB),
 
-                //Tier 1
-                ModuleRegistry.registerCreate(ModuleCrafting.LOC, ModuleCrafting.class),
-                ModuleRegistry.registerCreate(ModuleIO.LOC, ModuleIO.class),
-                ModuleRegistry.registerCreate(ModuleItem.LOC, ModuleItem.class),
-                ModuleRegistry.registerCreate(ModuleNullify.LOC, ModuleNullify.class),
-                ModuleRegistry.registerCreate(ModuleTank.LOC, ModuleTank.class),
+            //Tier 1
+            ModuleRegistry.registerCreate(ModuleCrafting.LOC, ModuleCrafting.class),
+            ModuleRegistry.registerCreate(ModuleIO.LOC, ModuleIO.class),
+            ModuleRegistry.registerCreate(ModuleItem.LOC, ModuleItem.class),
+            ModuleRegistry.registerCreate(ModuleNullify.LOC, ModuleNullify.class),
+            ModuleRegistry.registerCreate(ModuleTank.LOC, ModuleTank.class),
 
-                //Tier 2
-                ModuleRegistry.registerCreate(ModuleCraftingPlus.LOC, ModuleCraftingPlus.class),
-                ModuleRegistry.registerCreate(ModuleDispense.LOC, ModuleDispense.class),
-                ModuleRegistry.registerCreate(ModuleXP.LOC, ModuleXP.class),
-                ModuleRegistry.registerCreate(ModuleVacuum.LOC, ModuleVacuum.class),
-                ModuleRegistry.registerCreate(ModuleTrashCan.LOC, ModuleTrashCan.class),
+            //Tier 2
+            ModuleRegistry.registerCreate(ModuleCraftingPlus.LOC, ModuleCraftingPlus.class),
+            ModuleRegistry.registerCreate(ModuleDispense.LOC, ModuleDispense.class),
+            ModuleRegistry.registerCreate(ModuleXP.LOC, ModuleXP.class),
+            ModuleRegistry.registerCreate(ModuleVacuum.LOC, ModuleVacuum.class),
+            ModuleRegistry.registerCreate(ModuleTrashCan.LOC, ModuleTrashCan.class),
 
-                //Tier 3
-                //MODULE_AUTOCRAFTING = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_crafting_plus"), ModuleAutoCrafting.class);
-                ModuleRegistry.registerCreate(ModuleTeleport.LOC, ModuleTeleport.class),
-                ModuleRegistry.registerCreate(ModuleVacuumTeleporter.LOC, ModuleVacuumTeleporter.class),
-                ModuleRegistry.registerCreate(ModuleDispenserTeleporter.LOC, ModuleDispenserTeleporter.class)
+            //Tier 3
+            ModuleRegistry.registerCreate(ModuleAutoCrafting.LOC, ModuleAutoCrafting.class),
+            ModuleRegistry.registerCreate(ModuleTeleport.LOC, ModuleTeleport.class),
+            ModuleRegistry.registerCreate(ModuleVacuumTeleporter.LOC, ModuleVacuumTeleporter.class),
+            ModuleRegistry.registerCreate(ModuleXPVacuum.LOC, ModuleXPVacuum.class),
+            ModuleRegistry.registerCreate(ModuleFluidDispenser.LOC, ModuleFluidDispenser.class),
+
+            //Upgrades
+            UpgradeRegistry.registerCreate(UpgradeSpeed.LOC, UpgradeSpeed.class),
+            UpgradeRegistry.registerCreate(UpgradeRange.LOC, UpgradeRange.class),
+            UpgradeRegistry.registerCreate(UpgradeCapacity.LOC, UpgradeCapacity.class),
+            UpgradeRegistry.registerCreate(UpgradeBlastResist.LOC, UpgradeBlastResist.class)
         );
 
         CUSTOM_TEX = ImmutableList.of(

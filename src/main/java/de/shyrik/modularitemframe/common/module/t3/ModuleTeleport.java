@@ -93,6 +93,7 @@ public class ModuleTeleport extends ModuleBase {
                 BlockPos tmp = BlockPos.fromLong(nbt.getLong(NBT_LINK));
                 if (tile.getPos().getDistance(tmp.getX(), tmp.getY(), tmp.getZ()) < 1) return;
                 TileEntity targetTile = tile.getWorld().getTileEntity(tmp);
+                int countRange = tile.getRangeUpCount();
                 if (!(targetTile instanceof TileModularFrame) || !((((TileModularFrame) targetTile).module instanceof ModuleTeleport)))
                     playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.invalid_target"));
                 else if (tile.getPos().getDistance(tmp.getX(), tmp.getY(), tmp.getZ()) > ConfigValues.BaseTeleportRange + (countRange * 10)) {
@@ -120,7 +121,8 @@ public class ModuleTeleport extends ModuleBase {
             if (player != null) player.sendMessage(new TextComponentTranslation("modularitemframe.message.no_target"));
             return false;
         }
-        if (!(world.getTileEntity(linkedLoc) instanceof TileModularFrame) || !(((TileModularFrame) world.getTileEntity(linkedLoc)).module instanceof ModuleTeleport)) {
+        TileEntity targetTile = world.getTileEntity(linkedLoc);
+        if (!(targetTile instanceof TileModularFrame) || !(((TileModularFrame) targetTile).module instanceof ModuleTeleport)) {
             if (player != null)
                 player.sendMessage(new TextComponentTranslation("modularitemframe.message.invalid_target"));
             return false;

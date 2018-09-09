@@ -1,5 +1,6 @@
 package de.shyrik.modularitemframe.common.module.t3;
 
+import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import net.minecraft.block.state.IBlockState;
@@ -18,6 +19,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import javax.annotation.Nonnull;
 
 public class ModuleFluidDispenser extends ModuleBase {
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t3_fluid_dispenser");
+
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
@@ -43,7 +46,7 @@ public class ModuleFluidDispenser extends ModuleBase {
 
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
-        if (world.getTotalWorldTime() % (60 - 10 * countSpeed) == 0) return;
+        if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) == 0) return;
         EnumFacing facing = tile.blockFacing();
         if (!world.isAirBlock(pos.offset(facing.getOpposite()))) return;
 

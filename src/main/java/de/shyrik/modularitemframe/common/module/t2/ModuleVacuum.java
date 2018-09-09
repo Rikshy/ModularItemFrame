@@ -80,7 +80,7 @@ public class ModuleVacuum extends ModuleBase {
 
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
-        if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0) return;
+        if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
         IItemHandlerModifiable handler = getNeighborTileItemCap();
         if (handler != null) {
@@ -147,7 +147,7 @@ public class ModuleVacuum extends ModuleBase {
     }
 
     private void adjustRange(@Nonnull EntityPlayer playerIn) {
-        int maxRange = ConfigValues.BaseVacuumRange + countSpeed;
+        int maxRange = ConfigValues.BaseVacuumRange + tile.getRangeUpCount();
         if (maxRange > 1) {
             int r = 0;
             switch (mode) {

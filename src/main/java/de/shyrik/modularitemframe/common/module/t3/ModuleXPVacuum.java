@@ -23,7 +23,7 @@ public class ModuleXPVacuum extends ModuleXP {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (experience >= MAX_XP) return;
-        if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0) return;
+        if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
         List<EntityXPOrb> entities = world.getEntitiesWithinAABB(EntityXPOrb.class, getVacuumBB(pos));
         for (EntityXPOrb entity : entities) {
@@ -34,7 +34,7 @@ public class ModuleXPVacuum extends ModuleXP {
     }
 
     private AxisAlignedBB getVacuumBB(@Nonnull BlockPos pos) {
-        int range = ConfigValues.BaseVacuumRange + countRange;
+        int range = ConfigValues.BaseVacuumRange + tile.getRangeUpCount();
         switch (tile.blockFacing()) {
             case DOWN:
                 return new AxisAlignedBB(pos.add(-range, 0, -range), pos.add(range, range, range));

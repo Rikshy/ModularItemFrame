@@ -135,7 +135,7 @@ public class ModuleTank extends ModuleBase {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (!world.isRemote && mode != EnumMode.NONE && ConfigValues.TankTransferRate > 0) {
-            if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0) return;
+            if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
             EnumFacing facing = tile.blockFacing();
             TileEntity tile = world.getTileEntity(pos.offset(facing));

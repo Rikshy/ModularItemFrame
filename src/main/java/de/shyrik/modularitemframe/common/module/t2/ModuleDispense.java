@@ -52,6 +52,7 @@ public class ModuleDispense extends ModuleBase {
     public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
         if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return;
 
+        int countRange = tile.getRangeUpCount();
         if (!world.isRemote && countRange > 0) {
             if (playerIn.isSneaking()) range--;
             else range++;
@@ -79,12 +80,12 @@ public class ModuleDispense extends ModuleBase {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (!world.isRemote) {
-            if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0) return;
+            if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
             EnumFacing facing = tile.blockFacing();
-            TileEntity tile = world.getTileEntity(pos.offset(facing, Math.min(range, countRange) + 1));
-            if (tile != null) {
-                IItemHandlerModifiable inv = (IItemHandlerModifiable) tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+            TileEntity targetTile = world.getTileEntity(pos.offset(facing, Math.min(range, tile.getRangeUpCount()) + 1));
+            if (targetTile != null) {
+                IItemHandlerModifiable inv = (IItemHandlerModifiable) targetTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
                 if (inv != null) {
                     for (int slot = 0; slot < inv.getSlots(); slot++) {
                         if (!inv.getStackInSlot(slot).isEmpty()) {

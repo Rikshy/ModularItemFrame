@@ -61,12 +61,12 @@ public class ModuleTrashCan extends ModuleBase {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (!world.isRemote) {
-            if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0) return;
+            if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
             EnumFacing facing = tile.blockFacing();
-            TileEntity tile = world.getTileEntity(pos.offset(facing));
-            if (tile != null) {
-                IItemHandlerModifiable trash = (IItemHandlerModifiable) tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+            TileEntity tileTarget = world.getTileEntity(pos.offset(facing));
+            if (tileTarget != null) {
+                IItemHandlerModifiable trash = (IItemHandlerModifiable) tileTarget.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
                 if (trash != null) {
                     for (int slot = 0; slot < trash.getSlots(); slot++) {
                         if (!trash.getStackInSlot(slot).isEmpty()) {
