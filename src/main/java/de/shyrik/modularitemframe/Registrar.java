@@ -7,7 +7,9 @@ import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.module.t1.*;
 import de.shyrik.modularitemframe.common.module.t2.*;
+import de.shyrik.modularitemframe.common.module.t3.ModuleDispenserTeleporter;
 import de.shyrik.modularitemframe.common.module.t3.ModuleTeleport;
+import de.shyrik.modularitemframe.common.module.t3.ModuleVacuumTeleporter;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -65,7 +67,10 @@ public class Registrar {
 
                 //Tier 3
                 //MODULE_AUTOCRAFTING = ModuleRegistry.registerCreate(new ResourceLocation(ModularItemFrame.MOD_ID,"module_crafting_plus"), ModuleAutoCrafting.class);
-                ModuleRegistry.registerCreate(ModuleTeleport.LOC, ModuleTeleport.class));
+                ModuleRegistry.registerCreate(ModuleTeleport.LOC, ModuleTeleport.class),
+                ModuleRegistry.registerCreate(ModuleVacuumTeleporter.LOC, ModuleVacuumTeleporter.class),
+                ModuleRegistry.registerCreate(ModuleDispenserTeleporter.LOC, ModuleDispenserTeleporter.class)
+        );
     }
 
     @SubscribeEvent
@@ -98,17 +103,23 @@ public class Registrar {
         List<ResourceLocation> tex = ImmutableList.of(
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hardest_inner"),
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner"),
+
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/io"),
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/crafting_frame_bg"),
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg"),
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/nullify_frame_bg"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/null_bg"),
+
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/dispense_bg"),
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/vacuum_bg"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/io"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank"),
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_1"),
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_2"),
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_3"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/null_bg")
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/xp_bg"),
+
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tele_dispense_bg"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tele_vacuum")
         );
 
         for (ResourceLocation rl : tex)

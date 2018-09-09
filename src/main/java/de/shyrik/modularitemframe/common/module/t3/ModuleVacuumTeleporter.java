@@ -7,6 +7,7 @@ import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -26,6 +27,8 @@ import java.util.List;
 
 public class ModuleVacuumTeleporter extends ModuleBase {
 
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t3_itemtelein");
+
     private static final String NBT_LINK = "item_linked_pos";
     private static final String NBT_LINKX = "linked_posX";
     private static final String NBT_LINKY = "linked_posY";
@@ -36,7 +39,7 @@ public class ModuleVacuumTeleporter extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return null;
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tele_vacuum");
     }
 
     @Nonnull
@@ -47,7 +50,7 @@ public class ModuleVacuumTeleporter extends ModuleBase {
 
     @Override
     public String getModuleName() {
-        return null;
+        return I18n.format("modularitemframe.module.itemtelein");
     }
 
     @Override

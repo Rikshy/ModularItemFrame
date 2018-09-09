@@ -1,20 +1,24 @@
 tile.modularitemframe:modular_frame.name=Modular Frame
 
 item.modularitemframe:screwdriver.name=Screwdriver
+item.modularitemframe:canvas.name=Canvas
 item.modularitemframe:module_t1_item.name=Item Module
 item.modularitemframe:module_t1_craft.name=Crafting Module
 item.modularitemframe:module_t1_nullify.name=Nullify Module
 item.modularitemframe:module_t1_tank.name=Tank Module
 item.modularitemframe:module_t1_io.name=I/O Module
+
 item.modularitemframe:module_t2_dispense.name=Dispense Module
 item.modularitemframe:module_t2_xp.name=XP Module
 item.modularitemframe:module_t2_vacuum.name=Vacuum Module
 item.modularitemframe:module_t2_trashcan.name=Trash can Module
 item.modularitemframe:module_t2_craft_plus.name=Crafting Plus Module
+
 item.modularitemframe:module_t3_tele.name=Teleport Module
 item.modularitemframe:module_t3_auto_crafting.name=Auto Crafting Module
 item.modularitemframe:module_t3_fluid_dispenser.name=Fluid Dispenser Module
-item.modularitemframe:canvas.name=Canvas
+item.modularitemframe:module_t3_itemtelein.name=Item Teleporter In Module
+item.modularitemframe:module_t3_itemteleout.name=Item Teleporter Out Module
 
 modularitemframe.message.no_target=[ModularItemFrame] No target location set - use the screwdriver
 modularitemframe.message.invalid_target=[ModularItemFrame] No Ender Frame at target location
@@ -37,19 +41,23 @@ modularitemframe.message.vacuum_mode_change=[ModularItemFrame] Vacuum mode chang
 modularitemframe.message.vacuum_range_change=[ModularItemFrame] Vacuum range %s changed to %d
 
 modularitemframe.module.empty=Empty
+modularitemframe.module.io=I/O
 modularitemframe.module.item=Item
 modularitemframe.module.craft=Crafting
 modularitemframe.module.tank=Tank
 modularitemframe.module.nullify=Nullify
-modularitemframe.module.tele=Teleport
+
+modularitemframe.module.crafting_plus=Crafting Plus
 modularitemframe.module.xp=XP
 modularitemframe.module.dispense=Dispense
 modularitemframe.module.vacuum=Vacuum
-modularitemframe.module.io=I/O
 modularitemframe.module.trash_can=Trash can
-modularitemframe.module.crafting_plus=Crafting Plus
+
 modularitemframe.module.auto_crafting=Auto Crafting
+modularitemframe.module.tele=Teleport
 modularitemframe.module.fluid_dispenser=Fluid Dispenser
+modularitemframe.module.itemtelein=Item Teleport In
+modularitemframe.module.itemteleout=Item Teleport Out
 
 modularitemframe.tooltip.module=Module: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb

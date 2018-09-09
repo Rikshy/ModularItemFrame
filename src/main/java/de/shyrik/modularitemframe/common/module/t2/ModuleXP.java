@@ -1,8 +1,8 @@
 package de.shyrik.modularitemframe.common.module.t2;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
+import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.XpUtils;
-import de.shyrik.modularitemframe.common.module.t1.ModuleItem;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
@@ -12,7 +12,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -28,7 +27,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 //thx openblocks and enderio
-public class ModuleXP extends ModuleItem {
+public class ModuleXP extends ModuleBase {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_xp");
     protected static final int MAX_XP = 21862;
@@ -39,8 +38,10 @@ public class ModuleXP extends ModuleItem {
     public int experience;
     public int levels;
 
-    public ModuleXP() {
-        displayItem = new ItemStack(Items.EXPERIENCE_BOTTLE);
+    @Nonnull
+    @Override
+    public ResourceLocation frontTexture() {
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/xp_bg");
     }
 
     @Nonnull

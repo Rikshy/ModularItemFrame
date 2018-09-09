@@ -1,20 +1,24 @@
 tile.modularitemframe:modular_frame.name=Modularer Rahmen
 
 item.modularitemframe:screwdriver.name=Schraubendreher
+item.modularitemframe:canvas.name=Leinwand
 item.modularitemframe:module_t1_item.name=Item Modul
 item.modularitemframe:module_t1_craft.name=Crafting Modul
 item.modularitemframe:module_t1_nullify.name=Nullify Modul
 item.modularitemframe:module_t1_tank.name=Tank Modul
 item.modularitemframe:module_t1_io.name=I/O Modul
+
 item.modularitemframe:module_t2_dispense.name=Spender Modul
 item.modularitemframe:module_t2_xp.name=XP Module
 item.modularitemframe:module_t2_vacuum.name=Vacuum Module
 item.modularitemframe:module_t2_trashcan.name=M체lleimer Modul
 item.modularitemframe:module_t2_craft_plus.name=Crafting Plus Modul
+
 item.modularitemframe:module_t3_tele.name=Teleport Module
 item.modularitemframe:module_t3_auto_crafting.name=Auto Crafting Modul
 item.modularitemframe:module_t3_fluid_dispenser.name=Fl체ssigkeit Spender Module
-item.modularitemframe:canvas.name=Leinwand
+item.modularitemframe:module_t3_itemtelein.name=Item Teleporter In Modul
+item.modularitemframe:module_t3_itemteleout.name=Item Teleporter Out Modul
 
 modularitemframe.message.no_target=[ModularItemFrame] Keine Zielposition gesetzt - benutze daf체r den Schraubenzieher
 modularitemframe.message.invalid_target=[ModularItemFrame] Kein Ender Rahmen an der Zielposition
@@ -37,19 +41,23 @@ modularitemframe.message.vacuum_mode_change=[ModularItemFrame] Vacuum Modus ver�
 modularitemframe.message.vacuum_range_change=[ModularItemFrame] Vacuum Reichweite %s auf %d ge채ndert
 
 modularitemframe.module.empty=Leer
+modularitemframe.module.io=I/O
 modularitemframe.module.item=Item
 modularitemframe.module.craft=Crafting
 modularitemframe.module.tank=Tank
 modularitemframe.module.nullify=Nullify
-modularitemframe.module.tele=Teleport
+
+modularitemframe.module.crafting_plus=Crafting Plus
 modularitemframe.module.xp=XP
 modularitemframe.module.dispense=Spender
 modularitemframe.module.vacuum=Vacuum
-modularitemframe.module.io=I/O
 modularitemframe.module.trash_can=M체lleimer
-modularitemframe.module.crafting_plus=Crafting Plus
+
 modularitemframe.module.auto_crafting=Auto Crafting
+modularitemframe.module.tele=Teleport
 modularitemframe.module.fluid_dispenser=Fl체ssigkeit Spender
+modularitemframe.module.itemtelein=Item Teleport In
+modularitemframe.module.itemteleout=Item Teleport Out
 
 modularitemframe.tooltip.module=Modul: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb

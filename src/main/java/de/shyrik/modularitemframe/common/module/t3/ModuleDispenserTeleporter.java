@@ -5,6 +5,7 @@ import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -19,6 +20,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 
 public class ModuleDispenserTeleporter extends ModuleBase {
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t3_itemteleout");
 
     private static final String NBT_LINK = "item_linked_pos";
     private static final String NBT_LINKX = "linked_posX";
@@ -30,7 +32,7 @@ public class ModuleDispenserTeleporter extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return null;
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tele_dispense_bg");
     }
 
     @Nonnull
@@ -41,7 +43,7 @@ public class ModuleDispenserTeleporter extends ModuleBase {
 
     @Override
     public String getModuleName() {
-        return null;
+        return I18n.format("modularitemframe.module.itemteleout");
     }
 
 
