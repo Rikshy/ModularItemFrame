@@ -29,11 +29,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+@Mod.EventBusSubscriber
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
 public class BlockModularFrame extends BlockContainer implements IProbeInfoAccessor {
 
@@ -46,12 +51,12 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
 	private static final AxisAlignedBB EAST_AABB = new AxisAlignedBB(0.895D, 0.125D, 0.125D, 1.0D, 0.875D, 0.875D);
 	private static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.0D, 0.125D, 0.125D, 0.11D, 0.875D, 0.875D);
 
-	public static final ResourceLocation ID = new ResourceLocation(ModularItemFrame.MOD_ID,"modular_frame");
+	public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"modular_frame");
 
 	public BlockModularFrame() {
 		super(Material.WOOD);
-		setTranslationKey(ID.toString());
-		setRegistryName(ID);
+		setTranslationKey(LOC.toString());
+		setRegistryName(LOC);
 		setHardness(2.0F);
 		setResistance(4.0F);
 		setSoundType(SoundType.WOOD);
@@ -127,6 +132,13 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
         return false;
     }
 
+    @SubscribeEvent
+    public static void onPlayerInteracted(PlayerInteractEvent.RightClickBlock event) {
+        if (event.getWorld().getBlockState(event.getPos()).getBlock() instanceof BlockModularFrame){
+            event.setUseBlock(Event.Result.ALLOW);
+        }
+    }
+
 	@Override
 	public void breakBlock(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
         getTE(worldIn, pos).module.onRemove(worldIn, pos, state.getValue(FACING), null);
@@ -187,12 +199,6 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
 				return WEST_AABB;
 		}
 		return FULL_BLOCK_AABB;
-	}
-
-	@Override
-	@SuppressWarnings("deprecation")
-	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
-		return getBoundingBox(state, world, pos);
 	}
 
 	@Override

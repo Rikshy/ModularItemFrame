@@ -72,7 +72,7 @@ public class Registrar {
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().registerAll(ALL_BLOCKS.toArray(new Block[0]));
 
-        GameRegistry.registerTileEntity(TileModularFrame.class, new ResourceLocation(ModularItemFrame.MOD_ID,"modular_frame"));
+        GameRegistry.registerTileEntity(TileModularFrame.class, BlockModularFrame.LOC);
     }
 
     @SubscribeEvent
