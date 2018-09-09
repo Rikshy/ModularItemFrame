@@ -102,21 +102,20 @@ public class Registrar {
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner"),
 
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/io"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/crafting_frame_bg"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/nullify_frame_bg"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/null_bg"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_crafting"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_item"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_null"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_tank"),
 
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/dispense_bg"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/vacuum_bg"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_1"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_2"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_3"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/xp_bg"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_dispense"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_vacuum"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_1"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_2"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_3"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_xp"),
 
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tele_dispense_bg"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tele_vacuum"));
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t3_itemtelein"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t3_itemteleout"));
 
         for (ResourceLocation rl : tex)
             event.getMap().registerSprite(rl);

@@ -49,7 +49,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/crafting_frame_bg");
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_crafting");
     }
 
     @Override

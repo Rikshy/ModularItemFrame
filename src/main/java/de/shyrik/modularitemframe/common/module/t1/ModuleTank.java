@@ -49,13 +49,13 @@ public class ModuleTank extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank");
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_tank");
     }
 
     @Nonnull
     @Override
     public ResourceLocation backTexture() {
-        return super.backTexture();//new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank");
+        return super.backTexture();//new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_tank");
     }
 
     @Override

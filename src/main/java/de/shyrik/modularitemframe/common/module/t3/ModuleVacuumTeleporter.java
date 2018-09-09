@@ -39,7 +39,7 @@ public class ModuleVacuumTeleporter extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tele_vacuum");
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t3_itemtelein");
     }
 
     @Nonnull

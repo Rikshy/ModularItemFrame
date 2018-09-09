@@ -32,7 +32,7 @@ public class ModuleDispense extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/dispense_bg");
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_dispense");
     }
 
     @Nonnull

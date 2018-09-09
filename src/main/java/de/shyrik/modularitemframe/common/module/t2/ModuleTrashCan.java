@@ -26,9 +26,9 @@ public class ModuleTrashCan extends ModuleBase {
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2_trashcan");
 
     private List<ResourceLocation> frontTex = ImmutableList.of(
-            new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_1"),
-            new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_2"),
-            new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_3")
+            new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_1"),
+            new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_2"),
+            new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_3")
     );
     private int texIndex = 0;
 

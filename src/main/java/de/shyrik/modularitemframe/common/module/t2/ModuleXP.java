@@ -29,7 +29,7 @@ import java.util.List;
 //thx openblocks and enderio
 public class ModuleXP extends ModuleBase {
 
-    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2_xp");
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_xp");
     protected static final int MAX_XP = 21862;
 
     private static final String NBT_XP = "xp";
@@ -41,7 +41,7 @@ public class ModuleXP extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/xp_bg");
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_xp");
     }
 
     @Nonnull
