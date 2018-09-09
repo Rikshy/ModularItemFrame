@@ -9,7 +9,7 @@
     "S S"
   ],
   "key": {
-    "#": {
+    "S": {
       "type": "forge:ore_dict",
       "ore": "stone"
     },
