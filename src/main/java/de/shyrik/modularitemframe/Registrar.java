@@ -125,7 +125,8 @@ public class Registrar {
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/tank"),
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_1"),
                 new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_2"),
-                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_3")
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/trashcan_bg_3"),
+                new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/null_bg")
         );
 
         for (ResourceLocation rl : tex)

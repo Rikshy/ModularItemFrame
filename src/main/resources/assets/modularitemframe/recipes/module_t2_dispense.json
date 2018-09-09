@@ -10,7 +10,7 @@
   ],
   "key": {
     "#": {
-      "item": "minecraft:dropper"
+      "item": "minecraft:dispenser"
     },
     "C": {
       "item": "modularitemframe:canvas"
