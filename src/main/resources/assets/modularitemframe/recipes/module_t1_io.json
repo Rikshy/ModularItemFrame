@@ -1,20 +1,20 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "modularitemframe:module_t1_item"
+    "item": "modularitemframe:module_t1_io"
   },
   "pattern": [
     "S S",
-    " C ",
+    "CCC",
     "S S"
   ],
   "key": {
+    "#": {
+      "type": "forge:ore_dict",
+      "ore": "stone"
+    },
     "C": {
       "item": "modularitemframe:canvas"
-    },
-    "S": {
-      "type": "forge:ore_dict",
-      "ore": "stickWood"
     }
   }
 }

@@ -1,0 +1,22 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "modularitemframe:module_t2_dispense"
+  },
+  "pattern": [
+    " C ",
+    "I#I",
+    " C "
+  ],
+  "key": {
+    "#": {
+      "item": "modularitemframe:module_t1_nullify"
+    },
+    "M": {
+      "item": "modularitemframe:module_t1_io"
+    },
+    "C": {
+      "item": "modularitemframe:canvas"
+    }
+  }
+}
