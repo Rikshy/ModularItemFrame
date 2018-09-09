@@ -56,6 +56,7 @@ public class TileModularFrame extends TileEntity implements ITickable {
         UpgradeBase up = UpgradeRegistry.createUpgradeInstance(upgrade.upgradeId);
         if (up != null && countUpgradeOfType(up.getClass()) < up.getMaxCount()) {
             upgrades.add(up);
+            up.onInsert(world, pos, blockFacing());
             return true;
         }
         return false;
@@ -116,9 +117,13 @@ public class TileModularFrame extends TileEntity implements ITickable {
 
     public void dropUpgrades(@Nullable EntityPlayer playerIn, @Nonnull EnumFacing facing) {
         for (UpgradeBase up : upgrades) {
+            ResourceLocation upId = UpgradeRegistry.getUpgradeId(up.getClass());
+            if(upId == null) continue;
 
-            Item item = Item.getByNameOrId(ModularItemFrame.MOD_ID + ":" + UpgradeRegistry.getUpgradeId(up.getClass()));
+            Item item = Item.getByNameOrId(upId.toString());
             if (item instanceof ItemUpgrade) {
+                up.onRemove();
+
                 ItemStack remain = new ItemStack(item);
                 if (playerIn != null) remain = ItemUtils.giveStack(ItemUtils.getPlayerInv(playerIn), remain);
                 if (!remain.isEmpty()) ItemUtils.ejectStack(world, pos, facing, remain);
