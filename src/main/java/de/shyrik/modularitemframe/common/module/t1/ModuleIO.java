@@ -45,7 +45,7 @@ public class ModuleIO extends ModuleBase {
     public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
         if (!worldIn.isRemote) {
             EnumFacing blockFacing = tile.blockFacing();
-            TileEntity neighbor = tile.getNeighbor(blockFacing);
+            TileEntity neighbor = tile.getAttachedTile();
             if (neighbor != null) {
                 IItemHandlerModifiable handler = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, blockFacing);
                 IItemHandlerModifiable player = ItemUtils.getPlayerInv(playerIn);
@@ -66,7 +66,7 @@ public class ModuleIO extends ModuleBase {
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (!worldIn.isRemote) {
             EnumFacing blockFacing = tile.blockFacing();
-            TileEntity neighbor = tile.getNeighbor(blockFacing);
+            TileEntity neighbor = tile.getAttachedTile();
             if (neighbor != null) {
                 IItemHandlerModifiable handler = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, blockFacing);
                 IItemHandlerModifiable player = ItemUtils.getPlayerInv(playerIn);

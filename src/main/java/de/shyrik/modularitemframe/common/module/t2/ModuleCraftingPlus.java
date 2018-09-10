@@ -62,7 +62,7 @@ public class ModuleCraftingPlus extends ModuleCrafting {
     protected IItemHandlerModifiable getWorkingInventories(IItemHandlerModifiable playerInventory) {
         EnumFacing facing = tile.blockFacing();
 
-        TileEntity neighbor = tile.getNeighbor(facing);
+        TileEntity neighbor = tile.getAttachedTile();
         IItemHandlerModifiable neighborInventory = null;
         if (neighbor != null) {
             neighborInventory = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());

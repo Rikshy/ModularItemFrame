@@ -62,7 +62,7 @@ public class ModuleAutoCrafting extends ModuleCraftingPlus {
         if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
         EnumFacing facing = tile.blockFacing();
-        TileEntity neighbor = tile.getNeighbor(facing);
+        TileEntity neighbor = tile.getAttachedTile();
         if (neighbor != null) {
             IItemHandlerModifiable handler = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
             if (handler != null) {

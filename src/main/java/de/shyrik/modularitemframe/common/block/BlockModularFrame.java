@@ -31,13 +31,17 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Mod.EventBusSubscriber
 @Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
@@ -143,6 +147,24 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onExplosion(ExplosionEvent.Detonate event) {
+        List<BlockPos> toRemove = new ArrayList<>();
+        for (BlockPos pos : event.getAffectedBlocks()) {
+            TileEntity tmp = event.getWorld().getTileEntity(pos);
+            if (tmp instanceof TileModularFrame) {
+                TileModularFrame tile = (TileModularFrame) tmp;
+                if (tile.isBlastResist()) {
+                    toRemove.add(tile.getAttachedPos());
+                    toRemove.add(tile.getPos());
+                }
+            }
+        }
+        for (BlockPos pos : toRemove) {
+            event.getAffectedBlocks().remove(pos);
+        }
+    }
+
     @Override
     public void breakBlock(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
         getTE(worldIn, pos).module.onRemove(worldIn, pos, state.getValue(FACING), null);
@@ -229,11 +251,6 @@ public class BlockModularFrame extends BlockContainer implements IProbeInfoAcces
     @SuppressWarnings("deprecation")
     public IBlockState getStateFromMeta(int meta) {
         return getDefaultState().withProperty(FACING, EnumFacing.byIndex(meta & 7));
-    }
-
-    @Override
-    public float getExplosionResistance(World world, BlockPos pos, @Nullable Entity exploder, Explosion explosion) {
-        return getTE(world, pos).countUpgradeOfType(UpgradeBlastResist.class) >= 1 ? 200F : 4F;
     }
 
     @Override

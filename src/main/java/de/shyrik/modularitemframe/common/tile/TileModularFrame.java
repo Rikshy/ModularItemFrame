@@ -21,6 +21,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -77,6 +78,10 @@ public class TileModularFrame extends TileEntity implements ITickable {
         return countUpgradeOfType(UpgradeCapacity.class);
     }
 
+    public boolean isBlastResist() {
+        return countUpgradeOfType(UpgradeBlastResist.class) >= 1;
+    }
+
     public int countUpgradeOfType(Class<? extends UpgradeBase> clsUp) {
         int count = 0;
         for (UpgradeBase up : upgrades) {
@@ -89,8 +94,16 @@ public class TileModularFrame extends TileEntity implements ITickable {
         return world.getBlockState(pos).getValue(BlockModularFrame.FACING);
     }
 
-    public TileEntity getNeighbor(EnumFacing facing) {
-        return world.getTileEntity(pos.offset(facing));
+    public TileEntity getAttachedTile() {
+        return world.getTileEntity(pos.offset(blockFacing()));
+    }
+
+    public IBlockState getAttachedBlock() {
+        return world.getBlockState(getAttachedPos());
+    }
+
+    public BlockPos getAttachedPos() {
+        return pos.offset(blockFacing());
     }
 
     public boolean acceptsModule() {
@@ -125,7 +138,7 @@ public class TileModularFrame extends TileEntity implements ITickable {
 
             Item item = Item.getByNameOrId(upId.toString());
             if (item instanceof ItemUpgrade) {
-                up.onRemove();
+                up.onRemove(world, pos, facing);
 
                 ItemStack remain = new ItemStack(item);
                 if (playerIn != null) remain = ItemUtils.giveStack(ItemUtils.getPlayerInv(playerIn), remain);

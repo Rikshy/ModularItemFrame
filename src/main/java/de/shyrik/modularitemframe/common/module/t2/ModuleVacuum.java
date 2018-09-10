@@ -123,7 +123,7 @@ public class ModuleVacuum extends ModuleBase {
     @Nullable
     private IItemHandlerModifiable getNeighborTileItemCap() {
         EnumFacing facing = tile.blockFacing();
-        TileEntity te = tile.getNeighbor(facing);
+        TileEntity te = tile.getAttachedTile();
 
         if (te != null)
             return (IItemHandlerModifiable) te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());

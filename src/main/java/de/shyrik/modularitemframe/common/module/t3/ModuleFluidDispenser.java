@@ -50,7 +50,7 @@ public class ModuleFluidDispenser extends ModuleBase {
         EnumFacing facing = tile.blockFacing();
         if (!world.isAirBlock(pos.offset(facing.getOpposite()))) return;
 
-        TileEntity neighbor = tile.getNeighbor(facing);
+        TileEntity neighbor = tile.getAttachedTile();
         if (neighbor != null) {
             IFluidHandler handler = neighbor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
             if (handler != null) {
