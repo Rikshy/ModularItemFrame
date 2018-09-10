@@ -132,6 +132,10 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 
 	}
 
+	public void onFrameUpgradesChanged() {
+
+	}
+
 	/**
 	 * Called when a frame is simply right clicked
 	 */

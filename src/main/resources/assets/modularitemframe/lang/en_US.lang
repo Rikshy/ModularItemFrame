@@ -54,6 +54,7 @@ modularitemframe.module.item=Item
 modularitemframe.module.craft=Crafting
 modularitemframe.module.tank=Tank
 modularitemframe.module.nullify=Nullify
+modularitemframe.module.storage=Storage
 
 modularitemframe.module.crafting_plus=Crafting Plus
 modularitemframe.module.xp=XP

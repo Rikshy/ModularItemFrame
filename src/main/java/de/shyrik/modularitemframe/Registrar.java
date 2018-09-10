@@ -44,11 +44,11 @@ public class Registrar {
     static {
 
         ALL_BLOCKS = ImmutableList.of(
-                FRAME_MODULAR = new BlockModularFrame()
+            FRAME_MODULAR = new BlockModularFrame()
         );
 
         ALL_ITEMS = ImmutableList.of(
-                SCREWDRIVER = new ItemScrewdriver(),
+            SCREWDRIVER = new ItemScrewdriver(),
 
             //Canvas
             new Item().setRegistryName(new ResourceLocation(ModularItemFrame.MOD_ID, "canvas")).setTranslationKey(ModularItemFrame.MOD_ID + ":canvas").setCreativeTab(ModularItemFrame.TAB),
@@ -59,6 +59,7 @@ public class Registrar {
             ModuleRegistry.registerCreate(ModuleItem.LOC, ModuleItem.class),
             ModuleRegistry.registerCreate(ModuleNullify.LOC, ModuleNullify.class),
             ModuleRegistry.registerCreate(ModuleTank.LOC, ModuleTank.class),
+            ModuleRegistry.registerCreate(ModuleStorage.LOC, ModuleStorage.class),
 
             //Tier 2
             ModuleRegistry.registerCreate(ModuleCraftingPlus.LOC, ModuleCraftingPlus.class),

@@ -60,7 +60,10 @@ public class TileModularFrame extends TileEntity implements ITickable {
         UpgradeBase up = UpgradeRegistry.createUpgradeInstance(upgradeLoc);
         if (up != null && countUpgradeOfType(up.getClass()) < up.getMaxCount()) {
             upgrades.add(up);
-            if (fireInsert) up.onInsert(world, pos, blockFacing());
+            if (fireInsert) {
+                up.onInsert(world, pos, blockFacing());
+                module.onFrameUpgradesChanged();
+            }
             return true;
         }
         return false;
@@ -143,8 +146,10 @@ public class TileModularFrame extends TileEntity implements ITickable {
                 ItemStack remain = new ItemStack(item);
                 if (playerIn != null) remain = ItemUtils.giveStack(ItemUtils.getPlayerInv(playerIn), remain);
                 if (!remain.isEmpty()) ItemUtils.ejectStack(world, pos, facing, remain);
+                markDirty();
             }
         }
+        module.onFrameUpgradesChanged();
     }
 
     @Override

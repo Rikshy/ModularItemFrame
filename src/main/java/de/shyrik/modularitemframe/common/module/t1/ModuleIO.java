@@ -56,6 +56,8 @@ public class ModuleIO extends ModuleBase {
                         ItemStack extract = handler.extractItem(slot, amount, false);
                         extract = ItemUtils.giveStack(player, extract);
                         if (!extract.isEmpty()) ItemUtils.ejectStack(worldIn, pos, blockFacing, extract);
+                        neighbor.markDirty();
+                        tile.markDirty();
                     }
                 }
             }
