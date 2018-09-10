@@ -1,6 +1,7 @@
 package de.shyrik.modularitemframe;
 
 import de.shyrik.modularitemframe.client.gui.GuiHandler;
+import de.shyrik.modularitemframe.common.network.NetworkHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
@@ -18,6 +19,7 @@ public class ModularItemFrame {
     public static final String MOD_NAME = "Modular Item Frame";
     public static final String VERSION = "@GRADLE:VERSION@";
     public static final String DEPENDENCIES = "after:mcmultipart;";
+    public static final String CHANNEL = MOD_ID;
 
     public static final CreativeTabs TAB = new CreativeTabs("modularitemframe") {
         @Override
@@ -32,5 +34,6 @@ public class ModularItemFrame {
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+        NetworkHandler.registerPackets();
     }
 }

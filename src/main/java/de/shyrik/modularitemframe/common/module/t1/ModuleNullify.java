@@ -6,6 +6,8 @@ import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
+import de.shyrik.modularitemframe.common.network.NetworkHandler;
+import de.shyrik.modularitemframe.common.network.packet.PlaySoundPacket;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -96,22 +98,23 @@ public class ModuleNullify extends ModuleBase {
     @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return false;
-
-        ItemStack held = playerIn.getHeldItem(hand);
-        if (!playerIn.isSneaking() && !held.isEmpty()) {
-            if (ItemUtils.simpleAreStacksEqual(held, lastStack)) {
-                if (held.getCount() + lastStack.getCount() > lastStack.getMaxStackSize())
-                    lastStack.setCount(lastStack.getMaxStackSize());
-                else lastStack.grow(held.getCount());
-            } else {
-                lastStack = held.copy();
+        if (!worldIn.isRemote) {
+            ItemStack held = playerIn.getHeldItem(hand);
+            if (!playerIn.isSneaking() && !held.isEmpty()) {
+                if (ItemUtils.simpleAreStacksEqual(held, lastStack)) {
+                    if (held.getCount() + lastStack.getCount() > lastStack.getMaxStackSize())
+                        lastStack.setCount(lastStack.getMaxStackSize());
+                    else lastStack.grow(held.getCount());
+                } else {
+                    lastStack = held.copy();
+                }
+                held.setCount(0);
+                NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.BLOCK_LAVA_EXTINGUISH.getSoundName().toString(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), tile.getPos(), worldIn.provider.getDimension());
+            } else if (playerIn.isSneaking() && held.isEmpty() && !lastStack.isEmpty()) {
+                playerIn.setHeldItem(hand, lastStack);
+                lastStack = ItemStack.EMPTY;
+                NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.ENTITY_ENDERPEARL_THROW.getSoundName().toString(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), tile.getPos(), worldIn.provider.getDimension());
             }
-            held.setCount(0);
-            worldIn.playSound(null, pos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.4F, 0.7F);
-        } else if (playerIn.isSneaking() && held.isEmpty() && !lastStack.isEmpty()) {
-            playerIn.setHeldItem(hand, lastStack);
-            lastStack = ItemStack.EMPTY;
-            worldIn.playSound(null, pos, SoundEvents.ENTITY_ENDERPEARL_THROW, SoundCategory.BLOCKS, 0.4F, 0.7F);
         }
         return true;
     }

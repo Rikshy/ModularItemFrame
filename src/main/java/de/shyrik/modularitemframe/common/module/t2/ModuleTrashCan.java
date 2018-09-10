@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
+import de.shyrik.modularitemframe.common.network.NetworkHandler;
+import de.shyrik.modularitemframe.common.network.packet.PlaySoundPacket;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -71,7 +73,7 @@ public class ModuleTrashCan extends ModuleBase {
                     for (int slot = 0; slot < trash.getSlots(); slot++) {
                         if (!trash.getStackInSlot(slot).isEmpty()) {
                             trash.setStackInSlot(slot, ItemStack.EMPTY);
-                            world.playSound(null, pos, SoundEvents.BLOCK_LAVA_EXTINGUISH, SoundCategory.BLOCKS, 0.4F, 0.7F);
+                            NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.BLOCK_LAVA_EXTINGUISH.getSoundName().toString(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), pos, world.provider.getDimension());
                             break;
                         }
                     }

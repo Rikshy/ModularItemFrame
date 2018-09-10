@@ -5,6 +5,9 @@ import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
+import de.shyrik.modularitemframe.common.block.BlockModularFrame;
+import de.shyrik.modularitemframe.common.network.NetworkHandler;
+import de.shyrik.modularitemframe.common.network.packet.TeleportEffectPacket;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -69,15 +72,37 @@ public class ModuleTeleport extends ModuleBase {
                     target = linkedLoc.offset(EnumFacing.DOWN);
                 else target = linkedLoc;
 
-                for (int i = 0; i < 64; i++)
-                    worldIn.spawnParticle(EnumParticleTypes.PORTAL, playerIn.posX, playerIn.posY + worldIn.rand.nextDouble() * 2.0D, playerIn.posZ, worldIn.rand.nextGaussian(), 0.0D, worldIn.rand.nextGaussian());
-                Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.AMBIENT, 0.4F, 1F, pos));
-                playerIn.setPositionAndUpdate(target.getX() + 0.5F, target.getY() + 0.5F, target.getZ() + 0.5F);
-                for (int i = 0; i < 64; i++)
-                    worldIn.spawnParticle(EnumParticleTypes.PORTAL, target.getX(), target.getY() + worldIn.rand.nextDouble() * 2.0D, target.getZ(), worldIn.rand.nextGaussian(), 0.0D, worldIn.rand.nextGaussian());
+                if (playerIn.isBeingRidden()) {
+                    playerIn.removePassengers();
+                }
+                if (playerIn.isRiding()) {
+                    playerIn.dismountRidingEntity();
+                }
+
+                if (playerIn.attemptTeleport(target.getX() + 0.5F, target.getY() + 0.5F, target.getZ() + 0.5F)) {
+                    NetworkHandler.sendAround(new TeleportEffectPacket(playerIn.getPosition()), playerIn.getPosition(), playerIn.dimension);
+
+                    playerIn.rotationYaw = getRotationYaw(worldIn.getBlockState(linkedLoc).getValue(BlockModularFrame.FACING).getOpposite());
+
+                    NetworkHandler.sendAround(new TeleportEffectPacket(target), target, playerIn.dimension);
+                }
             }
         }
         return true;
+    }
+
+    public static float getRotationYaw(EnumFacing facing) {
+        switch (facing) {
+            case NORTH:
+                return 180f;
+            case SOUTH:
+                return 0f;
+            case WEST:
+                return 90f;
+            case EAST:
+                return -90f;
+        }
+        return 0f;
     }
 
     @Override

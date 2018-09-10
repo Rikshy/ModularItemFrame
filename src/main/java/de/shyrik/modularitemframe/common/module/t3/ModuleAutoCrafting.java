@@ -5,6 +5,8 @@ import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.module.t2.ModuleCraftingPlus;
+import de.shyrik.modularitemframe.common.network.NetworkHandler;
+import de.shyrik.modularitemframe.common.network.packet.PlaySoundPacket;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -85,6 +87,6 @@ public class ModuleAutoCrafting extends ModuleCraftingPlus {
                 }
             }
         } while (--craftAmount > 0);
-        world.playSound(null, tile.getPos(), SoundEvents.BLOCK_LADDER_STEP, SoundCategory.BLOCKS, 0.4F, 0.7F);
+        NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.BLOCK_LADDER_STEP.getSoundName().toString(), SoundCategory.BLOCKS.getName(), 0.3F, 0.7F), tile.getPos(), world.provider.getDimension());
     }
 }

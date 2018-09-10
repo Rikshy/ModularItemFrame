@@ -6,6 +6,8 @@ import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
 import de.shyrik.modularitemframe.common.container.IContainerCallbacks;
+import de.shyrik.modularitemframe.common.network.NetworkHandler;
+import de.shyrik.modularitemframe.common.network.packet.PlaySoundPacket;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
 import mcjty.theoneprobe.api.ProbeMode;
@@ -111,7 +113,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
                 }
             }
         } while (--craftAmount > 0);
-        player.world.playSound(null, tile.getPos(), SoundEvents.BLOCK_LADDER_STEP, SoundCategory.BLOCKS, 0.4F, 0.7F);
+        NetworkHandler.sendAround(new PlaySoundPacket(tile.getPos(), SoundEvents.BLOCK_LADDER_STEP.getSoundName().toString(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), tile.getPos(), player.dimension);
     }
 
     protected IItemHandlerModifiable getWorkingInventories(IItemHandlerModifiable playerInventory) {
