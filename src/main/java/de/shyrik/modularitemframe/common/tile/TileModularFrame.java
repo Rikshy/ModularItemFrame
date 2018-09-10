@@ -1,6 +1,5 @@
 package de.shyrik.modularitemframe.common.tile;
 
-import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.*;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
@@ -43,20 +42,24 @@ public class TileModularFrame extends TileEntity implements ITickable {
         setModule(new ModuleEmpty());
     }
 
-    public void setModule(ItemModule module) {
-        this.module = ModuleRegistry.createModuleInstance(module.moduleId);
+    public void setModule(ResourceLocation moduleLoc) {
+        setModule(ModuleRegistry.createModuleInstance(moduleLoc));
     }
 
     private void setModule(ModuleBase mod) {
-        module = mod;
+        module = mod == null ? new ModuleEmpty() : mod;
         module.setTile(this);
     }
 
-    public boolean tryAddUpgrade(ItemUpgrade upgrade) {
-        UpgradeBase up = UpgradeRegistry.createUpgradeInstance(upgrade.upgradeId);
+    public boolean tryAddUpgrade(ResourceLocation upgradeLoc) {
+        return tryAddUpgrade(upgradeLoc, true);
+    }
+
+    public boolean tryAddUpgrade(ResourceLocation upgradeLoc, boolean fireInsert) {
+        UpgradeBase up = UpgradeRegistry.createUpgradeInstance(upgradeLoc);
         if (up != null && countUpgradeOfType(up.getClass()) < up.getMaxCount()) {
             upgrades.add(up);
-            up.onInsert(world, pos, blockFacing());
+            if (fireInsert) up.onInsert(world, pos, blockFacing());
             return true;
         }
         return false;
@@ -196,15 +199,13 @@ public class TileModularFrame extends TileEntity implements ITickable {
         if (moduleLoc != null && moduleLoc.toString().equals(cmp.getString(NBTMODULE))) {
             module.deserializeNBT(cmp.getCompoundTag(NBTMODULEDATA));
         } else {
-            module = ModuleRegistry.createModuleInstance(new ResourceLocation(cmp.getString(NBTMODULE)));
-            if (module == null) module = new ModuleEmpty();
+            setModule(new ResourceLocation(cmp.getString(NBTMODULE)));
             module.deserializeNBT(cmp.getCompoundTag(NBTMODULEDATA));
-            module.setTile(this);
             cmp.removeTag(NBTMODULEDATA);
         }
         upgrades = new ArrayList<>();
         for (NBTBase sub : cmp.getTagList(NBTUPGRADES, 8)) {
-            upgrades.add(UpgradeRegistry.createUpgradeInstance(new ResourceLocation(((NBTTagString)sub).getString())));
+            tryAddUpgrade(new ResourceLocation(((NBTTagString)sub).getString()), false);
         }
     }
 }
