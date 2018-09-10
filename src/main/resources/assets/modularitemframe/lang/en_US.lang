@@ -21,6 +21,13 @@ item.modularitemframe:module_t3_itemtelein.name=Item Teleporter In Module
 item.modularitemframe:module_t3_itemteleout.name=Item Teleporter Out Module
 item.modularitemframe:module_t3_xpvaruum.name=XP Vacuum Module
 
+item.modularitemframe:upgrade_speed.name=Speed Upgrade
+item.modularitemframe:upgrade_range.name=Range Upgrade
+item.modularitemframe:upgrade_capacity.name=Capacity Upgrade
+item.modularitemframe:upgrade_resist.name=Resistance Upgrade
+item.modularitemframe:upgrade_security.name=Security Upgrade
+
+
 modularitemframe.message.no_target=[ModularItemFrame] No target location set - use the screwdriver
 modularitemframe.message.invalid_target=[ModularItemFrame] No Ender Frame at target location
 modularitemframe.message.location_blocked=[ModularItemFrame] Target location is blocked
