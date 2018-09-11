@@ -18,6 +18,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -40,12 +42,14 @@ public class ModuleTrashCan extends ModuleBase {
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
     public ResourceLocation frontTexture() {
         return frontTex.get(texIndex);
     }
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
     public ResourceLocation innerTexture() {
         return BlockModularFrame.INNER_HARD_LOC;
     }

@@ -29,6 +29,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,6 +49,7 @@ public class ModuleTeleport extends ModuleBase {
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
     public ResourceLocation frontTexture() {
         return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_item");
     }
@@ -57,6 +60,7 @@ public class ModuleTeleport extends ModuleBase {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         RenderUtils.renderEnd(tesr, x, y, z, tile.blockFacing());
     }
@@ -169,6 +173,7 @@ public class ModuleTeleport extends ModuleBase {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     @Optional.Method(modid = "theoneprobe")
     public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
         super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
@@ -177,12 +182,15 @@ public class ModuleTeleport extends ModuleBase {
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
+    @Optional.Method(modid = "waila")
     public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         List<String> tooltips = super.getWailaBody(itemStack, accessor, config);
         tooltips.add(I18n.format("modularitemframe.tooltip.tele_valid", hasValidConnection(accessor.getWorld(), null)));
         return tooltips;
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();

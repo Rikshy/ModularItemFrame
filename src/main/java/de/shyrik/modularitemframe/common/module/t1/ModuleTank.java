@@ -33,6 +33,8 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -65,6 +67,7 @@ public class ModuleTank extends ModuleBase {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         if (tank != null && tank.getFluid() != null && tank.getFluidAmount() > 0) {
             GlStateManager.pushMatrix();
@@ -152,6 +155,7 @@ public class ModuleTank extends ModuleBase {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     @Optional.Method(modid = "theoneprobe")
     public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
         super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
@@ -163,6 +167,8 @@ public class ModuleTank extends ModuleBase {
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
+    @Optional.Method(modid = "waila")
     public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         List<String> tooltips = super.getWailaBody(itemStack, accessor, config);
         tooltips.add(I18n.format("modularitemframe.tooltip.capacity", tank.getFluidAmount(), tank.getCapacity()));
@@ -170,6 +176,7 @@ public class ModuleTank extends ModuleBase {
         return tooltips;
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = super.serializeNBT();

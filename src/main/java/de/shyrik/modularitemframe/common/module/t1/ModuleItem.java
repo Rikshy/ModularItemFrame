@@ -23,6 +23,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -38,6 +40,7 @@ public class ModuleItem extends ModuleBase {
     protected ItemStack displayItem = ItemStack.EMPTY;
 
     @Nonnull
+    @SideOnly(Side.CLIENT)
     public ResourceLocation frontTexture() {
         return BG_LOC;
     }
@@ -61,6 +64,7 @@ public class ModuleItem extends ModuleBase {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.pushMatrix();
         GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
@@ -105,6 +109,7 @@ public class ModuleItem extends ModuleBase {
 
     @Nonnull
     @Override
+    @Optional.Method(modid = "waila")
     public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         List<String> tips = super.getWailaBody(itemStack, accessor, config);
         if (!displayItem.isEmpty()) tips.add("Display: " + displayItem.getDisplayName());
@@ -112,6 +117,7 @@ public class ModuleItem extends ModuleBase {
     }
 
 
+    @Nonnull
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();

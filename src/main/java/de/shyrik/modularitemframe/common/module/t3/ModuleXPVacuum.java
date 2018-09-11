@@ -9,6 +9,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -18,6 +20,7 @@ public class ModuleXPVacuum extends ModuleXP {
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
     public ResourceLocation innerTexture() {
         return BlockModularFrame.INNER_HARDEST_LOC;
     }

@@ -10,6 +10,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
@@ -17,12 +19,14 @@ public class ModuleEmpty extends ModuleBase {
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
     public ResourceLocation frontTexture() {
         return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/default_front");
     }
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
     public ResourceLocation backTexture() {
         return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/default_back");
     }

@@ -26,6 +26,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,6 +49,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 * @return [Nonnull] {@link ResourceLocation} to the Texture
 	 */
 	@Nonnull
+	@SideOnly(Side.CLIENT)
 	public abstract ResourceLocation frontTexture();
 
     /**
@@ -56,6 +59,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
      * @return [Nonnull] {@link ResourceLocation} to the Texture
      */
     @Nonnull
+	@SideOnly(Side.CLIENT)
     public ResourceLocation innerTexture() {
         return BlockModularFrame.INNER_DEF_LOC;
     }
@@ -67,6 +71,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
      * @return [Nonnull] {@link ResourceLocation} to the Texture
      */
     @Nonnull
+	@SideOnly(Side.CLIENT)
     public ResourceLocation backTexture() {
         return new ResourceLocation("minecraft", "blocks/log_birch_top");
     }
@@ -90,6 +95,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 * @param model Contains the model of the frame
 	 * @return baked model ofc
 	 */
+	@SideOnly(Side.CLIENT)
 	public IBakedModel bakeModel(IModel model) {
 		if (bakedModel == null || reloadModel) {
 			bakedModel = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, location -> {
@@ -113,6 +119,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 *
 	 * @param tesr instance of the current {@link FrameRenderer}
 	 */
+	@SideOnly(Side.CLIENT)
 	public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 	}
 
@@ -164,6 +171,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	/**
 	 * The One Probe information handling
 	 */
+	@SideOnly(Side.CLIENT)
 	@Optional.Method(modid = "theoneprobe")
 	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
 		probeInfo.horizontal().text(I18n.format("modularitemframe.tooltip.module", getModuleName()));
@@ -173,6 +181,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 * Waila/Hwyla information handling
 	 */
 	@Nonnull
+	@SideOnly(Side.CLIENT)
 	@Optional.Method(modid = "waila")
 	public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		List<String> tips = new ArrayList<>();
@@ -184,6 +193,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 * NBT serialization in case there are some data to be saved!
 	 * this gets synced automatically
 	 */
+	@Nonnull
 	@Override
 	public NBTTagCompound serializeNBT() {
 		return new NBTTagCompound();

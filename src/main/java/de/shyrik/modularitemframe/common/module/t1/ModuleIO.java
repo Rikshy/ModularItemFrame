@@ -14,6 +14,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -32,6 +34,7 @@ public class ModuleIO extends ModuleBase {
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
     public ResourceLocation frontTexture() {
         return BG_LOC;
     }
@@ -98,6 +101,7 @@ public class ModuleIO extends ModuleBase {
         return true;
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();

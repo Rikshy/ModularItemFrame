@@ -27,6 +27,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -51,6 +53,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
     public ResourceLocation frontTexture() {
         return BG_LOC;
     }
@@ -138,6 +141,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     @Optional.Method(modid = "theoneprobe")
     public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
         super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
@@ -159,6 +163,8 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
+    @Optional.Method(modid = "waila")
     public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         List<String> tips = super.getWailaBody(itemStack, accessor, config);
         tips.add("output: " + recipe.getRecipeOutput().getDisplayName());

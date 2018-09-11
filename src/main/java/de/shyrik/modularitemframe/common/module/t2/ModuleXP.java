@@ -22,6 +22,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,12 +44,14 @@ public class ModuleXP extends ModuleBase {
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
     public ResourceLocation frontTexture() {
         return BG_LOC;
     }
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
     public ResourceLocation innerTexture() {
         return BlockModularFrame.INNER_HARD_LOC;
     }
@@ -120,6 +124,7 @@ public class ModuleXP extends ModuleBase {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     @Optional.Method(modid = "theoneprobe")
     public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
         super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
@@ -128,12 +133,15 @@ public class ModuleXP extends ModuleBase {
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
+    @Optional.Method(modid = "waila")
     public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         List<String> tooltips = super.getWailaBody(itemStack, accessor, config);
         tooltips.add(I18n.format("modularitemframe.tooltip.xp_level", levels));
         return tooltips;
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = super.serializeNBT();

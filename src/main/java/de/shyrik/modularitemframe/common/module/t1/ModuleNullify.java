@@ -28,6 +28,8 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
@@ -53,6 +55,7 @@ public class ModuleNullify extends ModuleBase {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
@@ -91,6 +94,7 @@ public class ModuleNullify extends ModuleBase {
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
     public ResourceLocation frontTexture() {
         return BG_LOC;
     }
@@ -119,6 +123,7 @@ public class ModuleNullify extends ModuleBase {
         return true;
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();
