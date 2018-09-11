@@ -3,7 +3,6 @@ package de.shyrik.modularitemframe.common.module.t1;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleBase;
-import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import mcjty.theoneprobe.api.IProbeHitData;
@@ -37,7 +36,6 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -72,7 +70,7 @@ public class ModuleTank extends ModuleBase {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         if (tank != null && tank.getFluid() != null && tank.getFluidAmount() > 0) {
             GlStateManager.pushMatrix();
             GlStateManager.enableBlend();

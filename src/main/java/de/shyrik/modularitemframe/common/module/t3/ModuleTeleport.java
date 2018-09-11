@@ -35,6 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 public class ModuleTeleport extends ModuleBase {
 
@@ -61,8 +62,8 @@ public class ModuleTeleport extends ModuleBase {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        RenderUtils.renderEnd(tesr, x, y, z, tile.blockFacing());
+    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        RenderUtils.renderEnd(renderer, x, y, z, tile.blockFacing());
     }
 
     @Override
@@ -167,7 +168,7 @@ public class ModuleTeleport extends ModuleBase {
     @Override
     public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
         if (hasValidConnection(worldIn, null)) {
-            ((ModuleTeleport) ((TileModularFrame) worldIn.getTileEntity(linkedLoc)).module).linkedLoc = null;
+            ((ModuleTeleport) ((TileModularFrame) Objects.requireNonNull(worldIn.getTileEntity(linkedLoc))).module).linkedLoc = null;
         }
         super.onRemove(worldIn, pos, facing, playerIn);
     }

@@ -65,7 +65,7 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.pushMatrix();
         GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
         GlStateManager.scale(0.7F, 0.7F, 0.7F);
