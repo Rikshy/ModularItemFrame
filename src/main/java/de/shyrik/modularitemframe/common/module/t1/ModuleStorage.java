@@ -110,8 +110,7 @@ public class ModuleStorage extends ModuleBase {
 
     @Override
     public void onFrameUpgradesChanged() {
-        int capacityUps = tile.getCapacityUpCount();
-        int newCapacity = capacityUps > 0 ? 4 * tile.getCapacityUpCount() : 1;
+        int newCapacity = (int)Math.pow(2, tile.getCapacityUpCount() + 1);
         ItemStackHandler tmp = new ItemStackHandler(newCapacity);
         for (int slot = 0; slot < inventory.getSlots(); slot++) {
             if (slot < tmp.getSlots())
