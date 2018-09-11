@@ -2,8 +2,11 @@ package de.shyrik.modularitemframe.common.module.t1;
 
 import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.ModularItemFrame;
+import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
+import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.gui.GuiHandler;
+import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
 import de.shyrik.modularitemframe.common.container.IContainerCallbacks;
 import de.shyrik.modularitemframe.common.network.NetworkHandler;
@@ -14,6 +17,7 @@ import mcjty.theoneprobe.api.ProbeMode;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -36,20 +40,16 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
+public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1_craft");
     public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_crafting");
     private static final String NBT_GHOSTINVENTORY = "ghostinventory";
+    private static final String NBT_DISPLAY = "display";
 
     protected IRecipe recipe;
+    private ItemStack displayItem = ItemStack.EMPTY;
     private ItemStackHandler ghostInventory = new ItemStackHandler(9);
-
-    public ModuleCrafting() {
-        super();
-        scale = 0.7F;
-        offset = -0.05F;
-    }
 
     @Nonnull
     @Override
@@ -61,6 +61,20 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
     @Override
     public String getModuleName() {
         return I18n.format("modularitemframe.module.craft");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
+        GlStateManager.scale(0.7F, 0.7F, 0.7F);
+        GlStateManager.pushMatrix();
+
+        RenderUtils.renderItem(displayItem, tile.blockFacing(), 0, -0.05F);
+
+        GlStateManager.popMatrix();
+        GlStateManager.popMatrix();
     }
 
     @Override
@@ -178,9 +192,11 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
         tile.markDirty();
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();
+        compound.setTag(NBT_DISPLAY, displayItem.serializeNBT());
         compound.setTag(NBT_GHOSTINVENTORY, ghostInventory.serializeNBT());
         return compound;
     }
@@ -188,6 +204,7 @@ public class ModuleCrafting extends ModuleItem implements IContainerCallbacks {
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
+        if (nbt.hasKey(NBT_DISPLAY)) displayItem = new ItemStack(nbt.getCompoundTag(NBT_DISPLAY));
         if (nbt.hasKey(NBT_GHOSTINVENTORY)) ghostInventory.deserializeNBT(nbt.getCompoundTag(NBT_GHOSTINVENTORY));
     }
 }
