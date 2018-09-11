@@ -3,7 +3,10 @@ package de.shyrik.modularitemframe.common.module.t1;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
+import de.shyrik.modularitemframe.api.utils.RenderUtils;
+import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -13,6 +16,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -40,6 +45,20 @@ public class ModuleStorage extends ModuleBase {
     @Override
     public String getModuleName() {
         return I18n.format("modularitemframe.module.storage");
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
+        GlStateManager.scale(0.7F, 0.7F, 0.7F);
+        GlStateManager.pushMatrix();
+
+        RenderUtils.renderItem(lastStack, tile.blockFacing(), 0, 0.05F);
+
+        GlStateManager.popMatrix();
+        GlStateManager.popMatrix();
     }
 
     @Override
@@ -111,6 +130,7 @@ public class ModuleStorage extends ModuleBase {
         }
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();
