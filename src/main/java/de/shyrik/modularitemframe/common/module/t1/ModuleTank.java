@@ -28,6 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
@@ -158,7 +159,7 @@ public class ModuleTank extends ModuleBase {
 
     @Override
     public void onFrameUpgradesChanged() {
-        int newCapacity = (int) Math.pow(ConfigValues.TankFrameCapacity / 1000d, tile.getCapacityUpCount() + 1) * 1000;
+        int newCapacity = (int) Math.pow(ConfigValues.TankFrameCapacity / (float)Fluid.BUCKET_VOLUME, tile.getCapacityUpCount() + 1) * Fluid.BUCKET_VOLUME;
         tank.setCapacity(newCapacity);
         tile.markDirty();
     }
@@ -168,8 +169,8 @@ public class ModuleTank extends ModuleBase {
         super.onRemove(worldIn, pos, facing, playerIn);
         for ( EnumFacing face : EnumFacing.values()) {
             if (face == facing.getOpposite()) continue;
-            if (FluidUtil.tryPlaceFluid(null, worldIn, pos.offset(facing.getOpposite()), tank, tank.drain(1000, false)))
-                tank.drain(1000, true);
+            if (FluidUtil.tryPlaceFluid(null, worldIn, pos.offset(facing.getOpposite()), tank, tank.drain(Fluid.BUCKET_VOLUME, false)))
+                tank.drain(Fluid.BUCKET_VOLUME, true);
         }
     }
 

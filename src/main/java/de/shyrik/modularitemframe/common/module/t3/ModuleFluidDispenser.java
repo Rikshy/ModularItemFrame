@@ -12,6 +12,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -55,11 +56,12 @@ public class ModuleFluidDispenser extends ModuleBase {
         if (!world.isAirBlock(pos.offset(facing.getOpposite()))) return;
 
         TileEntity neighbor = tile.getAttachedTile();
-        if (neighbor != null) {
-            IFluidHandler handler = neighbor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
-            if (handler != null) {
-                FluidUtil.tryPlaceFluid(null, world, pos.offset(facing.getOpposite()), handler, handler.drain(1000, false));
-            }
-        }
+        if (neighbor == null) return;
+
+        IFluidHandler handler = neighbor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
+        if (handler == null) return;
+
+        if (FluidUtil.tryPlaceFluid(null, world, pos.offset(facing.getOpposite()), handler, handler.drain(Fluid.BUCKET_VOLUME, false)))
+            handler.drain(Fluid.BUCKET_VOLUME, true);
     }
 }
