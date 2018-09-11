@@ -3,6 +3,7 @@ package de.shyrik.modularitemframe.common.module.t1;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleBase;
+import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import mcjty.theoneprobe.api.IProbeHitData;
@@ -35,8 +36,10 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ModuleTank extends ModuleBase {
@@ -110,7 +113,6 @@ public class ModuleTank extends ModuleBase {
         }
     }
 
-
     @Override
     public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
         if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return;
@@ -151,6 +153,23 @@ public class ModuleTank extends ModuleBase {
                     tile.markDirty();
                 }
             }
+        }
+    }
+
+    @Override
+    public void onFrameUpgradesChanged() {
+        int newCapacity = (int) Math.pow(ConfigValues.TankFrameCapacity / 1000d, tile.getCapacityUpCount() + 1) * 1000;
+        tank.setCapacity(newCapacity);
+        tile.markDirty();
+    }
+
+    @Override
+    public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
+        super.onRemove(worldIn, pos, facing, playerIn);
+        for ( EnumFacing face : EnumFacing.values()) {
+            if (face == facing.getOpposite()) continue;
+            if (FluidUtil.tryPlaceFluid(null, worldIn, pos.offset(facing.getOpposite()), tank, tank.drain(1000, false)))
+                tank.drain(1000, true);
         }
     }
 
