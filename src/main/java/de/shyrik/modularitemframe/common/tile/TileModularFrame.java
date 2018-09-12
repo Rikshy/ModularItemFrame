@@ -43,15 +43,7 @@ public class TileModularFrame extends TileEntity implements ITickable {
         setModule(new ModuleEmpty());
     }
 
-    public void setModule(ResourceLocation moduleLoc) {
-        setModule(ModuleRegistry.createModuleInstance(moduleLoc));
-    }
-
-    private void setModule(ModuleBase mod) {
-        module = mod == null ? new ModuleEmpty() : mod;
-        module.setTile(this);
-    }
-
+    //region <upgrade>
     public boolean tryAddUpgrade(ResourceLocation upgradeLoc) {
         return tryAddUpgrade(upgradeLoc, true);
     }
@@ -67,6 +59,28 @@ public class TileModularFrame extends TileEntity implements ITickable {
             return true;
         }
         return false;
+    }
+
+    public boolean acceptsUpgrade() {
+        return upgrades.size() <= ConfigValues.MaxFrameUpgrades;
+    }
+
+    public void dropUpgrades(@Nullable EntityPlayer playerIn, @Nonnull EnumFacing facing) {
+        for (UpgradeBase up : upgrades) {
+            ResourceLocation upId = UpgradeRegistry.getUpgradeId(up.getClass());
+            if(upId == null) continue;
+
+            Item item = Item.getByNameOrId(upId.toString());
+            if (item instanceof ItemUpgrade) {
+                up.onRemove(world, pos, facing);
+
+                ItemStack remain = new ItemStack(item);
+                if (playerIn != null) remain = ItemUtils.giveStack(ItemUtils.getPlayerInv(playerIn), remain);
+                if (!remain.isEmpty()) ItemUtils.ejectStack(world, pos, facing, remain);
+                markDirty();
+            }
+        }
+        module.onFrameUpgradesChanged();
     }
 
     public int getSpeedUpCount() {
@@ -92,7 +106,9 @@ public class TileModularFrame extends TileEntity implements ITickable {
         }
         return count;
     }
+    //endregion
 
+    //region <block>
     public EnumFacing blockFacing() {
         return world.getBlockState(pos).getValue(BlockModularFrame.FACING);
     }
@@ -108,13 +124,20 @@ public class TileModularFrame extends TileEntity implements ITickable {
     public BlockPos getAttachedPos() {
         return pos.offset(blockFacing());
     }
+    //rendregion
+
+    //region <module>
+    public void setModule(ResourceLocation moduleLoc) {
+        setModule(ModuleRegistry.createModuleInstance(moduleLoc));
+    }
+
+    private void setModule(ModuleBase mod) {
+        module = mod == null ? new ModuleEmpty() : mod;
+        module.setTile(this);
+    }
 
     public boolean acceptsModule() {
         return module instanceof ModuleEmpty;
-    }
-
-    public boolean acceptsUpgrade() {
-        return upgrades.size() <= ConfigValues.MaxFrameUpgrades;
     }
 
     public void dropModule(@Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
@@ -133,33 +156,7 @@ public class TileModularFrame extends TileEntity implements ITickable {
             markDirty();
         }
     }
-
-    public void dropUpgrades(@Nullable EntityPlayer playerIn, @Nonnull EnumFacing facing) {
-        for (UpgradeBase up : upgrades) {
-            ResourceLocation upId = UpgradeRegistry.getUpgradeId(up.getClass());
-            if(upId == null) continue;
-
-            Item item = Item.getByNameOrId(upId.toString());
-            if (item instanceof ItemUpgrade) {
-                up.onRemove(world, pos, facing);
-
-                ItemStack remain = new ItemStack(item);
-                if (playerIn != null) remain = ItemUtils.giveStack(ItemUtils.getPlayerInv(playerIn), remain);
-                if (!remain.isEmpty()) ItemUtils.ejectStack(world, pos, facing, remain);
-                markDirty();
-            }
-        }
-        module.onFrameUpgradesChanged();
-    }
-
-    @Override
-    public void markDirty() {
-        IBlockState state = world.getBlockState(pos);
-        world.markBlockRangeForRenderUpdate(pos, pos);
-        world.notifyBlockUpdate(pos, state, state, 3);
-        world.scheduleBlockUpdate(pos, blockType, 0, 0);
-        super.markDirty();
-    }
+    //endregion
 
     @Override
     public void update() {
@@ -172,6 +169,16 @@ public class TileModularFrame extends TileEntity implements ITickable {
             }
         }
         module.tick(world, pos);
+    }
+
+    //region <syncing>
+    @Override
+    public void markDirty() {
+        IBlockState state = world.getBlockState(pos);
+        world.markBlockRangeForRenderUpdate(pos, pos);
+        world.notifyBlockUpdate(pos, state, state, 3);
+        world.scheduleBlockUpdate(pos, blockType, 0, 0);
+        super.markDirty();
     }
 
     @Override
@@ -233,4 +240,5 @@ public class TileModularFrame extends TileEntity implements ITickable {
             tryAddUpgrade(new ResourceLocation(((NBTTagString)sub).getString()), false);
         }
     }
+    //endregion
 }

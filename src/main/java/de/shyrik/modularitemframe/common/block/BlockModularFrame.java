@@ -69,6 +69,7 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }
 
+    //region <tileentity>
     @Override
     public boolean hasTileEntity(IBlockState state) {
         return true;
@@ -83,7 +84,9 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
     private TileModularFrame getTE(@Nonnull World world, @Nonnull BlockPos pos) {
         return (TileModularFrame) world.getTileEntity(pos);
     }
+    //endregion
 
+    //region <interaction>
     @Override
     public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
         getTE(worldIn, pos).module.onBlockClicked(worldIn, pos, playerIn);
@@ -148,6 +151,42 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
         }
     }
 
+    @Override
+    @Optional.Method(modid = "theoneprobe")
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+        getTE(world, data.getPos()).module.addProbeInfo(mode, probeInfo, player, world, blockState, data);
+    }
+
+    @Nonnull
+    @Override
+    @SuppressWarnings("deprecation")
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        switch (state.getValue(FACING)) {
+            case UP:
+                return UP_AABB;
+            case DOWN:
+                return DOWN_AABB;
+            case NORTH:
+                return NORTH_AABB;
+            case SOUTH:
+                return SOUTH_AABB;
+            case EAST:
+                return EAST_AABB;
+            case WEST:
+                return WEST_AABB;
+        }
+        return FULL_BLOCK_AABB;
+    }
+    //endregion
+
+    //region <placing/breaking>
+    @Override
+    public boolean canPlaceBlockOnSide(@Nonnull World worldIn, @Nonnull BlockPos pos, EnumFacing side) {
+        BlockPos adjacent = pos.offset(side.getOpposite());
+        IBlockState state = worldIn.getBlockState(adjacent);
+        return state.isSideSolid(worldIn, adjacent, side) || state.getMaterial().isSolid() && !BlockRedstoneDiode.isDiode(state);
+    }
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onExplosion(ExplosionEvent.Detonate event) {
         List<BlockPos> toRemove = new ArrayList<>();
@@ -172,13 +211,55 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
         getTE(worldIn, pos).dropUpgrades(null, state.getValue(FACING));
         super.breakBlock(worldIn, pos, state);
     }
+    //endregion
 
+    //region <state>
+    @Nonnull
     @Override
-    @Optional.Method(modid = "theoneprobe")
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        getTE(world, data.getPos()).module.addProbeInfo(mode, probeInfo, player, world, blockState, data);
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, FACING);
     }
 
+    @Nonnull
+    @Override
+    @SuppressWarnings("deprecation")
+    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+        return this.getStateFromMeta(meta).withProperty(FACING, facing.getOpposite());
+    }
+
+    @Nonnull
+    @Override
+    @SuppressWarnings("deprecation")
+    public IBlockState getStateFromMeta(int meta) {
+        return getDefaultState().withProperty(FACING, EnumFacing.byIndex(meta & 7));
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(FACING).getIndex();
+    }
+    //endregion
+
+    //region <rendering>
+    @Override
+    public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
+        return layer == BlockRenderLayer.TRANSLUCENT || layer == BlockRenderLayer.CUTOUT;
+    }
+
+    @Nonnull
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean shouldSideBeRendered(IBlockState blockState, @Nonnull IBlockAccess blockAccess, @Nonnull BlockPos pos, EnumFacing side) {
+        return true;
+    }
+    //endregion
+
+    //region <other>
     @Override
     @SuppressWarnings("deprecation")
     public boolean isFullBlock(IBlockState state) {
@@ -203,65 +284,6 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
     }
 
     @Override
-    public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
-        return layer == BlockRenderLayer.TRANSLUCENT || layer == BlockRenderLayer.CUTOUT;
-    }
-
-    @Nonnull
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean shouldSideBeRendered(IBlockState blockState, @Nonnull IBlockAccess blockAccess, @Nonnull BlockPos pos, EnumFacing side) {
-        return true;
-    }
-
-    @Override
-    @Nonnull
-    @SuppressWarnings("deprecation")
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        switch (state.getValue(FACING)) {
-            case UP:
-                return UP_AABB;
-            case DOWN:
-                return DOWN_AABB;
-            case NORTH:
-                return NORTH_AABB;
-            case SOUTH:
-                return SOUTH_AABB;
-            case EAST:
-                return EAST_AABB;
-            case WEST:
-                return WEST_AABB;
-        }
-        return FULL_BLOCK_AABB;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public @Nonnull
-    IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return this.getStateFromMeta(meta).withProperty(FACING, facing.getOpposite());
-    }
-
-    @Override
-    @Nonnull
-    @SuppressWarnings("deprecation")
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(FACING, EnumFacing.byIndex(meta & 7));
-    }
-
-    @Override
-    public boolean canPlaceBlockOnSide(@Nonnull World worldIn, @Nonnull BlockPos pos, EnumFacing side) {
-        BlockPos adjacent = pos.offset(side.getOpposite());
-        IBlockState state = worldIn.getBlockState(adjacent);
-        return state.isSideSolid(worldIn, adjacent, side) || state.getMaterial().isSolid() && !BlockRedstoneDiode.isDiode(state);
-    }
-
-    @Override
     public boolean canCreatureSpawn(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EntityLiving.SpawnPlacementType type) {
         return false;
     }
@@ -270,15 +292,5 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
     public boolean canPlaceTorchOnTop(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
         return false;
     }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(FACING).getIndex();
-    }
-
-    @Override
-    @Nonnull
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING);
-    }
+    //endregion
 }
