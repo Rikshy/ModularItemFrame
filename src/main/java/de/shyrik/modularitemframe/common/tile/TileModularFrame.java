@@ -164,6 +164,13 @@ public class TileModularFrame extends TileEntity implements ITickable {
     @Override
     public void update() {
         if (world.getTileEntity(pos) != this) return;
+        if (!world.isRemote) {
+            IBlockState state = world.getBlockState(pos);
+            if (!state.getBlock().canPlaceBlockOnSide(world, pos, state.getValue(BlockModularFrame.FACING).getOpposite())) {
+                state.getBlock().dropBlockAsItem(world, pos, state, 0);
+                world.setBlockToAir(pos);
+            }
+        }
         module.tick(world, pos);
     }
 
