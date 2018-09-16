@@ -111,7 +111,7 @@ public class TileModularFrame extends TileEntity implements ITickable {
 
     //region <block>
     public EnumFacing blockFacing() {
-        return CompatHelper.getBlockFacing(world, pos, this);
+        return world.getBlockState(pos).getValue(BlockModularFrame.FACING);
     }
 
     public TileEntity getAttachedTile() {
@@ -162,13 +162,6 @@ public class TileModularFrame extends TileEntity implements ITickable {
     @Override
     public void update() {
         if (world.getTileEntity(pos) != this) return;
-        if (!world.isRemote) {
-            IBlockState state = world.getBlockState(pos);
-            if (!state.getBlock().canPlaceBlockOnSide(world, pos, state.getValue(BlockModularFrame.FACING).getOpposite())) {
-                CompatHelper.dropFrame(world, pos, blockFacing());
-                markDirty();
-            }
-        }
         module.tick(world, pos);
     }
 

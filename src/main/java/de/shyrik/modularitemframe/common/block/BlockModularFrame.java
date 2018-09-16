@@ -188,6 +188,17 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
         return (state.isSideSolid(worldIn, adjacent, side) || state.getMaterial().isSolid()) && !BlockRedstoneDiode.isDiode(state) && CompatHelper.canPlace(worldIn, adjacent, side);
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        if (!worldIn.isRemote) {
+            if (!canPlaceBlockOnSide(worldIn, pos, state.getValue(BlockModularFrame.FACING).getOpposite())) {
+                dropBlockAsItem(worldIn, pos, state, 0);
+                worldIn.setBlockToAir(pos);
+            }
+        }
+    }
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onExplosion(ExplosionEvent.Detonate event) {
         List<BlockPos> toRemove = new ArrayList<>();
