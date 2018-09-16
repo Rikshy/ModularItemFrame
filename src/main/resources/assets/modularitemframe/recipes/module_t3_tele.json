@@ -4,17 +4,24 @@
     "item": "modularitemframe:module_t3_tele"
   },
   "pattern": [
-    " C ",
-    "C#C",
-    " C "
+    "ODO",
+    "###",
+    "OVO"
   ],
   "key": {
     "#": {
       "type": "forge:ore_dict",
       "ore": "enderpearl"
     },
-    "C": {
-      "item": "modularitemframe:canvas"
+    "V": {
+      "item": "modularitemframe:module_t2_vacuum"
+    },
+    "D": {
+      "item": "modularitemframe:module_t2_dispense"
+    },
+    "O": {
+      "type": "forge:ore_dict",
+      "ore": "obsidian"
     }
   }
 }
