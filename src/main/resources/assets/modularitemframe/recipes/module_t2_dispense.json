@@ -4,9 +4,9 @@
     "item": "modularitemframe:module_t2_dispense"
   },
   "pattern": [
-    " C ",
+    "ICI",
     "C#C",
-    " C "
+    "ICI"
   ],
   "key": {
     "#": {
@@ -14,6 +14,10 @@
     },
     "C": {
       "item": "modularitemframe:canvas"
+    },
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
     }
   }
 }

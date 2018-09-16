@@ -1,22 +1,19 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "modularitemframe:module_t2_dispense"
+    "item": "modularitemframe:module_t2_vacuum"
   },
   "pattern": [
     "ICI",
-    "A#A",
+    "A A",
     "ICI"
   ],
   "key": {
-    "#": {
-      "item": "modularitemframe:module_t1_nullify"
-    },
     "A": {
       "item": "modularitemframe:module_t1_io"
     },
     "C": {
-      "item": "modularitemframe:canvas"
+      "item": "modularitemframe:module_t1_item"
     },
     "I": {
       "type": "forge:ore_dict",

@@ -1,0 +1,20 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "modularitemframe:upgrade_speed",
+    "count": 2
+  },
+  "pattern": [
+    "SSS",
+    "S#S",
+    "SSS"
+  ],
+  "key": {
+    "#": {
+      "item": "modularitemframe:modular_frame"
+    },
+    "S": {
+      "item": "minecraft:sugar"
+    }
+  }
+}

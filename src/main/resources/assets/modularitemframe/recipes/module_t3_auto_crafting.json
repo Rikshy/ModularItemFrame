@@ -1,0 +1,26 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "modularitemframe:module_t3_auto_crafting"
+  },
+  "pattern": [
+    "OCO",
+    "D#D",
+    "OCO"
+  ],
+  "key": {
+    "#": {
+      "item": "modularitemframe:module_t2_craft_plus"
+    },
+    "C": {
+      "item": "modularitemframe:module_t1_craft"
+    },
+    "D": {
+      "item": "modularitemframe:module_t2_dispense"
+    },
+    "O": {
+      "type": "forge:ore_dict",
+      "ore": "obsidian"
+    }
+  }
+}

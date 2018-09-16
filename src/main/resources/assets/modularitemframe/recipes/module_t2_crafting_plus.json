@@ -1,7 +1,7 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "modularitemframe:module_t2_dispense"
+    "item": "modularitemframe:module_t2_craft_plus"
   },
   "pattern": [
     "ICI",
@@ -10,7 +10,7 @@
   ],
   "key": {
     "#": {
-      "item": "modularitemframe:module_t1_nullify"
+      "item": "modularitemframe:module_t1_craft"
     },
     "A": {
       "item": "modularitemframe:module_t1_io"

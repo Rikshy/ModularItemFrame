@@ -4,20 +4,20 @@
     "item": "modularitemframe:module_t3_tele"
   },
   "pattern": [
-    "ODO",
-    "###",
-    "OVO"
+    "O#O",
+    "ECE",
+    "O#O"
   ],
   "key": {
     "#": {
       "type": "forge:ore_dict",
       "ore": "enderpearl"
     },
-    "V": {
-      "item": "modularitemframe:module_t2_vacuum"
+    "E": {
+      "item": "minecraft:ender_eye"
     },
-    "D": {
-      "item": "modularitemframe:module_t2_dispense"
+    "C": {
+      "item": "modularitemframe:canvas"
     },
     "O": {
       "type": "forge:ore_dict",

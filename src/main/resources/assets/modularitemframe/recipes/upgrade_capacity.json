@@ -1,0 +1,21 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "modularitemframe:upgrade_capacity",
+    "count": 2
+  },
+  "pattern": [
+    " C ",
+    "C#C",
+    " C "
+  ],
+  "key": {
+    "#": {
+      "item": "modularitemframe:modular_frame"
+    },
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "chest"
+    }
+  }
+}
