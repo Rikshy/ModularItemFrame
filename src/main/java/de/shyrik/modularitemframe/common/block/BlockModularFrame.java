@@ -1,6 +1,7 @@
 package de.shyrik.modularitemframe.common.block;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
+import de.shyrik.modularitemframe.common.compat.CompatHelper;
 import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemUpgrade;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
@@ -184,19 +185,20 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
     public boolean canPlaceBlockOnSide(@Nonnull World worldIn, @Nonnull BlockPos pos, EnumFacing side) {
         BlockPos adjacent = pos.offset(side.getOpposite());
         IBlockState state = worldIn.getBlockState(adjacent);
-        return state.isSideSolid(worldIn, adjacent, side) || state.getMaterial().isSolid() && !BlockRedstoneDiode.isDiode(state);
+        return (state.isSideSolid(worldIn, adjacent, side) || state.getMaterial().isSolid()) && !BlockRedstoneDiode.isDiode(state) && CompatHelper.canPlace(worldIn, adjacent, side);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onExplosion(ExplosionEvent.Detonate event) {
         List<BlockPos> toRemove = new ArrayList<>();
         for (BlockPos pos : event.getAffectedBlocks()) {
-            TileEntity tmp = event.getWorld().getTileEntity(pos);
-            if (tmp instanceof TileModularFrame) {
-                TileModularFrame tile = (TileModularFrame) tmp;
-                if (tile.isBlastResist()) {
-                    toRemove.add(tile.getAttachedPos());
-                    toRemove.add(tile.getPos());
+            for (TileEntity tmp : CompatHelper.getTiles(event.getWorld(), pos)) {
+                if (tmp instanceof TileModularFrame) {
+                    TileModularFrame tile = (TileModularFrame) tmp;
+                    if (tile.isBlastResist()) {
+                        toRemove.add(tile.getAttachedPos());
+                        toRemove.add(tile.getPos());
+                    }
                 }
             }
         }

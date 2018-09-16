@@ -3,6 +3,7 @@ package de.shyrik.modularitemframe.common.tile;
 import de.shyrik.modularitemframe.api.*;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
+import de.shyrik.modularitemframe.common.compat.CompatHelper;
 import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemUpgrade;
 import de.shyrik.modularitemframe.common.module.ModuleEmpty;
@@ -110,7 +111,7 @@ public class TileModularFrame extends TileEntity implements ITickable {
 
     //region <block>
     public EnumFacing blockFacing() {
-        return world.getBlockState(pos).getValue(BlockModularFrame.FACING);
+        return CompatHelper.getBlockFacing(world, pos, this);
     }
 
     public TileEntity getAttachedTile() {
@@ -164,8 +165,8 @@ public class TileModularFrame extends TileEntity implements ITickable {
         if (!world.isRemote) {
             IBlockState state = world.getBlockState(pos);
             if (!state.getBlock().canPlaceBlockOnSide(world, pos, state.getValue(BlockModularFrame.FACING).getOpposite())) {
-                state.getBlock().dropBlockAsItem(world, pos, state, 0);
-                world.setBlockToAir(pos);
+                CompatHelper.dropFrame(world, pos, blockFacing());
+                markDirty();
             }
         }
         module.tick(world, pos);

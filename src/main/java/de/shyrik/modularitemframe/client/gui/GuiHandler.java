@@ -1,6 +1,6 @@
 package de.shyrik.modularitemframe.client.gui;
 
-import de.shyrik.modularitemframe.common.compat.Multipart;
+import de.shyrik.modularitemframe.common.compat.CompatHelper;
 import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
 import de.shyrik.modularitemframe.common.module.t1.ModuleCrafting;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
@@ -25,7 +25,7 @@ public class GuiHandler implements IGuiHandler {
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         BlockPos pos = new BlockPos(x, y, z);
-        final TileEntity tileEntity = Multipart.getTile(world, pos, EnumFacing.byIndex(ID & 7)).orElseThrow(() -> new RuntimeException("No valid tile entity at position " + pos));
+        final TileEntity tileEntity = CompatHelper.getTile(world, pos, EnumFacing.byIndex(ID & 7)).orElseThrow(() -> new RuntimeException("No valid tile entity at position " + pos));
 
         switch (ID >> 4) {
             case CRAFTING_FRAME:
@@ -41,7 +41,7 @@ public class GuiHandler implements IGuiHandler {
     @SideOnly(Side.CLIENT)
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         BlockPos pos = new BlockPos(x, y, z);
-        final TileEntity tileEntity = Multipart.getTile(world, pos, EnumFacing.byIndex(ID & 7)).orElseThrow(() -> new RuntimeException("No valid tile entity at position " + pos));
+        final TileEntity tileEntity = CompatHelper.getTile(world, pos, EnumFacing.byIndex(ID & 7)).orElseThrow(() -> new RuntimeException("No valid tile entity at position " + pos));
         switch (ID >> 4) {
             case CRAFTING_FRAME:
                 if (tileEntity instanceof TileModularFrame && ((TileModularFrame) tileEntity).module instanceof ModuleCrafting)

@@ -12,10 +12,10 @@ import mcmultipart.api.container.IPartInfo;
 import mcmultipart.api.multipart.IMultipart;
 import mcmultipart.api.multipart.IMultipartRegistry;
 import mcmultipart.api.multipart.IMultipartTile;
-import mcmultipart.api.multipart.MultipartHelper;
 import mcmultipart.api.slot.EnumFaceSlot;
 import mcmultipart.api.slot.IPartSlot;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRedstoneDiode;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,9 +29,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Loader;
 
-import java.util.Optional;
+import java.util.Collections;
+import java.util.Set;
 
 @MCMPAddon
 public class Multipart implements IMCMPAddon {
@@ -40,23 +40,6 @@ public class Multipart implements IMCMPAddon {
     public void registerParts(IMultipartRegistry registry) {
         registry.registerPartWrapper(Registrar.FRAME_MODULAR, new PartBlock(Registrar.FRAME_MODULAR));
         registry.registerStackWrapper(Item.getItemFromBlock(Registrar.FRAME_MODULAR), stack -> true, Registrar.FRAME_MODULAR);
-    }
-
-    public static Optional<TileEntity> getTile(World world, BlockPos pos, EnumFacing face) {
-        TileEntity te = world.getTileEntity(pos);
-        if (te instanceof TileModularFrame) {
-            return Optional.of(te);
-        } else {
-            if (Loader.isModLoaded("mcmultipart")) {
-                return getPartTile(world, pos, face);
-            }
-        }
-        return Optional.empty();
-    }
-
-    @net.minecraftforge.fml.common.Optional.Method(modid = "mcmultipart")
-    private static Optional<TileEntity> getPartTile(World world, BlockPos pos, EnumFacing face) {
-        return MultipartHelper.getPartTile(world, pos, EnumFaceSlot.fromFace(face)).map(IMultipartTile::getTileEntity);
     }
 
     public class PartBlock implements IMultipart {
@@ -74,7 +57,19 @@ public class Multipart implements IMCMPAddon {
 
         @Override
         public IPartSlot getSlotForPlacement(World world, BlockPos pos, IBlockState state, EnumFacing facing, float hitX, float hitY, float hitZ, EntityLivingBase placer) {
-            return EnumFaceSlot.fromFace(facing);
+            return EnumFaceSlot.fromFace(facing.getOpposite());
+        }
+
+        @Override
+        public Set<IPartSlot> getGhostSlots(IPartInfo part) {
+            return Collections.emptySet();
+        }
+
+        @Override
+        public boolean canPlacePartOnSide(World world, BlockPos pos, EnumFacing side, IPartSlot slot) {
+            BlockPos adjacent = pos.offset(side.getOpposite());
+            IBlockState state = world.getBlockState(adjacent);
+            return (state.isSideSolid(world, adjacent, side) || state.getMaterial().isSolid()) && !BlockRedstoneDiode.isDiode(state) && CompatHelper.canPlace(world, adjacent, side);
         }
 
         @Override
@@ -124,6 +119,11 @@ public class Multipart implements IMCMPAddon {
             } else
                 moveHand = tile.module.onBlockActivated(worldIn, pos, part.getState(), playerIn, hand, hit.sideHit, x, y, z);
             return moveHand;
+        }
+
+        @Override
+        public void onPartRemoved(IPartInfo part, IPartInfo otherPart) {
+            part.getTile().markPartDirty();
         }
 
         @Override
