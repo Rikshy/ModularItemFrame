@@ -64,7 +64,6 @@ public class Registrar {
             //Tier 2
             ModuleRegistry.registerCreate(ModuleCraftingPlus.LOC, ModuleCraftingPlus.class),
             ModuleRegistry.registerCreate(ModuleDispense.LOC, ModuleDispense.class),
-            ModuleRegistry.registerCreate(ModuleXP.LOC, ModuleXP.class),
             ModuleRegistry.registerCreate(ModuleVacuum.LOC, ModuleVacuum.class),
             ModuleRegistry.registerCreate(ModuleTrashCan.LOC, ModuleTrashCan.class),
 
@@ -72,7 +71,7 @@ public class Registrar {
             ModuleRegistry.registerCreate(ModuleAutoCrafting.LOC, ModuleAutoCrafting.class),
             ModuleRegistry.registerCreate(ModuleTeleport.LOC, ModuleTeleport.class),
             ModuleRegistry.registerCreate(ModuleVacuumTeleporter.LOC, ModuleVacuumTeleporter.class),
-            ModuleRegistry.registerCreate(ModuleXPVacuum.LOC, ModuleXPVacuum.class),
+            ModuleRegistry.registerCreate(ModuleXP.LOC, ModuleXP.class),
             ModuleRegistry.registerCreate(ModuleFluidDispenser.LOC, ModuleFluidDispenser.class),
 
             //Upgrades

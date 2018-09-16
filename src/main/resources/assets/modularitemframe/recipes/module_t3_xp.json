@@ -1,0 +1,27 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "modularitemframe:module_t2_xp"
+  },
+  "pattern": [
+    "OTO",
+    "V#V",
+    "OTO"
+  ],
+  "key": {
+    "#": {
+      "type": "forge:ore_dict",
+      "ore": "gemEmerald"
+    },
+    "V": {
+      "item": "modularitemframe:module_t2_vacuum"
+    },
+    "T": {
+      "item": "modularitemframe:module_t1_tank"
+    },
+    "O": {
+      "type": "forge:ore_dict",
+      "ore": "obsidian"
+    }
+  }
+}

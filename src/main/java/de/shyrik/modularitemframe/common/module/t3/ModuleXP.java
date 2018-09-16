@@ -1,6 +1,7 @@
-package de.shyrik.modularitemframe.common.module.t2;
+package de.shyrik.modularitemframe.common.module.t3;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
+import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.XpUtils;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
@@ -18,6 +19,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
@@ -29,18 +31,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-//thx openblocks and enderio
 public class ModuleXP extends ModuleBase {
-
-    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t2_xp");
-    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"blocks/module_t2_xp");
-    protected static final int MAX_XP = 21862;
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t3_xp");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"blocks/module_t3_xp");
+    private static final int MAX_XP = 21862;
 
     private static final String NBT_XP = "xp";
     private static final String NBT_LEVEL = "level";
 
-    protected int experience;
-    protected int levels;
+    private int experience;
+    private int levels;
 
     @Nonnull
     @Override
@@ -53,7 +53,7 @@ public class ModuleXP extends ModuleBase {
     @Override
     @SideOnly(Side.CLIENT)
     public ResourceLocation innerTexture() {
-        return BlockModularFrame.INNER_HARD_LOC;
+        return BlockModularFrame.INNER_HARDEST_LOC;
     }
 
     @Override
@@ -94,7 +94,7 @@ public class ModuleXP extends ModuleBase {
         }
     }
 
-    protected int addExperience(int xpToAdd) {
+    private int addExperience(int xpToAdd) {
         int j = MAX_XP - experience;
         if (xpToAdd > j) {
             xpToAdd = j;
@@ -121,6 +121,38 @@ public class ModuleXP extends ModuleBase {
         if (playerIn == null || playerIn instanceof FakePlayer)
             worldIn.spawnEntity(new EntityXPOrb(worldIn, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, experience));
         else playerIn.addExperience(experience);
+    }
+
+    @Override
+    public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
+        if (experience >= MAX_XP) return;
+        if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
+
+        List<EntityXPOrb> entities = world.getEntitiesWithinAABB(EntityXPOrb.class, getVacuumBB(pos));
+        for (EntityXPOrb entity : entities) {
+            if (entity.isDead) continue;
+
+            addExperience(entity.getXpValue());
+        }
+    }
+
+    private AxisAlignedBB getVacuumBB(@Nonnull BlockPos pos) {
+        int range = ConfigValues.BaseVacuumRange + tile.getRangeUpCount();
+        switch (tile.blockFacing()) {
+            case DOWN:
+                return new AxisAlignedBB(pos.add(-range, 0, -range), pos.add(range, range, range));
+            case UP:
+                return new AxisAlignedBB(pos.add(-range, 0, -range), pos.add(range, -range, range));
+            case NORTH:
+                return new AxisAlignedBB(pos.add(-range, -range, 0), pos.add(range, range, range));
+            case SOUTH:
+                return new AxisAlignedBB(pos.add(-range, -range, 0), pos.add(range, range, -range));
+            case WEST:
+                return new AxisAlignedBB(pos.add(0, -range, -range), pos.add(-range, range, range));
+            case EAST:
+                return new AxisAlignedBB(pos.add(0, -range, -range), pos.add(range, range, range));
+        }
+        return new AxisAlignedBB(pos, pos.add(1, 1, 1));
     }
 
     @Override
