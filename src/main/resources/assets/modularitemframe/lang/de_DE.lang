@@ -7,6 +7,7 @@ item.modularitemframe:module_t1_craft.name=Crafting Modul
 item.modularitemframe:module_t1_nullify.name=Nullify Modul
 item.modularitemframe:module_t1_tank.name=Tank Modul
 item.modularitemframe:module_t1_io.name=I/O Modul
+item.modularitemframe:module_t1_storage.name=Behälter Modul
 
 item.modularitemframe:module_t2_dispense.name=Spender Modul
 item.modularitemframe:module_t2_vacuum.name=Vacuum Module
@@ -53,7 +54,7 @@ modularitemframe.module.item=Item
 modularitemframe.module.craft=Crafting
 modularitemframe.module.tank=Tank
 modularitemframe.module.nullify=Nullify
-modularitemframe.module.storage=Speicher
+modularitemframe.module.storage=Behälter
 
 modularitemframe.module.crafting_plus=Crafting Plus
 modularitemframe.module.xp=XP

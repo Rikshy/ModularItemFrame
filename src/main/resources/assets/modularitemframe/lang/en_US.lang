@@ -7,6 +7,7 @@ item.modularitemframe:module_t1_craft.name=Crafting Module
 item.modularitemframe:module_t1_nullify.name=Nullify Module
 item.modularitemframe:module_t1_tank.name=Tank Module
 item.modularitemframe:module_t1_io.name=I/O Module
+item.modularitemframe:module_t1_storage.name=Storage Module
 
 item.modularitemframe:module_t2_dispense.name=Dispense Module
 item.modularitemframe:module_t2_vacuum.name=Vacuum Module
