@@ -63,7 +63,47 @@ public class ModuleTeleport extends ModuleBase {
     @Override
     @SideOnly(Side.CLIENT)
     public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        RenderUtils.renderEnd(renderer, x, y, z, tile.blockFacing());
+        RenderUtils.renderEnd(renderer, x, y, z, info -> {
+            switch (tile.blockFacing()) {
+                case DOWN:
+                    info.buffer.pos(x + 0.85d, y + 0.08d, z + 0.85d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.85d, y + 0.08d, z + 0.14d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.14d, y + 0.08d, z + 0.14d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.14d, y + 0.08d, z + 0.85d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    break;
+                case UP:
+                    info.buffer.pos(x + 0.85d, y + 0.92d, z + 0.16d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.85d, y + 0.92d, z + 0.85d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.16d, y + 0.92d, z + 0.85d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.16d, y + 0.92d, z + 0.16d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    break;
+                case NORTH:
+                    info.buffer.pos(x + 0.85d, y + 0.85d, z + 0.08d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.14d, y + 0.85d, z + 0.08d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.14d, y + 0.14d, z + 0.08d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.85d, y + 0.14d, z + 0.08d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    break;
+                case SOUTH:
+                    info.buffer.pos(x + 0.14d, y + 0.85d, z + 0.92d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.85d, y + 0.85d, z + 0.92d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.85d, y + 0.14d, z + 0.92d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.14d, y + 0.14d, z + 0.92d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    break;
+                case WEST:
+                    info.buffer.pos(x + 0.08d, y + 0.85d, z + 0.16d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.08d, y + 0.85d, z + 0.85d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.08d, y + 0.16d, z + 0.85d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.08d, y + 0.16d, z + 0.16d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    break;
+                case EAST:
+                    info.buffer.pos(x + 0.92d, y + 0.85d, z + 0.85d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.92d, y + 0.85d, z + 0.16d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.92d, y + 0.16d, z + 0.16d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.92d, y + 0.16d, z + 0.85d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    break;
+            }
+            return true;
+        });
     }
 
     @Override

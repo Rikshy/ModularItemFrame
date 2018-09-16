@@ -121,7 +121,7 @@ public class ModuleTank extends ModuleBase {
                 int modeIdx = mode.getIndex() + 1;
                 if (modeIdx == EnumMode.values().length) modeIdx = 0;
                 mode = EnumMode.VALUES[modeIdx];
-                playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.tank_mode_change", mode.getName()));
+                playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.mode_change", mode.getName()));
             }
         }
     }
@@ -180,7 +180,7 @@ public class ModuleTank extends ModuleBase {
         int color = 0;
         if (tank.getFluid() != null) color = tank.getFluid().getFluid().getColor();
         probeInfo.horizontal().progress(tank.getFluidAmount(), tank.getCapacity(), new ProgressStyle().suffix("mB").alternateFilledColor(color));
-        probeInfo.horizontal().text(I18n.format("modularitemframe.tooltip.tankmode", this.mode.getName()));
+        probeInfo.horizontal().text(I18n.format("modularitemframe.tooltip.mode", this.mode.getName()));
     }
 
     @Nonnull
@@ -190,7 +190,7 @@ public class ModuleTank extends ModuleBase {
     public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         List<String> tooltips = super.getWailaBody(itemStack, accessor, config);
         tooltips.add(I18n.format("modularitemframe.tooltip.capacity", tank.getFluidAmount(), tank.getCapacity()));
-        tooltips.add(I18n.format("modularitemframe.tooltip.tankmode", mode.getName()));
+        tooltips.add(I18n.format("modularitemframe.tooltip.mode", mode.getName()));
         return tooltips;
     }
 
@@ -212,9 +212,9 @@ public class ModuleTank extends ModuleBase {
     }
 
     public enum EnumMode {
-        NONE(0, "modularitemframe.message.tank_mode_change.no"),
-        DRAIN(1, "modularitemframe.message.tank_mode_change.in"),
-        PUSH(2, "modularitemframe.message.tank_mode_change.out");
+        NONE(0, "modularitemframe.mode.no"),
+        DRAIN(1, "modularitemframe.mode.in"),
+        PUSH(2, "modularitemframe.mode.out");
 
         public static final EnumMode[] VALUES = new EnumMode[3];
 

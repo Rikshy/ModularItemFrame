@@ -70,7 +70,7 @@ public class Registrar {
             //Tier 3
             ModuleRegistry.registerCreate(ModuleAutoCrafting.LOC, ModuleAutoCrafting.class),
             ModuleRegistry.registerCreate(ModuleTeleport.LOC, ModuleTeleport.class),
-            ModuleRegistry.registerCreate(ModuleVacuumTeleporter.LOC, ModuleVacuumTeleporter.class),
+            ModuleRegistry.registerCreate(ModuleItemTeleporter.LOC, ModuleItemTeleporter.class),
             ModuleRegistry.registerCreate(ModuleXP.LOC, ModuleXP.class),
             ModuleRegistry.registerCreate(ModuleFluidDispenser.LOC, ModuleFluidDispenser.class),
 
@@ -98,8 +98,9 @@ public class Registrar {
                 ModuleTrashCan.BG_LOC3,
                 ModuleXP.BG_LOC,
 
-                ModuleVacuumTeleporter.BG_LOC,
-                ModuleDispenserTeleporter.BG_LOC
+                ModuleItemTeleporter.BG_IN,
+                ModuleItemTeleporter.BG_OUT,
+                ModuleItemTeleporter.BG_NONE
         );
     }
 

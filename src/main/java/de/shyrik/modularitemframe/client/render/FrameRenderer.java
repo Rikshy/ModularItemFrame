@@ -13,9 +13,6 @@ import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import org.lwjgl.opengl.GL11;
 
-/**
- * Created by Demoniaque
- */
 public class FrameRenderer extends TileEntitySpecialRenderer<TileModularFrame> {
 
     private IModel model = null;
