@@ -2,12 +2,14 @@ package de.shyrik.modularitemframe.common.compat;
 
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
+import mcmultipart.api.container.IPartInfo;
 import mcmultipart.api.multipart.IMultipart;
 import mcmultipart.api.multipart.IMultipartTile;
 import mcmultipart.api.multipart.MultipartHelper;
 import mcmultipart.api.slot.EnumFaceSlot;
 import mcmultipart.block.BlockMultipartContainer;
 import mcmultipart.block.TileMultipartContainer;
+import mcmultipart.multipart.PartInfo;
 import mcmultipart.util.MCMPWorldWrapper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -157,23 +159,17 @@ public class CompatHelper {
         Block block = state.getBlock();
         block.dropBlockAsItem(world, pos, state, 0);
         if (Loader.isModLoaded("mcmultipart")) {
-            dropFramePart(world, pos, block, face);
+            dropFramePart(world, pos, face);
         } else  {
             world.setBlockToAir(pos);
         }
     }
 
     @net.minecraftforge.fml.common.Optional.Method(modid = "mcmultipart")
-    private static void dropFramePart(World world, BlockPos pos, Block block, EnumFacing face) {
-        World w = world;
-        if (world instanceof MCMPWorldWrapper) {
-            w = ((MCMPWorldWrapper) world).getActualWorld();
-        }
-        Optional<TileMultipartContainer> optTe = BlockMultipartContainer.getTile(w, pos);
-        if (optTe.isPresent()) {
-            if(optTe.get().getPart(EnumFaceSlot.fromFace(face)).isPresent()) {
-                optTe.get().removePart(EnumFaceSlot.fromFace(face));
-            }
+    private static void dropFramePart(World world, BlockPos pos, EnumFacing face) {
+        Optional<IPartInfo> partInfo = MultipartHelper.getInfo(world, pos, EnumFaceSlot.fromFace(face));
+        if (partInfo.isPresent()) {
+            partInfo.get().remove();
         } else {
             world.setBlockToAir(pos);
         }
