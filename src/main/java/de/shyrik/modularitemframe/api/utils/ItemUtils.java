@@ -166,19 +166,19 @@ public class ItemUtils {
 				velocity = velocity.add(0.0D, 0.2D, 0.0D);
 				break;
 			case NORTH:
-				position = position.add(0.0D, -0.5D, -0.25D);
+				position = position.add(0.0D, -0.25D, -0.25D);
 				velocity = velocity.add(0.0D, 0.0D, 0.2D);
 				break;
 			case EAST:
-				position = position.add(0.25D, -0.5D, 0.0D);
+				position = position.add(0.25D, -0.25D, 0.0D);
 				velocity = velocity.add(-0.2D, 0.0D, 0.0D);
 				break;
 			case WEST:
-				position = position.add(-0.25D, -0.5D, 0.0D);
+				position = position.add(-0.25D, -0.25D, 0.0D);
 				velocity = velocity.add(0.2D, 0.0D, 0.0D);
 				break;
 			case SOUTH:
-				position = position.add(0.0D, -0.5D, 0.25D);
+				position = position.add(0.0D, -0.25D, 0.25D);
 				velocity = velocity.add(0.0D, 0.0D, -0.2D);
 				break;
 		}
