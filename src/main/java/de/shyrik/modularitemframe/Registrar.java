@@ -33,7 +33,9 @@ import java.util.Objects;
 @Mod.EventBusSubscriber
 public class Registrar {
 
+    @GameRegistry.ObjectHolder("modularitemframe:modular_frame")
     public static BlockModularFrame FRAME_MODULAR;
+    @GameRegistry.ObjectHolder("modularitemframe:screwdriver")
     public static ItemScrewdriver SCREWDRIVER;
 
     public static List<Block> ALL_BLOCKS;
@@ -44,11 +46,11 @@ public class Registrar {
     static {
 
         ALL_BLOCKS = ImmutableList.of(
-            FRAME_MODULAR = new BlockModularFrame()
+            new BlockModularFrame()
         );
 
         ALL_ITEMS = ImmutableList.of(
-            SCREWDRIVER = new ItemScrewdriver(),
+            new ItemScrewdriver(),
 
             //Canvas
             new Item().setRegistryName(new ResourceLocation(ModularItemFrame.MOD_ID, "canvas")).setTranslationKey(ModularItemFrame.MOD_ID + ":canvas").setCreativeTab(ModularItemFrame.TAB),
