@@ -1,31 +1,31 @@
-tile.modularitemframe:modular_frame.name=Modular Frame
+tile.modularitemframe.modular_frame.name=Modular Frame
 
-item.modularitemframe:screwdriver.name=Screwdriver
-item.modularitemframe:canvas.name=Canvas
-item.modularitemframe:module_t1_item.name=Item Module
-item.modularitemframe:module_t1_craft.name=Crafting Module
-item.modularitemframe:module_t1_nullify.name=Nullify Module
-item.modularitemframe:module_t1_tank.name=Tank Module
-item.modularitemframe:module_t1_io.name=I/O Module
-item.modularitemframe:module_t1_storage.name=Storage Module
+item.modularitemframe.screwdriver.name=Screwdriver
+item.modularitemframe.canvas.name=Canvas
+item.modularitemframe.module_t1_item.name=Item Module
+item.modularitemframe.module_t1_craft.name=Crafting Module
+item.modularitemframe.module_t1_nullify.name=Nullify Module
+item.modularitemframe.module_t1_tank.name=Tank Module
+item.modularitemframe.module_t1_io.name=I/O Module
+item.modularitemframe.module_t1_storage.name=Storage Module
 
-item.modularitemframe:module_t2_dispense.name=Dispense Module
-item.modularitemframe:module_t2_vacuum.name=Vacuum Module
-item.modularitemframe:module_t2_trashcan.name=Trash can Module
-item.modularitemframe:module_t2_craft_plus.name=Crafting Plus Module
+item.modularitemframe.module_t2_dispense.name=Dispense Module
+item.modularitemframe.module_t2_vacuum.name=Vacuum Module
+item.modularitemframe.module_t2_trashcan.name=Trash can Module
+item.modularitemframe.module_t2_craft_plus.name=Crafting Plus Module
 
-item.modularitemframe:module_t3_xp.name=XP Module
-item.modularitemframe:module_t3_tele.name=Teleport Module
-item.modularitemframe:module_t3_auto_crafting.name=Auto Crafting Module
-item.modularitemframe:module_t3_fluid_dispenser.name=Fluid Dispenser Module
-item.modularitemframe:module_t3_itemtele.name=Item Teleporter Module
-item.modularitemframe:module_t3_xpvaruum.name=XP Vacuum Module
+item.modularitemframe.module_t3_xp.name=XP Module
+item.modularitemframe.module_t3_tele.name=Teleport Module
+item.modularitemframe.module_t3_auto_crafting.name=Auto Crafting Module
+item.modularitemframe.module_t3_fluid_dispenser.name=Fluid Dispenser Module
+item.modularitemframe.module_t3_itemtele.name=Item Teleporter Module
+item.modularitemframe.module_t3_xpvaruum.name=XP Vacuum Module
 
-item.modularitemframe:upgrade_speed.name=Speed Upgrade
-item.modularitemframe:upgrade_range.name=Range Upgrade
-item.modularitemframe:upgrade_capacity.name=Capacity Upgrade
-item.modularitemframe:upgrade_resist.name=Resistance Upgrade
-item.modularitemframe:upgrade_security.name=Security Upgrade
+item.modularitemframe.upgrade_speed.name=Speed Upgrade
+item.modularitemframe.upgrade_range.name=Range Upgrade
+item.modularitemframe.upgrade_capacity.name=Capacity Upgrade
+item.modularitemframe.upgrade_resist.name=Resistance Upgrade
+item.modularitemframe.upgrade_security.name=Security Upgrade
 
 
 modularitemframe.message.no_target=[ModularItemFrame] No target location set - use the screwdriver

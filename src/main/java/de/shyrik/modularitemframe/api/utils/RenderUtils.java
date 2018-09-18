@@ -13,14 +13,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 import java.nio.FloatBuffer;
 import java.util.Random;
 import java.util.function.Predicate;
 
+@SideOnly(Side.CLIENT)
 public class RenderUtils {
 
 	private static void rotateItemOnFacing(@Nonnull EnumFacing facing, float rotation, float offset) {
@@ -68,7 +70,6 @@ public class RenderUtils {
 			GlStateManager.popMatrix();
 		}
 	}
-
 
 	public static void renderFluid(FluidStack fluid, BlockPos pos, double x, double y, double z, double x1, double y1, double z1, double x2, double y2, double z2, int color, TextureAtlasSprite top, TextureAtlasSprite side) {
 

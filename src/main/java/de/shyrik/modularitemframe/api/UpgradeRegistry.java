@@ -33,7 +33,7 @@ public class UpgradeRegistry {
      */
     public static ItemUpgrade registerCreate(ResourceLocation id, Class<? extends UpgradeBase> upgradeClass) {
         register(id, upgradeClass);
-        return (ItemUpgrade) new ItemUpgrade(id).setTranslationKey(id.toString()).setRegistryName(id).setCreativeTab(ModularItemFrame.TAB);
+        return new ItemUpgrade(id);
     }
 
     /**

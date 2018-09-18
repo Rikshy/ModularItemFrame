@@ -42,40 +42,40 @@ public class Registrar {
                 asDefault(new Item(), new ResourceLocation(ModularItemFrame.MOD_ID, "canvas")),
 
                 //Tier 1
-                ModuleRegistry.registerCreate(ModuleCrafting.LOC, ModuleCrafting.class),
-                ModuleRegistry.registerCreate(ModuleIO.LOC, ModuleIO.class),
-                ModuleRegistry.registerCreate(ModuleItem.LOC, ModuleItem.class),
-                ModuleRegistry.registerCreate(ModuleNullify.LOC, ModuleNullify.class),
-                ModuleRegistry.registerCreate(ModuleTank.LOC, ModuleTank.class),
-                ModuleRegistry.registerCreate(ModuleStorage.LOC, ModuleStorage.class),
+                asDefault(ModuleRegistry.registerCreate(ModuleCrafting.LOC, ModuleCrafting.class), ModuleCrafting.LOC),
+                asDefault(ModuleRegistry.registerCreate(ModuleIO.LOC, ModuleIO.class), ModuleIO.LOC),
+                asDefault(ModuleRegistry.registerCreate(ModuleItem.LOC, ModuleItem.class), ModuleItem.LOC),
+                asDefault(ModuleRegistry.registerCreate(ModuleNullify.LOC, ModuleNullify.class), ModuleNullify.LOC),
+                asDefault(ModuleRegistry.registerCreate(ModuleTank.LOC, ModuleTank.class), ModuleTank.LOC),
+                asDefault(ModuleRegistry.registerCreate(ModuleStorage.LOC, ModuleStorage.class), ModuleStorage.LOC),
 
                 //Tier 2
-                ModuleRegistry.registerCreate(ModuleCraftingPlus.LOC, ModuleCraftingPlus.class),
-                ModuleRegistry.registerCreate(ModuleDispense.LOC, ModuleDispense.class),
-                ModuleRegistry.registerCreate(ModuleVacuum.LOC, ModuleVacuum.class),
-                ModuleRegistry.registerCreate(ModuleTrashCan.LOC, ModuleTrashCan.class),
+                asDefault(ModuleRegistry.registerCreate(ModuleCraftingPlus.LOC, ModuleCraftingPlus.class), ModuleCraftingPlus.LOC),
+                asDefault(ModuleRegistry.registerCreate(ModuleDispense.LOC, ModuleDispense.class), ModuleDispense.LOC),
+                asDefault(ModuleRegistry.registerCreate(ModuleVacuum.LOC, ModuleVacuum.class), ModuleVacuum.LOC),
+                asDefault(ModuleRegistry.registerCreate(ModuleTrashCan.LOC, ModuleTrashCan.class), ModuleTrashCan.LOC),
 
                 //Tier 3
-                ModuleRegistry.registerCreate(ModuleAutoCrafting.LOC, ModuleAutoCrafting.class),
-                ModuleRegistry.registerCreate(ModuleTeleport.LOC, ModuleTeleport.class),
-                ModuleRegistry.registerCreate(ModuleItemTeleporter.LOC, ModuleItemTeleporter.class),
-                ModuleRegistry.registerCreate(ModuleXP.LOC, ModuleXP.class),
-                ModuleRegistry.registerCreate(ModuleFluidDispenser.LOC, ModuleFluidDispenser.class),
+                asDefault(ModuleRegistry.registerCreate(ModuleAutoCrafting.LOC, ModuleAutoCrafting.class), ModuleAutoCrafting.LOC),
+                asDefault(ModuleRegistry.registerCreate(ModuleTeleport.LOC, ModuleTeleport.class), ModuleTeleport.LOC),
+                asDefault(ModuleRegistry.registerCreate(ModuleItemTeleporter.LOC, ModuleItemTeleporter.class), ModuleItemTeleporter.LOC),
+                asDefault(ModuleRegistry.registerCreate(ModuleXP.LOC, ModuleXP.class), ModuleXP.LOC),
+                asDefault(ModuleRegistry.registerCreate(ModuleFluidDispenser.LOC, ModuleFluidDispenser.class), ModuleFluidDispenser.LOC),
 
                 //Upgrades
-                UpgradeRegistry.registerCreate(UpgradeSpeed.LOC, UpgradeSpeed.class),
-                UpgradeRegistry.registerCreate(UpgradeRange.LOC, UpgradeRange.class),
-                UpgradeRegistry.registerCreate(UpgradeCapacity.LOC, UpgradeCapacity.class),
-                UpgradeRegistry.registerCreate(UpgradeBlastResist.LOC, UpgradeBlastResist.class)
+                asDefault(UpgradeRegistry.registerCreate(UpgradeSpeed.LOC, UpgradeSpeed.class), UpgradeSpeed.LOC),
+                asDefault(UpgradeRegistry.registerCreate(UpgradeRange.LOC, UpgradeRange.class), UpgradeRange.LOC),
+                asDefault(UpgradeRegistry.registerCreate(UpgradeCapacity.LOC, UpgradeCapacity.class), UpgradeCapacity.LOC),
+                asDefault(UpgradeRegistry.registerCreate(UpgradeBlastResist.LOC, UpgradeBlastResist.class), UpgradeBlastResist.LOC)
         );
     }
 
     private static Block asDefault(Block block, ResourceLocation loc) {
-        return block.setTranslationKey(loc.toString()).setRegistryName(loc).setCreativeTab(ModularItemFrame.TAB);
+        return block.setRegistryName(loc).setCreativeTab(ModularItemFrame.TAB).setTranslationKey(loc.toString().replace(':', '.'));
     }
 
     private static Item asDefault(Item item, ResourceLocation loc) {
-        return item.setTranslationKey(loc.toString()).setRegistryName(loc).setCreativeTab(ModularItemFrame.TAB);
+        return item.setRegistryName(loc).setCreativeTab(ModularItemFrame.TAB).setTranslationKey(loc.toString().replace(':', '.'));
     }
 
     private static Item asItem(Block block, ResourceLocation loc) {

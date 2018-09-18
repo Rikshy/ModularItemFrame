@@ -1,31 +1,31 @@
-tile.modularitemframe:modular_frame.name=Modularer Rahmen
+tile.modularitemframe.modular_frame.name=Modularer Rahmen
 
-item.modularitemframe:screwdriver.name=Schraubendreher
-item.modularitemframe:canvas.name=Leinwand
-item.modularitemframe:module_t1_item.name=Item Modul
-item.modularitemframe:module_t1_craft.name=Crafting Modul
-item.modularitemframe:module_t1_nullify.name=Nullify Modul
-item.modularitemframe:module_t1_tank.name=Tank Modul
-item.modularitemframe:module_t1_io.name=I/O Modul
-item.modularitemframe:module_t1_storage.name=Behälter Modul
+item.modularitemframe.screwdriver.name=Schraubendreher
+item.modularitemframe.canvas.name=Leinwand
+item.modularitemframe.module_t1_item.name=Item Modul
+item.modularitemframe.module_t1_craft.name=Crafting Modul
+item.modularitemframe.module_t1_nullify.name=Nullify Modul
+item.modularitemframe.module_t1_tank.name=Tank Modul
+item.modularitemframe.module_t1_io.name=I/O Modul
+item.modularitemframe.module_t1_storage.name=Behälter Modul
 
-item.modularitemframe:module_t2_dispense.name=Spender Modul
-item.modularitemframe:module_t2_vacuum.name=Vacuum Module
-item.modularitemframe:module_t2_trashcan.name=Mülleimer Modul
-item.modularitemframe:module_t2_craft_plus.name=Crafting Plus Modul
+item.modularitemframe.module_t2_dispense.name=Spender Modul
+item.modularitemframe.module_t2_vacuum.name=Vacuum Module
+item.modularitemframe.module_t2_trashcan.name=Mülleimer Modul
+item.modularitemframe.module_t2_craft_plus.name=Crafting Plus Modul
 
-item.modularitemframe:module_t3_xp.name=XP Modul
-item.modularitemframe:module_t3_tele.name=Teleport Modul
-item.modularitemframe:module_t3_auto_crafting.name=Auto Crafting Modul
-item.modularitemframe:module_t3_fluid_dispenser.name=Flüssigkeit Spender Modul
-item.modularitemframe:module_t3_itemtele.name=Item Teleporter Modul
-item.modularitemframe:module_t3_xpvaruum.name=XP Vacuum Modul
+item.modularitemframe.module_t3_xp.name=XP Modul
+item.modularitemframe.module_t3_tele.name=Teleport Modul
+item.modularitemframe.module_t3_auto_crafting.name=Auto Crafting Modul
+item.modularitemframe.module_t3_fluid_dispenser.name=Flüssigkeit Spender Modul
+item.modularitemframe.module_t3_itemtele.name=Item Teleporter Modul
+item.modularitemframe.module_t3_xpvaruum.name=XP Vacuum Modul
 
-item.modularitemframe:upgrade_speed.name=Geschwindigkeits Aufwertung
-item.modularitemframe:upgrade_range.name=Reichweiten Aufwertung
-item.modularitemframe:upgrade_capacity.name=Speicher Aufwertung
-item.modularitemframe:upgrade_resist.name=Schutz Aufwertung
-item.modularitemframe:upgrade_security.name=Sicherheits Aufwertung
+item.modularitemframe.upgrade_speed.name=Geschwindigkeits Aufwertung
+item.modularitemframe.upgrade_range.name=Reichweiten Aufwertung
+item.modularitemframe.upgrade_capacity.name=Speicher Aufwertung
+item.modularitemframe.upgrade_resist.name=Schutz Aufwertung
+item.modularitemframe.upgrade_security.name=Sicherheits Aufwertung
 
 
 modularitemframe.message.no_target=[ModularItemFrame] Keine Zielposition gesetzt - benutze dafür den Schraubenzieher

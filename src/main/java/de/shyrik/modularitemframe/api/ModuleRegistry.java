@@ -36,7 +36,7 @@ public class ModuleRegistry {
      */
     public static ItemModule registerCreate(ResourceLocation id, Class<? extends ModuleBase> moduleClass) {
         register(id, moduleClass);
-        return (ItemModule)new ItemModule(id).setTranslationKey(id.toString()).setRegistryName(id).setCreativeTab(ModularItemFrame.TAB);
+        return new ItemModule(id);
     }
 
     /**

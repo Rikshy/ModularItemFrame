@@ -189,7 +189,7 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
     @SuppressWarnings("deprecation")
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!worldIn.isRemote) {
-            if (!canPlaceBlockOnSide(worldIn, pos, state.getValue(BlockModularFrame.FACING).getOpposite())) {
+            if (!canPlaceBlockOnSide(worldIn, pos, state.getValue(FACING).getOpposite())) {
                 dropBlockAsItem(worldIn, pos, state, 0);
                 worldIn.setBlockToAir(pos);
             }
@@ -270,12 +270,6 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
     //endregion
 
     //region <other>
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean isFullBlock(IBlockState state) {
-        return false;
-    }
-
     @Override
     @SuppressWarnings("deprecation")
     public boolean isFullCube(IBlockState state) {
