@@ -37,7 +37,7 @@ public class ModuleItem extends ModuleBase {
     private static final String NBT_ROTATION = "rotation";
 
     private int rotation = 0;
-    protected ItemStack displayItem = ItemStack.EMPTY;
+    private ItemStack displayItem = ItemStack.EMPTY;
 
     @Nonnull
     @SideOnly(Side.CLIENT)
@@ -50,10 +50,10 @@ public class ModuleItem extends ModuleBase {
         return I18n.format("modularitemframe.module.item");
     }
 
-    protected float scale = 0.9f;
-    protected float offset = 0.05F;
+    private float scale = 0.9f;
+    private float offset = 0.05F;
 
-    public void rotate(EntityPlayer player) {
+    private void rotate(EntityPlayer player) {
         if (player.isSneaking()) {
             rotation += 20;
         } else {

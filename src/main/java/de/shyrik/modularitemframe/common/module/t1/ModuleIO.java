@@ -3,7 +3,10 @@ package de.shyrik.modularitemframe.common.module.t1;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
+import de.shyrik.modularitemframe.api.utils.RenderUtils;
+import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -28,8 +32,10 @@ public class ModuleIO extends ModuleBase {
 
     private static final String NBT_LAST = "lastclick";
     private static final String NBT_LASTSTACK = "laststack";
+    private static final String NBT_DISPLAY = "display";
 
     private long lastClick;
+    private ItemStack displayItem = ItemStack.EMPTY;
     private ItemStack lastStack = ItemStack.EMPTY;
 
     @Nonnull
@@ -40,6 +46,19 @@ public class ModuleIO extends ModuleBase {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
+        GlStateManager.pushMatrix();
+
+        RenderUtils.renderItem(displayItem, tile.blockFacing(), 0F, 0.05F);
+
+        GlStateManager.popMatrix();
+        GlStateManager.popMatrix();
+    }
+
+    @Override
     public String getModuleName() {
         return I18n.format("modularitemframe.module.io");
     }
@@ -47,9 +66,9 @@ public class ModuleIO extends ModuleBase {
     @Override
     public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
         if (!worldIn.isRemote) {
-            EnumFacing blockFacing = tile.blockFacing();
             TileEntity neighbor = tile.getAttachedTile();
             if (neighbor != null) {
+                EnumFacing blockFacing = tile.blockFacing();
                 IItemHandlerModifiable handler = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, blockFacing);
                 IItemHandlerModifiable player = ItemUtils.getPlayerInv(playerIn);
                 if (handler != null && player != null) {
@@ -101,12 +120,36 @@ public class ModuleIO extends ModuleBase {
         return true;
     }
 
+    @Override
+    public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
+        if(!world.isRemote) {
+            TileEntity neighbor = tile.getAttachedTile();
+            if (neighbor != null) {
+                EnumFacing blockFacing = tile.blockFacing();
+                IItemHandler handler = neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, blockFacing);
+                if (handler != null) {
+                    int slot = ItemUtils.getFirstOccupiedSlot(handler);
+                    if (slot >= 0) {
+                        ItemStack slotStack = handler.getStackInSlot(slot);
+                        if (!ItemStack.areItemsEqual(slotStack, displayItem)) {
+                            ItemStack copy = slotStack.copy();
+                            copy.setCount(1);
+                            displayItem = copy;
+                            tile.markDirty();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @Nonnull
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();
         compound.setLong(NBT_LAST, lastClick);
         compound.setTag(NBT_LASTSTACK, lastStack.serializeNBT());
+        compound.setTag(NBT_DISPLAY, displayItem.serializeNBT());
         return compound;
     }
 
@@ -115,5 +158,6 @@ public class ModuleIO extends ModuleBase {
         super.deserializeNBT(nbt);
         if (nbt.hasKey(NBT_LAST)) lastClick = nbt.getLong(NBT_LAST);
         if (nbt.hasKey(NBT_LASTSTACK)) lastStack = new ItemStack(nbt.getCompoundTag(NBT_LASTSTACK));
+        if (nbt.hasKey(NBT_DISPLAY)) displayItem = new ItemStack(nbt.getCompoundTag(NBT_DISPLAY));
     }
 }
