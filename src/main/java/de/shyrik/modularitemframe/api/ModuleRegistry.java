@@ -1,6 +1,7 @@
 package de.shyrik.modularitemframe.api;
 
 
+import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.common.item.ItemModule;
 import net.minecraft.util.ResourceLocation;
 
@@ -35,7 +36,7 @@ public class ModuleRegistry {
      */
     public static ItemModule registerCreate(ResourceLocation id, Class<? extends ModuleBase> moduleClass) {
         register(id, moduleClass);
-        return new ItemModule(id);
+        return (ItemModule)new ItemModule(id).setTranslationKey(id.toString()).setRegistryName(id).setCreativeTab(ModularItemFrame.TAB);
     }
 
     /**

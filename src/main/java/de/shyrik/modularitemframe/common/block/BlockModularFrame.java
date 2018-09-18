@@ -60,12 +60,9 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
 
     public BlockModularFrame() {
         super(Material.WOOD);
-        setTranslationKey(LOC.toString());
-        setRegistryName(LOC);
         setHardness(2.0F);
         setResistance(4.0F);
         setSoundType(SoundType.WOOD);
-        setCreativeTab(ModularItemFrame.TAB);
 
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
     }

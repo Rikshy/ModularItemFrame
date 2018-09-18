@@ -2,6 +2,7 @@ package de.shyrik.modularitemframe;
 
 import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.common.network.NetworkHandler;
+import de.shyrik.modularitemframe.init.Items;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
@@ -24,7 +25,7 @@ public class ModularItemFrame {
     public static final CreativeTabs TAB = new CreativeTabs("modularitemframe") {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(Registrar.SCREWDRIVER);
+            return new ItemStack(Items.SCREWDRIVER);
         }
     };
 

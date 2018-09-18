@@ -18,13 +18,10 @@ import java.util.List;
 
 public class ItemScrewdriver extends ItemTool {
     private static final String NBT_MODE = "mode";
-    private static final ResourceLocation loc = new ResourceLocation(ModularItemFrame.MOD_ID, "screwdriver");
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "screwdriver");
 
     public ItemScrewdriver() {
         super(ToolMaterial.IRON, new HashSet<>());
-        setRegistryName(loc);
-        setTranslationKey(loc.toString());
-        setCreativeTab(ModularItemFrame.TAB);
     }
 
     @Override

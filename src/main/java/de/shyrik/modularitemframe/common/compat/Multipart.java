@@ -1,6 +1,6 @@
 package de.shyrik.modularitemframe.common.compat;
 
-import de.shyrik.modularitemframe.Registrar;
+import de.shyrik.modularitemframe.init.Blocks;
 import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemUpgrade;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
@@ -38,8 +38,8 @@ public class Multipart implements IMCMPAddon {
 
     @Override
     public void registerParts(IMultipartRegistry registry) {
-        registry.registerPartWrapper(Registrar.FRAME_MODULAR, new PartBlock(Registrar.FRAME_MODULAR));
-        registry.registerStackWrapper(Item.getItemFromBlock(Registrar.FRAME_MODULAR), stack -> true, Registrar.FRAME_MODULAR);
+        registry.registerPartWrapper(Blocks.MODULAR_FRAME, new PartBlock((BlockModularFrame) Blocks.MODULAR_FRAME));
+        registry.registerStackWrapper(Item.getItemFromBlock(Blocks.MODULAR_FRAME), stack -> true, Blocks.MODULAR_FRAME);
     }
 
     public class PartBlock implements IMultipart {

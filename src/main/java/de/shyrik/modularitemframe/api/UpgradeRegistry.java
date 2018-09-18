@@ -1,5 +1,6 @@
 package de.shyrik.modularitemframe.api;
 
+import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.common.item.ItemUpgrade;
 import net.minecraft.util.ResourceLocation;
 
@@ -32,7 +33,7 @@ public class UpgradeRegistry {
      */
     public static ItemUpgrade registerCreate(ResourceLocation id, Class<? extends UpgradeBase> upgradeClass) {
         register(id, upgradeClass);
-        return new ItemUpgrade(id);
+        return (ItemUpgrade) new ItemUpgrade(id).setTranslationKey(id.toString()).setRegistryName(id).setCreativeTab(ModularItemFrame.TAB);
     }
 
     /**
