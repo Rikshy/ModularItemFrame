@@ -189,8 +189,15 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 		return tips;
 	}
 
-	public void additionalUpdateNBT(@Nonnull NBTTagCompound cmp) {
+	@Nonnull
+	public NBTTagCompound writeUpdateNBT(@Nonnull NBTTagCompound cmp) {
+	    return cmp;
 	}
+
+	@SideOnly(Side.CLIENT)
+	public void readUpdateNBT(@Nonnull NBTTagCompound cmp) {
+
+    }
 
 	/**
 	 * NBT serialization in case there are some data to be saved!

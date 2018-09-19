@@ -11,8 +11,9 @@ item.modularitemframe.module_t1_storage.name=Storage Module
 
 item.modularitemframe.module_t2_dispense.name=Dispense Module
 item.modularitemframe.module_t2_vacuum.name=Vacuum Module
-item.modularitemframe.module_t2_trashcan.name=Trash can Module
+item.modularitemframe.module_t2_trashcan.name=Trashcan Module
 item.modularitemframe.module_t2_craft_plus.name=Crafting Plus Module
+item.modularitemframe.module_t2_use.name=Use Module
 
 item.modularitemframe.module_t3_xp.name=XP Module
 item.modularitemframe.module_t3_tele.name=Teleport Module
@@ -60,15 +61,16 @@ modularitemframe.module.nullify=Nullify
 modularitemframe.module.storage=Storage
 
 modularitemframe.module.crafting_plus=Crafting Plus
-modularitemframe.module.xp=XP
 modularitemframe.module.dispense=Dispense
 modularitemframe.module.vacuum=Vacuum
-modularitemframe.module.trash_can=Trash can
+modularitemframe.module.trash_can=Trashcan
+modularitemframe.module.use=Use
 
 modularitemframe.module.auto_crafting=Auto Crafting
 modularitemframe.module.tele=Teleport
 modularitemframe.module.fluid_dispenser=Fluid Dispenser
 modularitemframe.module.itemtele=Item Teleport
+modularitemframe.module.xp=XP
 
 modularitemframe.tooltip.module=Module: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb

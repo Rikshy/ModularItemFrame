@@ -8,6 +8,11 @@ import de.shyrik.modularitemframe.api.utils.FakePlayerUtils;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.ProbeMode;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -23,6 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -30,7 +36,9 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -98,12 +106,31 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
 
     @Override
     public String getModuleName() {
-        return null;
+        return I18n.format("modularitemframe.module.use");
+    }
+
+    @Override
+    public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
+        if (!worldIn.isRemote) ItemUtils.ejectStack(worldIn, pos, facing, displayItem);
     }
 
     @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        return false;
+        if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return false;
+
+        if (!worldIn.isRemote) {
+            ItemStack held = playerIn.getHeldItem(hand);
+            if (held.isEmpty()) {
+                playerIn.setHeldItem(hand, displayItem.copy());
+                displayItem.setCount(0);
+            } else {
+                if (displayItem.isEmpty()) {
+                    displayItem = held.copy();
+                    playerIn.setHeldItem(hand, ItemStack.EMPTY);
+                }
+            }
+        }
+        return true;
     }
 
     @Override
@@ -126,32 +153,18 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
 
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
-        if(!world.isRemote && !tile.isPowered()) {
-            TileEntity neighbor = tile.getAttachedTile();
-            if (neighbor != null) {
-                EnumFacing blockFacing = tile.blockFacing();
-                IItemHandler handler = neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, blockFacing);
-                if (handler != null) {
-                    int slot = ItemUtils.getFirstOccupiedSlot(handler);
-                    if (slot >= 0) {
-                        ItemStack slotStack = handler.getStackInSlot(slot);
-                        if (!ItemStack.areItemsEqual(slotStack, displayItem)) {
-                            displayItem = slotStack;
-                            rotation = 0;
-                            tile.markDirty();
-                        } else {
-                            if (!displayItem.isEmpty()) {
-                                if (rotation == 360) {
-                                    rotation = 0;
-                                }
-                                if (rotation % 180 == 0)
-                                    hitIt(world, pos);
-                                rotation += 10;
-                                tile.markDirty();
-                            }
-                        }
-                    }
+        if (!world.isRemote && !tile.isPowered()) {
+            if (displayItem.isEmpty()) {
+                displayItem = getNextStack();
+                rotation = 0;
+                tile.markDirty();
+            } else {
+                if (rotation == 360) {
+                    rotation = 0;
                 }
+                if (rotation % 180 == 0) hitIt(world, pos);
+                rotation += 5;
+                tile.markDirty();
             }
         }
     }
@@ -162,14 +175,63 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
         EnumFacing facing = tile.blockFacing().getOpposite();
         FakePlayerUtils.setupFakePlayerForUse(player.get(), pos, facing, displayItem, isSneaking);
         ItemStack result;
-        if(!rightClick) result = FakePlayerUtils.leftClickInDirection(player.get(), world, pos, facing, world.getBlockState(pos));
+        if (!rightClick)
+            result = FakePlayerUtils.leftClickInDirection(player.get(), world, pos, facing, world.getBlockState(pos));
         else result = FakePlayerUtils.rightClickInDirection(player.get(), world, pos, facing, world.getBlockState(pos));
         FakePlayerUtils.cleanupFakePlayerFromUse(player.get(), result, displayItem, this);
     }
 
+    private ItemStack getNextStack() {
+        TileEntity neighbor = tile.getAttachedTile();
+        if (neighbor != null) {
+            EnumFacing blockFacing = tile.blockFacing();
+            IItemHandler handler = neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, blockFacing);
+            if (handler != null) {
+                int slot = ItemUtils.getFirstOccupiedSlot(handler);
+                if (slot >= 0) {
+                    return handler.extractItem(slot, handler.getStackInSlot(slot).getCount(), false);
+                }
+            }
+        }
+        return ItemStack.EMPTY;
+    }
+
     @Override
-    public void additionalUpdateNBT(@Nonnull NBTTagCompound cmp) {
-        cmp.setInteger(NBT_ROTATION, rotation); //TODO
+    @SideOnly(Side.CLIENT)
+    @Optional.Method(modid = "theoneprobe")
+    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
+        super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
+        String txt = isSneaking ? I18n.format("modularitemframe.mode.sn") + " + " : "";
+        txt += rightClick ? I18n.format("modularitemframe.mode.rc") : I18n.format("modularitemframe.mode.lc");
+        probeInfo.horizontal().text(I18n.format("modularitemframe.tooltip.mode", txt));
+        if (!displayItem.isEmpty())
+            probeInfo.horizontal().text("Held:").item(displayItem).text(displayItem.getDisplayName());
+    }
+
+    @Nonnull
+    @Override
+    @SideOnly(Side.CLIENT)
+    @Optional.Method(modid = "waila")
+    public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        List<String> tips = super.getWailaBody(itemStack, accessor, config);
+        String mode = isSneaking ? I18n.format("modularitemframe.mode.sn") + " + " : "";
+        mode += rightClick ? I18n.format("modularitemframe.mode.rc") : I18n.format("modularitemframe.mode.lc");
+        tips.add(I18n.format("modularitemframe.tooltip.mode", mode));
+        if (!displayItem.isEmpty()) tips.add("Display: " + displayItem.getDisplayName() + " (" + displayItem.getCount() + ")");
+        return tips;
+    }
+
+    @Nonnull
+    @Override
+    public NBTTagCompound writeUpdateNBT(@Nonnull NBTTagCompound cmp) {
+        cmp.setInteger(NBT_ROTATION, rotation);
+        return cmp;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void readUpdateNBT(@Nonnull NBTTagCompound cmp) {
+        if (cmp.hasKey(NBT_ROTATION)) rotation = cmp.getInteger(NBT_ROTATION);
     }
 
     @Nonnull
@@ -186,7 +248,6 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
         if (nbt.hasKey(NBT_DISPLAY)) displayItem = new ItemStack(nbt.getCompoundTag(NBT_DISPLAY));
-        if (nbt.hasKey(NBT_ROTATION)) rotation = nbt.getInteger(NBT_ROTATION);
         if (nbt.hasKey(NBT_SNEAK)) isSneaking = nbt.getBoolean(NBT_SNEAK);
         if (nbt.hasKey(NBT_RIGHT)) rightClick = nbt.getBoolean(NBT_RIGHT);
     }

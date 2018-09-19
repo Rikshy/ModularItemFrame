@@ -7,6 +7,7 @@ import de.shyrik.modularitemframe.common.compat.CompatHelper;
 import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemUpgrade;
 import de.shyrik.modularitemframe.common.module.ModuleEmpty;
+import de.shyrik.modularitemframe.common.network.packet.FrameTileUpdatePacket;
 import de.shyrik.modularitemframe.common.upgrade.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -192,14 +193,15 @@ public class TileModularFrame extends TileEntity implements ITickable {
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
         NBTTagCompound nbt = writeToNBT(new NBTTagCompound());
-        module.additionalUpdateNBT(nbt);
-        return new SPacketUpdateTileEntity(getPos(), -999, nbt);
+        NBTTagCompound customNBT = module.writeUpdateNBT(new NBTTagCompound());
+        return new FrameTileUpdatePacket(getPos(), -999, nbt, customNBT);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
         super.onDataPacket(net, packet);
+        module.readUpdateNBT(((FrameTileUpdatePacket) packet).getCustomTag());
         readFromNBT(packet.getNbtCompound());
     }
 
