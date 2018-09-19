@@ -7,6 +7,7 @@ import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -55,7 +56,7 @@ public class ModuleStorage extends ModuleBase {
         GlStateManager.scale(0.7F, 0.7F, 0.7F);
         GlStateManager.pushMatrix();
 
-        RenderUtils.renderItem(lastStack, tile.blockFacing(), 0, 0.05F);
+        RenderUtils.renderItem(lastStack, tile.blockFacing(), 0, 0.05F, ItemCameraTransforms.TransformType.FIXED);
 
         GlStateManager.popMatrix();
         GlStateManager.popMatrix();

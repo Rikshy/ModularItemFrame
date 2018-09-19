@@ -54,6 +54,7 @@ public class Registrar {
                 asDefault(ModuleRegistry.registerCreate(ModuleDispense.LOC, ModuleDispense.class), ModuleDispense.LOC),
                 asDefault(ModuleRegistry.registerCreate(ModuleVacuum.LOC, ModuleVacuum.class), ModuleVacuum.LOC),
                 asDefault(ModuleRegistry.registerCreate(ModuleTrashCan.LOC, ModuleTrashCan.class), ModuleTrashCan.LOC),
+                asDefault(ModuleRegistry.registerCreate(ModuleUse.LOC, ModuleUse.class), ModuleUse.LOC),
 
                 //Tier 3
                 asDefault(ModuleRegistry.registerCreate(ModuleAutoCrafting.LOC, ModuleAutoCrafting.class), ModuleAutoCrafting.LOC),

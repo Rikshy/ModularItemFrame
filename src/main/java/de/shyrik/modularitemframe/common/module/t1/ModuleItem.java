@@ -12,6 +12,7 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -50,9 +51,6 @@ public class ModuleItem extends ModuleBase {
         return I18n.format("modularitemframe.module.item");
     }
 
-    private float scale = 0.9f;
-    private float offset = 0.05F;
-
     private void rotate(EntityPlayer player) {
         if (player.isSneaking()) {
             rotation += 20;
@@ -68,10 +66,10 @@ public class ModuleItem extends ModuleBase {
     public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.pushMatrix();
         GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
-        GlStateManager.scale(scale, scale, scale);
+        GlStateManager.scale(0.9f, 0.9f, 0.9f);
         GlStateManager.pushMatrix();
 
-        RenderUtils.renderItem(displayItem, tile.blockFacing(), rotation, offset);
+        RenderUtils.renderItem(displayItem, tile.blockFacing(), rotation, 0.05F, ItemCameraTransforms.TransformType.FIXED);
 
         GlStateManager.popMatrix();
         GlStateManager.popMatrix();
@@ -122,7 +120,7 @@ public class ModuleItem extends ModuleBase {
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();
         compound.setTag(NBT_DISPLAY, displayItem.serializeNBT());
-        compound.setInteger("rotation", rotation);
+        compound.setInteger(NBT_ROTATION, rotation);
         return compound;
     }
 

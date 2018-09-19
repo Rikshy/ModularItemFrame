@@ -18,6 +18,7 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -71,7 +72,7 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
         GlStateManager.scale(0.7F, 0.7F, 0.7F);
         GlStateManager.pushMatrix();
 
-        RenderUtils.renderItem(displayItem, tile.blockFacing(), 0, -0.05F);
+        RenderUtils.renderItem(displayItem, tile.blockFacing(), 0, -0.05F, ItemCameraTransforms.TransformType.FIXED);
 
         GlStateManager.popMatrix();
         GlStateManager.popMatrix();

@@ -48,7 +48,7 @@ public class RenderUtils {
 		GlStateManager.translate(0.0F, 0.0F, -0.5125F + offset);
 	}
 
-	public static void renderItem(ItemStack stack, @Nonnull EnumFacing facing, float rotation, float offset) {
+	public static void renderItem(ItemStack stack, @Nonnull EnumFacing facing, float rotation, float offset, ItemCameraTransforms.TransformType transformType) {
 		if (!stack.isEmpty()) {
 			rotateItemOnFacing(facing, rotation, offset);
 			RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
@@ -62,7 +62,7 @@ public class RenderUtils {
 			if (itemRenderer.shouldRenderItemIn3D(stack)) {
 				GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
 			}
-			itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED);
+			itemRenderer.renderItem(stack, transformType);
 			RenderHelper.disableStandardItemLighting();
 			GlStateManager.popAttrib();
 

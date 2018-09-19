@@ -21,6 +21,7 @@ public class Items {
     public static final Item MODULE_T2_DISPENSE = null;
     public static final Item MODULE_T2_TRASHCAN = null;
     public static final Item MODULE_T2_VACUUM = null;
+    public static final Item MODULE_T2_USE = null;
 
     public static final Item MODULE_T3_AUTO_CRAFTING = null;
     public static final Item MODULE_T3_FLUID_DISPENSER = null;

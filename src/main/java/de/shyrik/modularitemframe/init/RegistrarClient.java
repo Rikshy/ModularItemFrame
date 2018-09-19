@@ -44,6 +44,7 @@ public class RegistrarClient {
             Items.MODULE_T2_DISPENSE,
             Items.MODULE_T2_TRASHCAN,
             Items.MODULE_T2_VACUUM,
+            Items.MODULE_T2_USE,
             Items.MODULE_T3_AUTO_CRAFTING,
             Items.MODULE_T3_FLUID_DISPENSER,
             Items.MODULE_T3_ITEMTELE,

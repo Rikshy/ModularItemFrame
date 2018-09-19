@@ -125,6 +125,8 @@ public class TileModularFrame extends TileEntity implements ITickable {
     public BlockPos getAttachedPos() {
         return pos.offset(blockFacing());
     }
+
+    public boolean isPowered() { return world.isBlockPowered(pos); }
     //rendregion
 
     //region <module>
@@ -190,11 +192,12 @@ public class TileModularFrame extends TileEntity implements ITickable {
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
         NBTTagCompound nbt = writeToNBT(new NBTTagCompound());
+        module.additionalUpdateNBT(nbt);
         return new SPacketUpdateTileEntity(getPos(), -999, nbt);
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
+    @SideOnly(Side.CLIENT)
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
         super.onDataPacket(net, packet);
         readFromNBT(packet.getNbtCompound());
