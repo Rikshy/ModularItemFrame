@@ -132,10 +132,23 @@ public class ModuleStorage extends ModuleBase {
 
     @Nonnull
     @Override
+    public NBTTagCompound writeUpdateNBT(@Nonnull NBTTagCompound cmp) {
+        cmp.setLong(NBT_LAST, lastClick);
+        cmp.setTag(NBT_LASTSTACK, lastStack.serializeNBT());
+        return cmp;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void readUpdateNBT(@Nonnull NBTTagCompound cmp) {
+        if (cmp.hasKey(NBT_LAST)) lastClick = cmp.getLong(NBT_LAST);
+        if (cmp.hasKey(NBT_LASTSTACK)) lastStack = new ItemStack(cmp.getCompoundTag(NBT_LASTSTACK));
+    }
+
+    @Nonnull
+    @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();
-        compound.setLong(NBT_LAST, lastClick);
-        compound.setTag(NBT_LASTSTACK, lastStack.serializeNBT());
         compound.setTag(NBT_INVENTORY, inventory.serializeNBT());
         return compound;
     }
@@ -143,8 +156,6 @@ public class ModuleStorage extends ModuleBase {
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_LAST)) lastClick = nbt.getLong(NBT_LAST);
-        if (nbt.hasKey(NBT_LASTSTACK)) lastStack = new ItemStack(nbt.getCompoundTag(NBT_LASTSTACK));
         if (nbt.hasKey(NBT_INVENTORY)) inventory.deserializeNBT(nbt.getCompoundTag(NBT_INVENTORY));
     }
 }

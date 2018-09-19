@@ -146,19 +146,18 @@ public class ModuleIO extends ModuleBase {
 
     @Nonnull
     @Override
-    public NBTTagCompound serializeNBT() {
-        NBTTagCompound compound = super.serializeNBT();
-        compound.setLong(NBT_LAST, lastClick);
-        compound.setTag(NBT_LASTSTACK, lastStack.serializeNBT());
-        compound.setTag(NBT_DISPLAY, displayItem.serializeNBT());
-        return compound;
+    public NBTTagCompound writeUpdateNBT(@Nonnull NBTTagCompound cmp) {
+        cmp.setLong(NBT_LAST, lastClick);
+        cmp.setTag(NBT_LASTSTACK, lastStack.serializeNBT());
+        cmp.setTag(NBT_DISPLAY, displayItem.serializeNBT());
+        return cmp;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
-        super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_LAST)) lastClick = nbt.getLong(NBT_LAST);
-        if (nbt.hasKey(NBT_LASTSTACK)) lastStack = new ItemStack(nbt.getCompoundTag(NBT_LASTSTACK));
-        if (nbt.hasKey(NBT_DISPLAY)) displayItem = new ItemStack(nbt.getCompoundTag(NBT_DISPLAY));
+    @SideOnly(Side.CLIENT)
+    public void readUpdateNBT(@Nonnull NBTTagCompound cmp) {
+        if (cmp.hasKey(NBT_LAST)) lastClick = cmp.getLong(NBT_LAST);
+        if (cmp.hasKey(NBT_LASTSTACK)) lastStack = new ItemStack(cmp.getCompoundTag(NBT_LASTSTACK));
+        if (cmp.hasKey(NBT_DISPLAY)) displayItem = new ItemStack(cmp.getCompoundTag(NBT_DISPLAY));
     }
 }
