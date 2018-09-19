@@ -254,16 +254,6 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
 
     @Override
     public void accept(ItemStack stack) {
-        TileEntity neighbor = tile.getAttachedTile();
-        if (neighbor != null) {
-            EnumFacing blockFacing = tile.blockFacing();
-            IItemHandlerModifiable handler = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, blockFacing);
-            if (handler != null) {
-                int slot = ItemUtils.getFirstOccupiedSlot(handler);
-                if (slot >= 0) {
-                    handler.setStackInSlot(slot, stack);
-                }
-            }
-        }
+        displayItem = stack;
     }
 }

@@ -108,15 +108,15 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
                 }
             }
             moveHand = true;
-        } else if (handItem.getItem() instanceof ItemModule) {
-            if (!worldIn.isRemote && tile.acceptsModule()) {
+        } else if (handItem.getItem() instanceof ItemModule && tile.acceptsModule()) {
+            if (!worldIn.isRemote) {
                 tile.setModule(((ItemModule) handItem.getItem()).moduleId);
                 if (!playerIn.isCreative()) playerIn.getHeldItem(hand).shrink(1);
                 tile.markDirty();
             }
             moveHand = true;
-        } else if (handItem.getItem() instanceof ItemUpgrade) {
-            if (!worldIn.isRemote && tile.acceptsUpgrade()) {
+        } else if (handItem.getItem() instanceof ItemUpgrade && tile.acceptsUpgrade()) {
+            if (!worldIn.isRemote) {
                 if (tile.tryAddUpgrade(((ItemUpgrade) handItem.getItem()).upgradeId)) {
                     if (!playerIn.isCreative()) playerIn.getHeldItem(hand).shrink(1);
                     tile.markDirty();
