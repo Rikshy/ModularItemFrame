@@ -153,7 +153,7 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
 
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
-        if (!world.isRemote && !tile.isPowered()) {
+        if (!world.isRemote) {
             if (displayItem.isEmpty()) {
                 displayItem = getNextStack();
                 rotation = 0;

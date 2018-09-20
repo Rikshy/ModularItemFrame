@@ -3,7 +3,6 @@ package de.shyrik.modularitemframe.common.tile;
 import de.shyrik.modularitemframe.api.*;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
-import de.shyrik.modularitemframe.common.compat.CompatHelper;
 import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemUpgrade;
 import de.shyrik.modularitemframe.common.module.ModuleEmpty;
@@ -164,7 +163,7 @@ public class TileModularFrame extends TileEntity implements ITickable {
 
     @Override
     public void update() {
-        if (world.getTileEntity(pos) != this) return;
+        if (world.getTileEntity(pos) != this || isPowered()) return;
         module.tick(world, pos);
     }
 
