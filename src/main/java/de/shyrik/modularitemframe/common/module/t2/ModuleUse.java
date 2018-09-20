@@ -159,11 +159,11 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
                 rotation = 0;
                 tile.markDirty();
             } else {
-                if (rotation == 360) {
+                if (rotation >= 360) {
                     rotation = 0;
+                    hitIt(world, pos);
                 }
-                if (rotation % 180 == 0) hitIt(world, pos);
-                rotation += 5;
+                rotation += 5 * (tile.getSpeedUpCount() + 1);
                 tile.markDirty();
             }
         }
@@ -176,8 +176,9 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
         FakePlayerUtils.setupFakePlayerForUse(player.get(), pos, facing, displayItem, isSneaking);
         ItemStack result;
         if (!rightClick)
-            result = FakePlayerUtils.leftClickInDirection(player.get(), world, pos, facing, world.getBlockState(pos));
-        else result = FakePlayerUtils.rightClickInDirection(player.get(), world, pos, facing, world.getBlockState(pos));
+            result = FakePlayerUtils.leftClickInDirection(player.get(), world, pos, facing, world.getBlockState(pos), 1 + tile.getRangeUpCount());
+        else
+            result = FakePlayerUtils.rightClickInDirection(player.get(), world, pos.offset(facing), facing, world.getBlockState(pos), 1 + tile.getRangeUpCount());
         FakePlayerUtils.cleanupFakePlayerFromUse(player.get(), result, displayItem, this);
     }
 

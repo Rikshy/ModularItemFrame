@@ -128,10 +128,10 @@ public class FakePlayerUtils {
      * @param sourceState The state of the calling tile entity, so we don't click ourselves.
      * @return The remainder of whatever the player was holding.  This should be set back into the tile's stack handler or similar.
      */
-    public static ItemStack rightClickInDirection(UsefulFakePlayer player, World world, BlockPos pos, EnumFacing side, IBlockState sourceState) {
+    public static ItemStack rightClickInDirection(UsefulFakePlayer player, World world, BlockPos pos, EnumFacing side, IBlockState sourceState, int range) {
         Vec3d base = new Vec3d(player.posX, player.posY, player.posZ);
         Vec3d look = player.getLookVec();
-        Vec3d target = base.add(look.x * 5, look.y * 5, look.z * 5);
+        Vec3d target = base.add(look.x * range, look.y * range, look.z * range);
         RayTraceResult trace = world.rayTraceBlocks(base, target, false, false, true);
         RayTraceResult traceEntity = traceEntities(player, base, target, world);
         RayTraceResult toUse = trace == null ? traceEntity : trace;
@@ -184,10 +184,10 @@ public class FakePlayerUtils {
      * @param sourceState The state of the calling tile entity, so we don't click ourselves.
      * @return The remainder of whatever the player was holding.  This should be set back into the tile's stack handler or similar.
      */
-    public static ItemStack leftClickInDirection(UsefulFakePlayer player, World world, BlockPos pos, EnumFacing side, IBlockState sourceState) {
+    public static ItemStack leftClickInDirection(UsefulFakePlayer player, World world, BlockPos pos, EnumFacing side, IBlockState sourceState, int range) {
         Vec3d base = new Vec3d(player.posX, player.posY, player.posZ);
         Vec3d look = player.getLookVec();
-        Vec3d target = base.add(look.x * 5, look.y * 5, look.z * 5);
+        Vec3d target = base.add(look.x * range, look.y * range, look.z * range);
         RayTraceResult trace = world.rayTraceBlocks(base, target, false, false, true);
         RayTraceResult traceEntity = traceEntities(player, base, target, world);
         RayTraceResult toUse = trace == null ? traceEntity : trace;
