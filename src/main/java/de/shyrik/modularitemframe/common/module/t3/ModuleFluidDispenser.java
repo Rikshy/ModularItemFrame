@@ -23,14 +23,14 @@ import javax.annotation.Nonnull;
 
 public class ModuleFluidDispenser extends ModuleBase {
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t3_fluid_dispenser");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_nyi");
 
     @Nonnull
     @Override
     @SideOnly(Side.CLIENT)
     public ResourceLocation frontTexture() {
-        return null;
+        return BG_LOC;
     }
-
 
     @Nonnull
     @Override

@@ -60,7 +60,7 @@ public class ModuleTank extends ModuleBase {
     @Nonnull
     @Override
     public ResourceLocation backTexture() {
-        return super.backTexture();//new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_tank");
+        return BG_LOC;
     }
 
     @Override
