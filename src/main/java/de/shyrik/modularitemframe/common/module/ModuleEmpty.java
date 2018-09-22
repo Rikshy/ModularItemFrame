@@ -16,19 +16,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 
 public class ModuleEmpty extends ModuleBase {
+    private static final ResourceLocation FG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/default_front");
+    private static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/default_back");
 
     @Nonnull
     @Override
     @SideOnly(Side.CLIENT)
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/default_front");
+        return FG_LOC;
     }
 
     @Nonnull
     @Override
     @SideOnly(Side.CLIENT)
     public ResourceLocation backTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/default_back");
+        return BG_LOC;
     }
 
     @Override
