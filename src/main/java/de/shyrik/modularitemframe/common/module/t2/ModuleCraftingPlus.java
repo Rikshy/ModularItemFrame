@@ -1,7 +1,6 @@
 package de.shyrik.modularitemframe.common.module.t2;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.module.t1.ModuleCrafting;
@@ -15,7 +14,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -45,8 +43,6 @@ public class ModuleCraftingPlus extends ModuleCrafting {
 
     @Override
     public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
-        if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return;
-
         if (!world.isRemote) {
             if (playerIn.isSneaking()) {
                 int modeIdx = mode.getIndex() + 1;

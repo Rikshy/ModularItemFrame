@@ -1,6 +1,5 @@
 package de.shyrik.modularitemframe.common.module.t2;
 
-import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
@@ -17,7 +16,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -54,8 +52,6 @@ public class ModuleDispense extends ModuleBase {
 
     @Override
     public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
-        if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return;
-
         int countRange = tile.getRangeUpCount();
         if (!world.isRemote && countRange > 0) {
             if (playerIn.isSneaking()) range--;
@@ -69,8 +65,6 @@ public class ModuleDispense extends ModuleBase {
 
     @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return false;
-
         if (!worldIn.isRemote) {
             ItemStack held = playerIn.getHeldItem(hand);
             if (!playerIn.isSneaking() && !held.isEmpty()) {

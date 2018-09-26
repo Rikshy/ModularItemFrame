@@ -46,8 +46,6 @@ public class ModuleAutoCrafting extends ModuleCraftingPlus {
 
     @Override
     public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
-        if (playerIn instanceof FakePlayer) return;
-
         if (!world.isRemote) {
             playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, world, pos.getX(), pos.getY(), pos.getZ());
             tile.markDirty();

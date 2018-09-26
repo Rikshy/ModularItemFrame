@@ -26,7 +26,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
@@ -114,8 +113,6 @@ public class ModuleTank extends ModuleBase {
 
     @Override
     public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
-        if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return;
-
         if (!world.isRemote) {
             if (ConfigValues.TankTransferRate > 0) {
                 int modeIdx = mode.getIndex() + 1;
@@ -128,8 +125,6 @@ public class ModuleTank extends ModuleBase {
 
     @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return false;
-
         ItemStack stack = playerIn.getHeldItem(hand);
         FluidUtil.interactWithFluidHandler(playerIn, hand, tank);
         tile.markDirty();

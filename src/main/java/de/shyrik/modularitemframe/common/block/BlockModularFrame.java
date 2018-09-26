@@ -1,6 +1,7 @@
 package de.shyrik.modularitemframe.common.block;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
+import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.common.compat.CompatHelper;
 import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemUpgrade;
@@ -27,6 +28,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -93,37 +95,38 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
     @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
         boolean moveHand;
-        TileModularFrame tile = getTE(worldIn, pos);
-        ItemStack handItem = playerIn.getHeldItem(hand);
-
-        if (handItem.getItem() instanceof ItemScrewdriver) {
-            if (!worldIn.isRemote) {
-                if (facing.getOpposite() == state.getValue(FACING)) {
-                    if (hitModule(facing.getOpposite(), hitX, hitY, hitZ)) {
-                        if (ItemScrewdriver.getMode(handItem) == ItemScrewdriver.EnumMode.INTERACT) {
-                            tile.module.screw(worldIn, pos, playerIn, handItem);
-                        } else tile.dropModule(facing, playerIn);
-                    } else tile.dropUpgrades(playerIn, facing);
-                    tile.markDirty();
+        if (!(playerIn instanceof FakePlayer) || ConfigValues.AllowFakePlayers) {
+            TileModularFrame tile = getTE(worldIn, pos);
+            ItemStack handItem = playerIn.getHeldItem(hand);
+            if (handItem.getItem() instanceof ItemScrewdriver) {
+                if (!worldIn.isRemote) {
+                    if (facing.getOpposite() == state.getValue(FACING)) {
+                        if (hitModule(facing.getOpposite(), hitX, hitY, hitZ)) {
+                            if (ItemScrewdriver.getMode(handItem) == ItemScrewdriver.EnumMode.INTERACT) {
+                                tile.module.screw(worldIn, pos, playerIn, handItem);
+                            } else tile.dropModule(facing, playerIn);
+                        } else tile.dropUpgrades(playerIn, facing);
+                        tile.markDirty();
+                    }
                 }
-            }
-            moveHand = true;
-        } else if (handItem.getItem() instanceof ItemModule && tile.acceptsModule()) {
-            if (!worldIn.isRemote) {
-                tile.setModule(((ItemModule) handItem.getItem()).moduleId);
-                if (!playerIn.isCreative()) playerIn.getHeldItem(hand).shrink(1);
-                tile.markDirty();
-            }
-            moveHand = true;
-        } else if (handItem.getItem() instanceof ItemUpgrade && tile.acceptsUpgrade()) {
-            if (!worldIn.isRemote) {
-                if (tile.tryAddUpgrade(((ItemUpgrade) handItem.getItem()).upgradeId)) {
+                moveHand = true;
+            } else if (handItem.getItem() instanceof ItemModule && tile.acceptsModule()) {
+                if (!worldIn.isRemote) {
+                    tile.setModule(((ItemModule) handItem.getItem()).moduleId);
                     if (!playerIn.isCreative()) playerIn.getHeldItem(hand).shrink(1);
                     tile.markDirty();
                 }
-            }
-            moveHand = true;
-        } else moveHand = tile.module.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
+                moveHand = true;
+            } else if (handItem.getItem() instanceof ItemUpgrade && tile.acceptsUpgrade()) {
+                if (!worldIn.isRemote) {
+                    if (tile.tryAddUpgrade(((ItemUpgrade) handItem.getItem()).upgradeId)) {
+                        if (!playerIn.isCreative()) playerIn.getHeldItem(hand).shrink(1);
+                        tile.markDirty();
+                    }
+                }
+                moveHand = true;
+            } else moveHand = tile.module.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
+        }
         return moveHand;
     }
 
