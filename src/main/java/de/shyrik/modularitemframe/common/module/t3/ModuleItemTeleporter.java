@@ -170,7 +170,16 @@ public class ModuleItemTeleporter extends ModuleBase {
 
     @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        return false;
+        if (direction != EnumMode.VACUUM) return false;
+        if (!hasValidConnection(worldIn)) return false;
+
+        ItemStack held = playerIn.getHeldItem(hand);
+
+        if (!held.isEmpty()) {
+            ItemUtils.ejectStack(worldIn, linkedLoc, worldIn.getBlockState(linkedLoc).getValue(BlockModularFrame.FACING), held);
+            held.setCount(0);
+        }
+        return true;
     }
 
     @Override
@@ -186,6 +195,7 @@ public class ModuleItemTeleporter extends ModuleBase {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (direction != EnumMode.VACUUM) return;
+        if (ConfigValues.DisableAutomaticItemTransfer) return;
         if (!hasValidConnection(world)) return;
         if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
@@ -194,7 +204,7 @@ public class ModuleItemTeleporter extends ModuleBase {
             ItemStack entityStack = entity.getItem();
             if (entity.isDead || entityStack.isEmpty()) continue;
 
-            ItemUtils.ejectStack(world, linkedLoc, world.getBlockState(pos).getValue(BlockModularFrame.FACING), entityStack);
+            ItemUtils.ejectStack(world, linkedLoc, world.getBlockState(linkedLoc).getValue(BlockModularFrame.FACING), entityStack);
             entity.setDead();
             NetworkHandler.sendAround(new SpawnParticlesPacket(EnumParticleTypes.EXPLOSION_NORMAL.getParticleID(), entity.getPosition(), 1), entity.getPosition(), entity.dimension);
             break;

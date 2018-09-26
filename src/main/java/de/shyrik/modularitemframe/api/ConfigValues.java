@@ -14,7 +14,7 @@ public final class ConfigValues {
     public static boolean AllowFakePlayers = false;
 
     @Config.RangeInt(min = 1000, max = 32000)
-    @Config.Comment("Fluid Capacity of the tank frame (mB)")
+    @Config.Comment("Base Fluid Capacity of the tank frame (mB)")
     public static int TankFrameCapacity = 4000;
 
     @Config.RangeInt(min = 0, max = 1000)
@@ -28,4 +28,7 @@ public final class ConfigValues {
     @Config.RangeInt(min = 1, max = 10)
     @Config.Comment("Base range of the vacuum frame")
     public static int BaseVacuumRange = 3;
+
+    @Config.Comment("Makes the Item Teleport Module to not vacuum items")
+    public static boolean DisableAutomaticItemTransfer = false;
 }
