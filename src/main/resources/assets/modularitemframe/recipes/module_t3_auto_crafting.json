@@ -1,7 +1,8 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "modularitemframe:module_t3_auto_crafting"
+    "item": "modularitemframe:module_t3",
+    "data": 0
   },
   "pattern": [
     "OCO",
@@ -10,13 +11,16 @@
   ],
   "key": {
     "#": {
-      "item": "modularitemframe:module_t2_craft_plus"
+      "item": "modularitemframe:module_t2",
+      "data": 0
     },
     "C": {
-      "item": "modularitemframe:module_t1_craft"
+      "item": "modularitemframe:module_t1",
+      "data": 2
     },
     "D": {
-      "item": "modularitemframe:module_t2_dispense"
+      "item": "modularitemframe:module_t2",
+      "data": 1
     },
     "O": {
       "type": "forge:ore_dict",

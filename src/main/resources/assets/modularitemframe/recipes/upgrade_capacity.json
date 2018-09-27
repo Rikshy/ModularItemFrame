@@ -1,7 +1,8 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "modularitemframe:upgrade_capacity",
+    "item": "modularitemframe:upgrade",
+    "data": 3,
     "count": 2
   },
   "pattern": [

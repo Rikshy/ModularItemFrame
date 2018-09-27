@@ -103,14 +103,14 @@ public class Multipart implements IMCMPAddon {
                 moveHand = true;
             } else if (handItem.getItem() instanceof ItemModule) {
                 if (!worldIn.isRemote && tile.acceptsModule()) {
-                    tile.setModule(((ItemModule) handItem.getItem()).moduleId);
+                    tile.setModule(((ItemModule) handItem.getItem()).getModuleId(handItem));
                     if (!playerIn.isCreative()) playerIn.getHeldItem(hand).shrink(1);
                     tile.markDirty();
                 }
                 moveHand = true;
             } else if (handItem.getItem() instanceof ItemUpgrade) {
                 if (!worldIn.isRemote && tile.acceptsUpgrade()) {
-                    if (tile.tryAddUpgrade(((ItemUpgrade) handItem.getItem()).upgradeId)) {
+                    if (tile.tryAddUpgrade(((ItemUpgrade) handItem.getItem()).getUpgradeId(handItem))) {
                         if (!playerIn.isCreative()) playerIn.getHeldItem(hand).shrink(1);
                         tile.markDirty();
                     }

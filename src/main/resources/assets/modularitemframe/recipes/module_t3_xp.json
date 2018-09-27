@@ -1,7 +1,8 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "modularitemframe:module_t3_xp"
+    "item": "modularitemframe:module_t3",
+    "data": 4
   },
   "pattern": [
     "OTO",
@@ -14,10 +15,12 @@
       "ore": "gemEmerald"
     },
     "V": {
-      "item": "modularitemframe:module_t2_vacuum"
+      "item": "modularitemframe:module_t2",
+      "data": 4
     },
     "T": {
-      "item": "modularitemframe:module_t1_tank"
+      "item": "modularitemframe:module_t1",
+      "data": 5
     },
     "O": {
       "type": "forge:ore_dict",

@@ -1,10 +1,16 @@
 package de.shyrik.modularitemframe;
 
 import de.shyrik.modularitemframe.api.ModuleRegistry;
+import de.shyrik.modularitemframe.api.UpgradeRegistry;
 import de.shyrik.modularitemframe.client.gui.GuiHandler;
-import de.shyrik.modularitemframe.common.module.t1.ModuleCrafting;
-import de.shyrik.modularitemframe.common.module.t1.ModuleIO;
+import de.shyrik.modularitemframe.common.module.t1.*;
+import de.shyrik.modularitemframe.common.module.t2.*;
+import de.shyrik.modularitemframe.common.module.t3.*;
 import de.shyrik.modularitemframe.common.network.NetworkHandler;
+import de.shyrik.modularitemframe.common.upgrade.UpgradeBlastResist;
+import de.shyrik.modularitemframe.common.upgrade.UpgradeCapacity;
+import de.shyrik.modularitemframe.common.upgrade.UpgradeRange;
+import de.shyrik.modularitemframe.common.upgrade.UpgradeSpeed;
 import de.shyrik.modularitemframe.init.Items;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
@@ -42,5 +48,27 @@ public class ModularItemFrame {
 
         ModuleRegistry.register(ModuleCrafting.LOC, ModuleCrafting.class);
         ModuleRegistry.register(ModuleIO.LOC, ModuleIO.class);
+        ModuleRegistry.register(ModuleItem.LOC, ModuleItem.class);
+        ModuleRegistry.register(ModuleNullify.LOC, ModuleNullify.class);
+        ModuleRegistry.register(ModuleTank.LOC, ModuleTank.class);
+        ModuleRegistry.register(ModuleStorage.LOC, ModuleStorage.class);
+
+        ModuleRegistry.register(ModuleCraftingPlus.LOC, ModuleCraftingPlus.class);
+        ModuleRegistry.register(ModuleDispense.LOC, ModuleDispense.class);
+        ModuleRegistry.register(ModuleVacuum.LOC, ModuleVacuum.class);
+        ModuleRegistry.register(ModuleTrashCan.LOC, ModuleTrashCan.class);
+        ModuleRegistry.register(ModuleUse.LOC, ModuleUse.class);
+
+        ModuleRegistry.register(ModuleAutoCrafting.LOC, ModuleAutoCrafting.class);
+        ModuleRegistry.register(ModuleTeleport.LOC, ModuleTeleport.class);
+        ModuleRegistry.register(ModuleItemTeleporter.LOC, ModuleItemTeleporter.class);
+        ModuleRegistry.register(ModuleXP.LOC, ModuleXP.class);
+        ModuleRegistry.register(ModuleFluidDispenser.LOC, ModuleFluidDispenser.class);
+
+        //Upgrades
+        UpgradeRegistry.register(UpgradeSpeed.LOC, UpgradeSpeed.class);
+        UpgradeRegistry.register(UpgradeRange.LOC, UpgradeRange.class);
+        UpgradeRegistry.register(UpgradeCapacity.LOC, UpgradeCapacity.class);
+        UpgradeRegistry.register(UpgradeBlastResist.LOC, UpgradeBlastResist.class);
     }
 }

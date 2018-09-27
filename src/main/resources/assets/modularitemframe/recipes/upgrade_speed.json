@@ -1,7 +1,8 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "modularitemframe:upgrade_speed",
+    "item": "modularitemframe:upgrade",
+    "data": 1,
     "count": 2
   },
   "pattern": [

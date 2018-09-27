@@ -1,11 +1,10 @@
 package de.shyrik.modularitemframe.init;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ModuleRegistry;
-import de.shyrik.modularitemframe.api.UpgradeRegistry;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
+import de.shyrik.modularitemframe.common.item.ItemUpgrade;
 import de.shyrik.modularitemframe.common.module.t1.*;
 import de.shyrik.modularitemframe.common.module.t2.*;
 import de.shyrik.modularitemframe.common.module.t3.*;
@@ -14,11 +13,13 @@ import de.shyrik.modularitemframe.common.upgrade.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemBucket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
 
 @Mod.EventBusSubscriber
 public class Registrar {
@@ -43,33 +44,36 @@ public class Registrar {
                 asDefault(new Item(), new ResourceLocation(ModularItemFrame.MOD_ID, "canvas")),
 
                 //Tier 1
-                asDefault(new ItemModule().addVariant(1, ModuleCrafting.LOC).addVariant(0, ModuleIO.LOC), new ResourceLocation(ModularItemFrame.MOD_ID, "module")),
-                /*asDefault(ModuleRegistry.registerCreate(ModuleCrafting.LOC, ModuleCrafting.class), ModuleCrafting.LOC),
-                asDefault(ModuleRegistry.registerCreate(ModuleIO.LOC, ModuleIO.class), ModuleIO.LOC),
-                asDefault(ModuleRegistry.registerCreate(ModuleItem.LOC, ModuleItem.class), ModuleItem.LOC),
-                asDefault(ModuleRegistry.registerCreate(ModuleNullify.LOC, ModuleNullify.class), ModuleNullify.LOC),
-                asDefault(ModuleRegistry.registerCreate(ModuleTank.LOC, ModuleTank.class), ModuleTank.LOC),
-                asDefault(ModuleRegistry.registerCreate(ModuleStorage.LOC, ModuleStorage.class), ModuleStorage.LOC),
-
+                asDefault(new ItemModule(ModuleItem.LOC)
+                                .addVariant(ModuleIO.LOC)
+                                .addVariant(ModuleCrafting.LOC)
+                                .addVariant(ModuleNullify.LOC)
+                                .addVariant(ModuleStorage.LOC)
+                                .addVariant(ModuleTank.LOC),
+                        new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1")),
                 //Tier 2
-                asDefault(ModuleRegistry.registerCreate(ModuleCraftingPlus.LOC, ModuleCraftingPlus.class), ModuleCraftingPlus.LOC),
-                asDefault(ModuleRegistry.registerCreate(ModuleDispense.LOC, ModuleDispense.class), ModuleDispense.LOC),
-                asDefault(ModuleRegistry.registerCreate(ModuleVacuum.LOC, ModuleVacuum.class), ModuleVacuum.LOC),
-                asDefault(ModuleRegistry.registerCreate(ModuleTrashCan.LOC, ModuleTrashCan.class), ModuleTrashCan.LOC),
-                asDefault(ModuleRegistry.registerCreate(ModuleUse.LOC, ModuleUse.class), ModuleUse.LOC),
-
+                asDefault(new ItemModule(ModuleCraftingPlus.LOC)
+                                .addVariant(ModuleDispense.LOC)
+                                .addVariant(ModuleTrashCan.LOC)
+                                .addVariant(ModuleUse.LOC)
+                                .addVariant(ModuleVacuum.LOC),
+                        new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2")),
                 //Tier 3
-                asDefault(ModuleRegistry.registerCreate(ModuleAutoCrafting.LOC, ModuleAutoCrafting.class), ModuleAutoCrafting.LOC),
-                asDefault(ModuleRegistry.registerCreate(ModuleTeleport.LOC, ModuleTeleport.class), ModuleTeleport.LOC),
-                asDefault(ModuleRegistry.registerCreate(ModuleItemTeleporter.LOC, ModuleItemTeleporter.class), ModuleItemTeleporter.LOC),
-                asDefault(ModuleRegistry.registerCreate(ModuleXP.LOC, ModuleXP.class), ModuleXP.LOC),
-                asDefault(ModuleRegistry.registerCreate(ModuleFluidDispenser.LOC, ModuleFluidDispenser.class), ModuleFluidDispenser.LOC),*/
+                asDefault(new ItemModule(ModuleAutoCrafting.LOC)
+                                .addVariant(ModuleFluidDispenser.LOC)
+                                .addVariant(ModuleItemTeleporter.LOC)
+                                .addVariant(ModuleTeleport.LOC)
+                                .addVariant(ModuleXP.LOC),
+                        new ResourceLocation(ModularItemFrame.MOD_ID, "module_t3")),
 
                 //Upgrades
-                asDefault(UpgradeRegistry.registerCreate(UpgradeSpeed.LOC, UpgradeSpeed.class), UpgradeSpeed.LOC),
-                asDefault(UpgradeRegistry.registerCreate(UpgradeRange.LOC, UpgradeRange.class), UpgradeRange.LOC),
-                asDefault(UpgradeRegistry.registerCreate(UpgradeCapacity.LOC, UpgradeCapacity.class), UpgradeCapacity.LOC),
-                asDefault(UpgradeRegistry.registerCreate(UpgradeBlastResist.LOC, UpgradeBlastResist.class), UpgradeBlastResist.LOC)
+                asDefault(new ItemUpgrade(UpgradeBlastResist.LOC)
+                        .addVariant(UpgradeSpeed.LOC)
+                        .addVariant(UpgradeRange.LOC)
+                        .addVariant(UpgradeCapacity.LOC),
+                        new ResourceLocation(ModularItemFrame.MOD_ID, "upgrade")
+                )
+
         );
     }
 

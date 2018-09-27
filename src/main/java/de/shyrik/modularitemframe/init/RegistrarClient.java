@@ -4,6 +4,7 @@ import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.item.ItemModule;
+import de.shyrik.modularitemframe.common.item.ItemUpgrade;
 import de.shyrik.modularitemframe.common.module.t1.*;
 import de.shyrik.modularitemframe.common.module.t2.ModuleDispense;
 import de.shyrik.modularitemframe.common.module.t2.ModuleTrashCan;
@@ -25,8 +26,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.Objects;
-
 @Mod.EventBusSubscriber(Side.CLIENT)
 public class RegistrarClient {
 
@@ -37,29 +36,11 @@ public class RegistrarClient {
 
             Items.SCREWDRIVER,
             Items.CANVAS,
-            Items.MODULE,
+            Items.MODULE_T1,
+            Items.MODULE_T2,
+            Items.MODULE_T3,
 
-            /*Items.MODULE_T1_ITEM,
-            Items.MODULE_T1_CRAFT,
-            Items.MODULE_T1_IO,
-            Items.MODULE_T1_NULLIFY,
-            Items.MODULE_T1_TANK,
-            Items.MODULE_T1_STORAGE,
-            Items.MODULE_T2_CRAFT_PLUS,
-            Items.MODULE_T2_DISPENSE,
-            Items.MODULE_T2_TRASHCAN,
-            Items.MODULE_T2_VACUUM,
-            Items.MODULE_T2_USE,
-            Items.MODULE_T3_AUTO_CRAFTING,
-            Items.MODULE_T3_FLUID_DISPENSER,
-            Items.MODULE_T3_ITEMTELE,
-            Items.MODULE_T3_TELE,
-            Items.MODULE_T3_XP,*/
-
-            Items.UPGRADE_SPEED,
-            Items.UPGRADE_RANGE,
-            Items.UPGRADE_CAPACITY,
-            Items.UPGRADE_RESIST
+            Items.UPGRADE
         );
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileModularFrame.class, new FrameRenderer());
@@ -95,7 +76,11 @@ public class RegistrarClient {
             if (item instanceof ItemModule) {
                 NonNullList<ItemStack> list = NonNullList.create();
                 item.getSubItems(ModularItemFrame.TAB, list);
-                list.forEach(stack -> registerItemModel(item, stack.getItemDamage(), ItemModule.getModuleId(stack), "inventory"));
+                list.forEach(stack -> registerItemModel(item, stack.getItemDamage(), ((ItemModule) item).getModuleId(stack), "inventory"));
+            } else if (item instanceof ItemUpgrade) {
+                NonNullList<ItemStack> list = NonNullList.create();
+                item.getSubItems(ModularItemFrame.TAB, list);
+                list.forEach(stack -> registerItemModel(item, stack.getItemDamage(), ((ItemUpgrade) item).getUpgradeId(stack), "inventory"));
             } else registerItemModel(item);
         }
     }

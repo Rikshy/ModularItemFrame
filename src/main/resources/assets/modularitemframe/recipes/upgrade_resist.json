@@ -1,7 +1,8 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "modularitemframe:upgrade_resist"
+    "item": "modularitemframe:upgrade",
+    "data": 0
   },
   "pattern": [
     "OOO",

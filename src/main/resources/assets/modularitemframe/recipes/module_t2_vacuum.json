@@ -1,7 +1,8 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "modularitemframe:module_t2_vacuum"
+    "item": "modularitemframe:module_t2",
+    "data": 4
   },
   "pattern": [
     "ICI",
@@ -10,10 +11,12 @@
   ],
   "key": {
     "A": {
-      "item": "modularitemframe:module_t1_io"
+      "item": "modularitemframe:module_t1",
+      "data": 1
     },
     "C": {
-      "item": "modularitemframe:module_t1_item"
+      "item": "modularitemframe:module_t1",
+      "data": 0
     },
     "I": {
       "type": "forge:ore_dict",

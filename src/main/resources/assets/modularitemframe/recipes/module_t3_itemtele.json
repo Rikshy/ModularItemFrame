@@ -1,7 +1,8 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "modularitemframe:module_t3_itemtele"
+    "item": "modularitemframe:module_t3",
+    "data": 2
   },
   "pattern": [
     "ODO",
@@ -14,10 +15,12 @@
       "ore": "enderpearl"
     },
     "V": {
-      "item": "modularitemframe:module_t2_vacuum"
+      "item": "modularitemframe:module_t2",
+      "data": 4
     },
     "D": {
-      "item": "modularitemframe:module_t2_dispense"
+      "item": "modularitemframe:module_t2",
+      "data": 1
     },
     "C": {
       "type": "forge:ore_dict",
