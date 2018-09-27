@@ -4,6 +4,7 @@ import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleRegistry;
 import de.shyrik.modularitemframe.api.UpgradeRegistry;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
+import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.module.t1.*;
 import de.shyrik.modularitemframe.common.module.t2.*;
@@ -42,7 +43,8 @@ public class Registrar {
                 asDefault(new Item(), new ResourceLocation(ModularItemFrame.MOD_ID, "canvas")),
 
                 //Tier 1
-                asDefault(ModuleRegistry.registerCreate(ModuleCrafting.LOC, ModuleCrafting.class), ModuleCrafting.LOC),
+                asDefault(new ItemModule().addVariant(1, ModuleCrafting.LOC).addVariant(0, ModuleIO.LOC), new ResourceLocation(ModularItemFrame.MOD_ID, "module")),
+                /*asDefault(ModuleRegistry.registerCreate(ModuleCrafting.LOC, ModuleCrafting.class), ModuleCrafting.LOC),
                 asDefault(ModuleRegistry.registerCreate(ModuleIO.LOC, ModuleIO.class), ModuleIO.LOC),
                 asDefault(ModuleRegistry.registerCreate(ModuleItem.LOC, ModuleItem.class), ModuleItem.LOC),
                 asDefault(ModuleRegistry.registerCreate(ModuleNullify.LOC, ModuleNullify.class), ModuleNullify.LOC),
@@ -61,7 +63,7 @@ public class Registrar {
                 asDefault(ModuleRegistry.registerCreate(ModuleTeleport.LOC, ModuleTeleport.class), ModuleTeleport.LOC),
                 asDefault(ModuleRegistry.registerCreate(ModuleItemTeleporter.LOC, ModuleItemTeleporter.class), ModuleItemTeleporter.LOC),
                 asDefault(ModuleRegistry.registerCreate(ModuleXP.LOC, ModuleXP.class), ModuleXP.LOC),
-                asDefault(ModuleRegistry.registerCreate(ModuleFluidDispenser.LOC, ModuleFluidDispenser.class), ModuleFluidDispenser.LOC),
+                asDefault(ModuleRegistry.registerCreate(ModuleFluidDispenser.LOC, ModuleFluidDispenser.class), ModuleFluidDispenser.LOC),*/
 
                 //Upgrades
                 asDefault(UpgradeRegistry.registerCreate(UpgradeSpeed.LOC, UpgradeSpeed.class), UpgradeSpeed.LOC),

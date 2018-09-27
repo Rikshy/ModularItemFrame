@@ -1,6 +1,9 @@
 package de.shyrik.modularitemframe;
 
+import de.shyrik.modularitemframe.api.ModuleRegistry;
 import de.shyrik.modularitemframe.client.gui.GuiHandler;
+import de.shyrik.modularitemframe.common.module.t1.ModuleCrafting;
+import de.shyrik.modularitemframe.common.module.t1.ModuleIO;
 import de.shyrik.modularitemframe.common.network.NetworkHandler;
 import de.shyrik.modularitemframe.init.Items;
 import net.minecraft.creativetab.CreativeTabs;
@@ -36,5 +39,8 @@ public class ModularItemFrame {
     public void preInit(FMLPreInitializationEvent event) {
         NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
         NetworkHandler.registerPackets();
+
+        ModuleRegistry.register(ModuleCrafting.LOC, ModuleCrafting.class);
+        ModuleRegistry.register(ModuleIO.LOC, ModuleIO.class);
     }
 }

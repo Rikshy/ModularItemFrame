@@ -9,8 +9,9 @@ public class Items {
     public static final Item SCREWDRIVER = null;
 
     public static final Item CANVAS = null;
+    public static final Item MODULE = null;
 
-    public static final Item MODULE_T1_CRAFT = null;
+    /*public static final Item MODULE_T1_CRAFT = null;
     public static final Item MODULE_T1_IO = null;
     public static final Item MODULE_T1_ITEM = null;
     public static final Item MODULE_T1_NULLIFY = null;
@@ -27,7 +28,7 @@ public class Items {
     public static final Item MODULE_T3_FLUID_DISPENSER = null;
     public static final Item MODULE_T3_ITEMTELE = null;
     public static final Item MODULE_T3_TELE = null;
-    public static final Item MODULE_T3_XP = null;
+    public static final Item MODULE_T3_XP = null;*/
 
     public static final Item UPGRADE_SPEED = null;
     public static final Item UPGRADE_RANGE = null;

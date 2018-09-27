@@ -36,7 +36,7 @@ public class ModuleRegistry {
      */
     public static ItemModule registerCreate(ResourceLocation id, Class<? extends ModuleBase> moduleClass) {
         register(id, moduleClass);
-        return new ItemModule(id);
+        return new ItemModule();
     }
 
     /**

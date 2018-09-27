@@ -94,7 +94,7 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
 
     @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        boolean moveHand;
+        boolean moveHand = false;
         if (!(playerIn instanceof FakePlayer) || ConfigValues.AllowFakePlayers) {
             TileModularFrame tile = getTE(worldIn, pos);
             ItemStack handItem = playerIn.getHeldItem(hand);

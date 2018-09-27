@@ -1,7 +1,9 @@
 package de.shyrik.modularitemframe.init;
 
+import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
+import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.module.t1.*;
 import de.shyrik.modularitemframe.common.module.t2.ModuleDispense;
 import de.shyrik.modularitemframe.common.module.t2.ModuleTrashCan;
@@ -12,6 +14,8 @@ import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -33,8 +37,9 @@ public class RegistrarClient {
 
             Items.SCREWDRIVER,
             Items.CANVAS,
+            Items.MODULE,
 
-            Items.MODULE_T1_ITEM,
+            /*Items.MODULE_T1_ITEM,
             Items.MODULE_T1_CRAFT,
             Items.MODULE_T1_IO,
             Items.MODULE_T1_NULLIFY,
@@ -49,7 +54,7 @@ public class RegistrarClient {
             Items.MODULE_T3_FLUID_DISPENSER,
             Items.MODULE_T3_ITEMTELE,
             Items.MODULE_T3_TELE,
-            Items.MODULE_T3_XP,
+            Items.MODULE_T3_XP,*/
 
             Items.UPGRADE_SPEED,
             Items.UPGRADE_RANGE,
@@ -86,12 +91,21 @@ public class RegistrarClient {
     }
 
     private static void registerAllItemModel(Item... items) {
-        for (Item item : items)
-            registerItemModel(item, "inventory");
+        for (Item item : items) {
+            if (item instanceof ItemModule) {
+                NonNullList<ItemStack> list = NonNullList.create();
+                item.getSubItems(ModularItemFrame.TAB, list);
+                list.forEach(stack -> registerItemModel(item, stack.getItemDamage(), ItemModule.getModuleId(stack), "inventory"));
+            } else registerItemModel(item);
+        }
     }
 
-    private static void registerItemModel(Item item, String variant) {
-        ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(Objects.requireNonNull(item.getRegistryName()), variant));
+    private static void registerItemModel(Item item) {
+        registerItemModel(item, 0, item.getRegistryName(), "inventory");
+    }
+
+    private static void registerItemModel(Item item, int meta, ResourceLocation location, String variant) {
+        ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(location, variant));
     }
 
     private static void registerAllTex(TextureMap map, ResourceLocation... locations) {
