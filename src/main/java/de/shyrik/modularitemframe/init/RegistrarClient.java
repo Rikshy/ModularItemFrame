@@ -76,17 +76,21 @@ public class RegistrarClient {
             if (item instanceof ItemModule) {
                 NonNullList<ItemStack> list = NonNullList.create();
                 item.getSubItems(ModularItemFrame.TAB, list);
-                list.forEach(stack -> registerItemModel(item, stack.getItemDamage(), ((ItemModule) item).getModuleId(stack), "inventory"));
+                list.forEach(stack -> registerItemModel(item, stack.getItemDamage(), ((ItemModule) item).getModuleId(stack)));
             } else if (item instanceof ItemUpgrade) {
                 NonNullList<ItemStack> list = NonNullList.create();
                 item.getSubItems(ModularItemFrame.TAB, list);
-                list.forEach(stack -> registerItemModel(item, stack.getItemDamage(), ((ItemUpgrade) item).getUpgradeId(stack), "inventory"));
+                list.forEach(stack -> registerItemModel(item, stack.getItemDamage(), ((ItemUpgrade) item).getUpgradeId(stack)));
             } else registerItemModel(item);
         }
     }
 
     private static void registerItemModel(Item item) {
-        registerItemModel(item, 0, item.getRegistryName(), "inventory");
+        registerItemModel(item, 0, item.getRegistryName());
+    }
+
+    private static void registerItemModel(Item item, int meta, ResourceLocation location) {
+        registerItemModel(item, meta, location, "inventory");
     }
 
     private static void registerItemModel(Item item, int meta, ResourceLocation location, String variant) {
