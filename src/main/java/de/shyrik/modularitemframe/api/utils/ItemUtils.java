@@ -94,6 +94,10 @@ public class ItemUtils {
 			ItemStack stack = inventory.extractItem(invSlot, 1, true);
 			if (!stack.isEmpty() && areItemsEqualIgnoreDurability(toRemove, stack)) {
 				inventory.extractItem(invSlot, 1, false);
+				if(stack.getItem().hasContainerItem(stack))
+					inventory.setStackInSlot(invSlot, stack.getItem().getContainerItem(stack));
+				else
+					inventory.extractItem(invSlot, 1, false);
 				break;
 			}
 		}
