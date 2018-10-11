@@ -86,7 +86,7 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
 
     @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (!hasValidRecipe(playerIn))
+        if (!hasValidRecipe())
             playerIn.openGui(ModularItemFrame.instance, GuiHandler.getMetaGuiId(GuiHandler.CRAFTING_FRAME, facing), worldIn, pos.getX(), pos.getY(), pos.getZ());
         else {
             if (!worldIn.isRemote) {
@@ -114,7 +114,7 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
         if (workingInv == null || recipe == null || recipe.getRecipeOutput().isEmpty() || !ItemUtils.canCraft(workingInv, recipe.getIngredients()))
             return;
 
-        int craftAmount = fullStack ? Math.min(ItemUtils.countPossibleCrafts(workingInv, recipe.getIngredients()), 64) : 1;
+        int craftAmount = fullStack ? Math.min(ItemUtils.countPossibleCrafts(workingInv, recipe), 64) : 1;
         do {
             ItemStack remain = ItemUtils.giveStack(playerInventory, recipe.getRecipeOutput()); //use playerinventory here!
             if (!remain.isEmpty()) ItemUtils.ejectStack(player.world, tile.getPos(), tile.blockFacing(), remain);
@@ -132,7 +132,7 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
         return playerInventory;
     }
 
-    public boolean hasValidRecipe(@Nonnull EntityPlayer player) {
+    protected boolean hasValidRecipe() {
         if (recipe == null) reloadRecipe();
         return recipe != null && !recipe.getRecipeOutput().isEmpty();
     }
@@ -160,13 +160,13 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
             for (int slot = 0; slot < ghostInventory.getSlots(); ++slot) {
                 ItemStack stack = ghostInventory.getStackInSlot(slot);
                 if (!stack.isEmpty()) {
-                    if (!ItemUtils.increaseStackinList(stacks, stack)) stacks.add(stack.copy());
+                    if (!ItemUtils.increaseStackInList(stacks, stack)) stacks.add(stack.copy());
                 }
             }
+
             for (ItemStack stack : stacks) {
                 input.item(stack);
             }
-            //probeInfo.horizontal().text("output:").item(recipe.getRecipeOutput());
         }
     }
 

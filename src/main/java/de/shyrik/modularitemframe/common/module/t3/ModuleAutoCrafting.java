@@ -13,17 +13,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -62,32 +59,26 @@ public class ModuleAutoCrafting extends ModuleCraftingPlus {
         if (world.isRemote) return;
         if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
-        EnumFacing facing = tile.blockFacing();
-        TileEntity neighbor = tile.getAttachedTile();
-        if (neighbor != null) {
-            IItemHandlerModifiable handler = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
-            if (handler != null) {
-                autoCraft(handler, world, pos, false);
-            }
+        IItemHandlerModifiable handler = (IItemHandlerModifiable) tile.getAttachedInventory();
+        if (handler != null) {
+            autoCraft(handler, world, pos);
         }
     }
 
-    private void autoCraft(IItemHandlerModifiable inventory, World world, BlockPos pos, boolean fullStack) {
+    private void autoCraft(IItemHandlerModifiable inventory, World world, BlockPos pos) {
         if (recipe == null) reloadRecipe();
 
         if (recipe == null || recipe.getRecipeOutput().isEmpty() || !ItemUtils.canCraft(inventory, recipe.getIngredients()))
             return;
 
-        int craftAmount = fullStack ? Math.min(ItemUtils.countPossibleCrafts(inventory, recipe.getIngredients()), 64) : 1;
-        do {
-            ItemUtils.ejectStack(world, pos, tile.blockFacing(), recipe.getRecipeOutput().copy());
+        ItemUtils.ejectStack(world, pos, tile.blockFacing(), recipe.getRecipeOutput().copy());
 
-            for (Ingredient ingredient : recipe.getIngredients()) {
-                if (ingredient.getMatchingStacks().length > 0) {
-                    ItemUtils.removeFromInventory(inventory, ingredient.getMatchingStacks());
-                }
+        for (Ingredient ingredient : recipe.getIngredients()) {
+            if (ingredient.getMatchingStacks().length > 0) {
+                ItemUtils.removeFromInventory(inventory, ingredient.getMatchingStacks());
             }
-        } while (--craftAmount > 0);
+        }
+
         NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.BLOCK_LADDER_STEP.getSoundName().toString(), SoundCategory.BLOCKS.getName(), 0.3F, 0.7F), tile.getPos(), world.provider.getDimension());
     }
 }

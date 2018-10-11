@@ -8,15 +8,12 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
@@ -59,13 +56,7 @@ public class ModuleCraftingPlus extends ModuleCrafting {
 
     @Override
     protected IItemHandlerModifiable getWorkingInventories(IItemHandlerModifiable playerInventory) {
-        EnumFacing facing = tile.blockFacing();
-
-        TileEntity neighbor = tile.getAttachedTile();
-        IItemHandlerModifiable neighborInventory = null;
-        if (neighbor != null) {
-            neighborInventory = (IItemHandlerModifiable) neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
-        }
+        IItemHandlerModifiable neighborInventory = (IItemHandlerModifiable)tile.getAttachedInventory();
 
         if (neighborInventory != null) {
             if (mode == EnumMode.NO_PLAYER) return neighborInventory;

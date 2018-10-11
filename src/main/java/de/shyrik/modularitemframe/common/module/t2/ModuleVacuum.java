@@ -13,7 +13,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -24,11 +23,9 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class ModuleVacuum extends ModuleBase {
@@ -88,7 +85,7 @@ public class ModuleVacuum extends ModuleBase {
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
-        IItemHandlerModifiable handler = getNeighborTileItemCap();
+        IItemHandlerModifiable handler = (IItemHandlerModifiable) tile.getAttachedInventory();
         if (handler != null) {
             List<EntityItem> entities = world.getEntitiesWithinAABB(EntityItem.class, getVacuumBB(pos));
             for (EntityItem entity : entities) {
@@ -123,16 +120,6 @@ public class ModuleVacuum extends ModuleBase {
         if (nbt.hasKey(NBT_RANGEX)) rangeX = nbt.getInteger(NBT_RANGEX);
         if (nbt.hasKey(NBT_RANGEY)) rangeY = nbt.getInteger(NBT_RANGEY);
         if (nbt.hasKey(NBT_RANGEZ)) rangeZ = nbt.getInteger(NBT_RANGEZ);
-    }
-
-    @Nullable
-    private IItemHandlerModifiable getNeighborTileItemCap() {
-        EnumFacing facing = tile.blockFacing();
-        TileEntity te = tile.getAttachedTile();
-
-        if (te != null)
-            return (IItemHandlerModifiable) te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
-        return null;
     }
 
     private AxisAlignedBB getVacuumBB(@Nonnull BlockPos pos) {

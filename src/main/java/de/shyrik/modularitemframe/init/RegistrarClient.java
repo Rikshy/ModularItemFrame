@@ -32,15 +32,15 @@ public class RegistrarClient {
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
         registerAllItemModel(
-            Item.getItemFromBlock(Blocks.MODULAR_FRAME),
+                Item.getItemFromBlock(Blocks.MODULAR_FRAME),
 
-            Items.SCREWDRIVER,
-            Items.CANVAS,
-            Items.MODULE_T1,
-            Items.MODULE_T2,
-            Items.MODULE_T3,
+                Items.SCREWDRIVER,
+                Items.CANVAS,
+                Items.MODULE_T1,
+                Items.MODULE_T2,
+                Items.MODULE_T3,
 
-            Items.UPGRADE
+                Items.UPGRADE
         );
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileModularFrame.class, new FrameRenderer());

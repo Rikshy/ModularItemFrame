@@ -124,20 +124,16 @@ public class ModuleIO extends ModuleBase {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if(!world.isRemote) {
-            TileEntity neighbor = tile.getAttachedTile();
-            if (neighbor != null) {
-                EnumFacing blockFacing = tile.blockFacing();
-                IItemHandler handler = neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, blockFacing);
-                if (handler != null) {
-                    int slot = ItemUtils.getFirstOccupiedSlot(handler);
-                    if (slot >= 0) {
-                        ItemStack slotStack = handler.getStackInSlot(slot);
-                        if (!ItemStack.areItemsEqual(slotStack, displayItem)) {
-                            ItemStack copy = slotStack.copy();
-                            copy.setCount(1);
-                            displayItem = copy;
-                            tile.markDirty();
-                        }
+            IItemHandler handler = tile.getAttachedInventory();
+            if (handler != null) {
+                int slot = ItemUtils.getFirstOccupiedSlot(handler);
+                if (slot >= 0) {
+                    ItemStack slotStack = handler.getStackInSlot(slot);
+                    if (!ItemStack.areItemsEqual(slotStack, displayItem)) {
+                        ItemStack copy = slotStack.copy();
+                        copy.setCount(1);
+                        displayItem = copy;
+                        tile.markDirty();
                     }
                 }
             }

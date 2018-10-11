@@ -19,7 +19,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
@@ -29,7 +28,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -176,17 +174,14 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
     }
 
     private ItemStack getNextStack() {
-        TileEntity neighbor = tile.getAttachedTile();
-        if (neighbor != null) {
-            EnumFacing blockFacing = tile.blockFacing();
-            IItemHandler handler = neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, blockFacing);
-            if (handler != null) {
-                int slot = ItemUtils.getFirstOccupiedSlot(handler);
-                if (slot >= 0) {
-                    return handler.extractItem(slot, handler.getStackInSlot(slot).getCount(), false);
-                }
+        IItemHandler handler = tile.getAttachedInventory();
+        if (handler != null) {
+            int slot = ItemUtils.getFirstOccupiedSlot(handler);
+            if (slot >= 0) {
+                return handler.extractItem(slot, handler.getStackInSlot(slot).getCount(), false);
             }
         }
+
         return ItemStack.EMPTY;
     }
 

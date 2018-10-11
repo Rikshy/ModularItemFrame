@@ -25,6 +25,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -114,8 +116,22 @@ public class TileModularFrame extends TileEntity implements ITickable {
         return world.getBlockState(pos).getValue(BlockModularFrame.FACING);
     }
 
+    public boolean hasAttachedTile() {
+        return getAttachedTile() != null;
+    }
+
+    @Nullable
     public TileEntity getAttachedTile() {
         return world.getTileEntity(pos.offset(blockFacing()));
+    }
+
+    @Nullable
+    public IItemHandler getAttachedInventory() {
+        TileEntity neighbor = getAttachedTile();
+        if (neighbor != null)
+            return neighbor.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, blockFacing().getOpposite());
+
+        return null;
     }
 
     public IBlockState getAttachedBlock() {
