@@ -57,14 +57,12 @@ public class RenderUtils {
 			GlStateManager.disableLighting();
 
 			GlStateManager.scale(0.5F, 0.5F, 0.5F);
-			GlStateManager.pushAttrib();
 			RenderHelper.enableStandardItemLighting();
 			if (itemRenderer.shouldRenderItemIn3D(stack)) {
 				GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
 			}
 			itemRenderer.renderItem(stack, transformType);
 			RenderHelper.disableStandardItemLighting();
-			GlStateManager.popAttrib();
 
 			GlStateManager.enableLighting();
 			GlStateManager.popMatrix();

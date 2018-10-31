@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 public class ModuleCraftingPlus extends ModuleCrafting {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2_craft_plus");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_craft_plus");
     private static final String NBT_MODE = "cpmode";
 
     public EnumMode mode = EnumMode.PLAYER;
@@ -29,6 +30,13 @@ public class ModuleCraftingPlus extends ModuleCrafting {
     @Override
     public String getModuleName() {
         return I18n.format("modularitemframe.module.crafting_plus");
+    }
+
+    @Nonnull
+    @Override
+    @SideOnly(Side.CLIENT)
+    public ResourceLocation frontTexture() {
+        return BG_LOC;
     }
 
     @Nonnull

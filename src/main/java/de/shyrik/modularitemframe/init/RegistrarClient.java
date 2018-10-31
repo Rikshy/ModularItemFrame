@@ -6,9 +6,12 @@ import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemUpgrade;
 import de.shyrik.modularitemframe.common.module.t1.*;
+import de.shyrik.modularitemframe.common.module.t2.ModuleCraftingPlus;
 import de.shyrik.modularitemframe.common.module.t2.ModuleDispense;
 import de.shyrik.modularitemframe.common.module.t2.ModuleTrashCan;
 import de.shyrik.modularitemframe.common.module.t2.ModuleVacuum;
+import de.shyrik.modularitemframe.common.module.t3.ModuleAutoCrafting;
+import de.shyrik.modularitemframe.common.module.t3.ModuleFluidDispenser;
 import de.shyrik.modularitemframe.common.module.t3.ModuleItemTeleporter;
 import de.shyrik.modularitemframe.common.module.t3.ModuleXP;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
@@ -52,22 +55,26 @@ public class RegistrarClient {
                 BlockModularFrame.INNER_HARDEST_LOC,
                 BlockModularFrame.INNER_HARD_LOC,
 
-                ModuleIO.BG_LOC,
                 ModuleCrafting.BG_LOC,
+                ModuleIO.BG_LOC,
                 ModuleItem.BG_LOC,
                 ModuleNullify.BG_LOC,
+                ModuleStorage.BG_LOC,
                 ModuleTank.BG_LOC,
 
+                ModuleCraftingPlus.BG_LOC,
                 ModuleDispense.BG_LOC,
-                ModuleVacuum.BG_LOC,
                 ModuleTrashCan.BG_LOC1,
                 ModuleTrashCan.BG_LOC2,
                 ModuleTrashCan.BG_LOC3,
-                ModuleXP.BG_LOC,
+                ModuleVacuum.BG_LOC,
 
+                ModuleAutoCrafting.BG_LOC,
+                ModuleFluidDispenser.BG_LOC,
                 ModuleItemTeleporter.BG_IN,
                 ModuleItemTeleporter.BG_OUT,
-                ModuleItemTeleporter.BG_NONE
+                ModuleItemTeleporter.BG_NONE,
+                ModuleXP.BG_LOC
         );
     }
 

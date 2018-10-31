@@ -23,7 +23,7 @@ import javax.annotation.Nonnull;
 
 public class ModuleFluidDispenser extends ModuleBase {
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t3_fluid_dispenser");
-    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_nyi");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t3_fluid_dispenser");
 
     @Nonnull
     @Override
