@@ -47,7 +47,7 @@ public class ItemUtils {
         IItemHandler copy = copyItemHandler(inventory);
         for (Ingredient ingredient : ingredients) {
             if (ingredient.getMatchingStacks().length > 0) {
-                int slot = findSlotOfIngredient(inventory, ingredient);
+                int slot = findSlotOfIngredient(copy, ingredient);
                 if (slot >= 0)
                     copy.extractItem(slot, 1, false);
                 else
