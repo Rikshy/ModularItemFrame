@@ -3,15 +3,16 @@ package de.shyrik.modularitemframe.common.module.t2;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleBase;
-import de.shyrik.modularitemframe.api.UpgradeBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
+import de.shyrik.modularitemframe.common.block.BlockModularFrame;
+import de.shyrik.modularitemframe.common.network.NetworkHandler;
+import de.shyrik.modularitemframe.common.network.packet.SpawnParticlesPacket;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
@@ -20,15 +21,17 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class ModuleVacuum extends ModuleBase {
 
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2_vacuum");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_vacuum");
     private static final String NBT_MODE = "rangemode";
     private static final String NBT_RANGEX = "rangex";
     private static final String NBT_RANGEY = "rangey";
@@ -41,20 +44,16 @@ public class ModuleVacuum extends ModuleBase {
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/vacuum_bg");
+        return BG_LOC;
     }
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
     public ResourceLocation innerTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
-    }
-
-    @Nonnull
-    @Override
-    public ResourceLocation backTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/vacuum_bg");
+        return BlockModularFrame.INNER_HARD_LOC;
     }
 
     @Override
@@ -84,10 +83,9 @@ public class ModuleVacuum extends ModuleBase {
 
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
-        if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0)
-            return;
+        if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
-        IItemHandlerModifiable handler = getNeighborTileItemCap();
+        IItemHandlerModifiable handler = (IItemHandlerModifiable) tile.getAttachedInventory();
         if (handler != null) {
             List<EntityItem> entities = world.getEntitiesWithinAABB(EntityItem.class, getVacuumBB(pos));
             for (EntityItem entity : entities) {
@@ -98,12 +96,13 @@ public class ModuleVacuum extends ModuleBase {
                 ItemStack remain = ItemUtils.giveStack(handler, entityStack);
                 if (remain.isEmpty()) entity.setDead();
                 else entity.setItem(remain);
-                world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, entity.posX, entity.posY, entity.posZ, world.rand.nextGaussian(), 0.0D, world.rand.nextGaussian());
+                NetworkHandler.sendAround(new SpawnParticlesPacket(EnumParticleTypes.EXPLOSION_NORMAL.getParticleID(), entity.getPosition(), 1), entity.getPosition(), entity.dimension);
                 break;
             }
         }
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = super.serializeNBT();
@@ -121,16 +120,6 @@ public class ModuleVacuum extends ModuleBase {
         if (nbt.hasKey(NBT_RANGEX)) rangeX = nbt.getInteger(NBT_RANGEX);
         if (nbt.hasKey(NBT_RANGEY)) rangeY = nbt.getInteger(NBT_RANGEY);
         if (nbt.hasKey(NBT_RANGEZ)) rangeZ = nbt.getInteger(NBT_RANGEZ);
-    }
-
-    @Nullable
-    private IItemHandlerModifiable getNeighborTileItemCap() {
-        EnumFacing facing = tile.blockFacing();
-        TileEntity te = tile.getNeighbor(facing);
-
-        if (te != null)
-            return (IItemHandlerModifiable) te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
-        return null;
     }
 
     private AxisAlignedBB getVacuumBB(@Nonnull BlockPos pos) {
@@ -152,7 +141,7 @@ public class ModuleVacuum extends ModuleBase {
     }
 
     private void adjustRange(@Nonnull EntityPlayer playerIn) {
-        int maxRange = ConfigValues.BaseVacuumRange + countSpeed;
+        int maxRange = ConfigValues.BaseVacuumRange + tile.getRangeUpCount();
         if (maxRange > 1) {
             int r = 0;
             switch (mode) {

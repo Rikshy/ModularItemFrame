@@ -1,0 +1,28 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "modularitemframe:module_t2",
+    "data": 1
+  },
+  "pattern": [
+    "ICI",
+    "O#O",
+    "ICI"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:dispenser"
+    },
+    "C": {
+      "item": "modularitemframe:canvas"
+    },
+    "O": {
+      "item": "modularitemframe:module_t1",
+      "data": 1
+    },
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    }
+  }
+}

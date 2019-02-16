@@ -5,6 +5,9 @@ import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
+import de.shyrik.modularitemframe.common.block.BlockModularFrame;
+import de.shyrik.modularitemframe.common.network.NetworkHandler;
+import de.shyrik.modularitemframe.common.network.packet.TeleportEffectPacket;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import mcjty.theoneprobe.api.IProbeHitData;
 import mcjty.theoneprobe.api.IProbeInfo;
@@ -26,24 +29,30 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 public class ModuleTeleport extends ModuleBase {
+
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t3_tele");
 
     private static final String NBT_LINK = "linked_pos";
     private static final String NBT_LINKX = "linked_posX";
     private static final String NBT_LINKY = "linked_posY";
     private static final String NBT_LINKZ = "linked_posZ";
 
-    public BlockPos linkedLoc = null;
+    private BlockPos linkedLoc = null;
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg");
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_item");
     }
 
     @Override
@@ -52,8 +61,49 @@ public class ModuleTeleport extends ModuleBase {
     }
 
     @Override
-    public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        RenderUtils.renderEnd(tesr, x, y, z, tile.blockFacing());
+    @SideOnly(Side.CLIENT)
+    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+        RenderUtils.renderEnd(renderer, x, y, z, info -> {
+            switch (tile.blockFacing()) {
+                case DOWN:
+                    info.buffer.pos(x + 0.85d, y + 0.08d, z + 0.85d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.85d, y + 0.08d, z + 0.14d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.14d, y + 0.08d, z + 0.14d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.14d, y + 0.08d, z + 0.85d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    break;
+                case UP:
+                    info.buffer.pos(x + 0.85d, y + 0.92d, z + 0.16d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.85d, y + 0.92d, z + 0.85d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.16d, y + 0.92d, z + 0.85d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.16d, y + 0.92d, z + 0.16d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    break;
+                case NORTH:
+                    info.buffer.pos(x + 0.85d, y + 0.85d, z + 0.08d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.14d, y + 0.85d, z + 0.08d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.14d, y + 0.14d, z + 0.08d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.85d, y + 0.14d, z + 0.08d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    break;
+                case SOUTH:
+                    info.buffer.pos(x + 0.14d, y + 0.85d, z + 0.92d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.85d, y + 0.85d, z + 0.92d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.85d, y + 0.14d, z + 0.92d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.14d, y + 0.14d, z + 0.92d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    break;
+                case WEST:
+                    info.buffer.pos(x + 0.08d, y + 0.85d, z + 0.16d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.08d, y + 0.85d, z + 0.85d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.08d, y + 0.16d, z + 0.85d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.08d, y + 0.16d, z + 0.16d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    break;
+                case EAST:
+                    info.buffer.pos(x + 0.92d, y + 0.85d, z + 0.85d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.92d, y + 0.85d, z + 0.16d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.92d, y + 0.16d, z + 0.16d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    info.buffer.pos(x + 0.92d, y + 0.16d, z + 0.85d).color(info.color1, info.color2, info.color3, 1.0F).endVertex();
+                    break;
+            }
+            return true;
+        });
     }
 
     @Override
@@ -67,15 +117,37 @@ public class ModuleTeleport extends ModuleBase {
                     target = linkedLoc.offset(EnumFacing.DOWN);
                 else target = linkedLoc;
 
-                for (int i = 0; i < 64; i++)
-                    worldIn.spawnParticle(EnumParticleTypes.PORTAL, playerIn.posX, playerIn.posY + worldIn.rand.nextDouble() * 2.0D, playerIn.posZ, worldIn.rand.nextGaussian(), 0.0D, worldIn.rand.nextGaussian());
-                Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.AMBIENT, 0.4F, 1F, pos));
-                playerIn.setPositionAndUpdate(target.getX() + 0.5F, target.getY() + 0.5F, target.getZ() + 0.5F);
-                for (int i = 0; i < 64; i++)
-                    worldIn.spawnParticle(EnumParticleTypes.PORTAL, target.getX(), target.getY() + worldIn.rand.nextDouble() * 2.0D, target.getZ(), worldIn.rand.nextGaussian(), 0.0D, worldIn.rand.nextGaussian());
+                if (playerIn.isBeingRidden()) {
+                    playerIn.removePassengers();
+                }
+                if (playerIn.isRiding()) {
+                    playerIn.dismountRidingEntity();
+                }
+
+                if (playerIn.attemptTeleport(target.getX() + 0.5F, target.getY() + 0.5F, target.getZ() + 0.5F)) {
+                    NetworkHandler.sendAround(new TeleportEffectPacket(playerIn.getPosition()), playerIn.getPosition(), playerIn.dimension);
+
+                    playerIn.rotationYaw = getRotationYaw(worldIn.getBlockState(linkedLoc).getValue(BlockModularFrame.FACING).getOpposite());
+
+                    NetworkHandler.sendAround(new TeleportEffectPacket(target), target, playerIn.dimension);
+                }
             }
         }
         return true;
+    }
+
+    public static float getRotationYaw(EnumFacing facing) {
+        switch (facing) {
+            case NORTH:
+                return 180f;
+            case SOUTH:
+                return 0f;
+            case WEST:
+                return 90f;
+            case EAST:
+                return -90f;
+        }
+        return 0f;
     }
 
     @Override
@@ -91,6 +163,7 @@ public class ModuleTeleport extends ModuleBase {
                 BlockPos tmp = BlockPos.fromLong(nbt.getLong(NBT_LINK));
                 if (tile.getPos().getDistance(tmp.getX(), tmp.getY(), tmp.getZ()) < 1) return;
                 TileEntity targetTile = tile.getWorld().getTileEntity(tmp);
+                int countRange = tile.getRangeUpCount();
                 if (!(targetTile instanceof TileModularFrame) || !((((TileModularFrame) targetTile).module instanceof ModuleTeleport)))
                     playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.invalid_target"));
                 else if (tile.getPos().getDistance(tmp.getX(), tmp.getY(), tmp.getZ()) > ConfigValues.BaseTeleportRange + (countRange * 10)) {
@@ -113,13 +186,13 @@ public class ModuleTeleport extends ModuleBase {
         else return worldIn.isAirBlock(linkedLoc.offset(EnumFacing.UP));
     }
 
-    public boolean hasValidConnection(@Nonnull World world, @Nullable EntityPlayer player) {
-
+    private boolean hasValidConnection(@Nonnull World world, @Nullable EntityPlayer player) {
         if (linkedLoc == null) {
             if (player != null) player.sendMessage(new TextComponentTranslation("modularitemframe.message.no_target"));
             return false;
         }
-        if (!(world.getTileEntity(linkedLoc) instanceof TileModularFrame) || !(((TileModularFrame) world.getTileEntity(linkedLoc)).module instanceof ModuleTeleport)) {
+        TileEntity targetTile = world.getTileEntity(linkedLoc);
+        if (!(targetTile instanceof TileModularFrame) || !(((TileModularFrame) targetTile).module instanceof ModuleTeleport)) {
             if (player != null)
                 player.sendMessage(new TextComponentTranslation("modularitemframe.message.invalid_target"));
             return false;
@@ -134,14 +207,14 @@ public class ModuleTeleport extends ModuleBase {
 
     @Override
     public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
-        if(hasValidConnection(worldIn, null)) {
-            ((ModuleTeleport)((TileModularFrame) worldIn.getTileEntity(linkedLoc)).module).linkedLoc = null;
+        if (hasValidConnection(worldIn, null)) {
+            ((ModuleTeleport) ((TileModularFrame) Objects.requireNonNull(worldIn.getTileEntity(linkedLoc))).module).linkedLoc = null;
         }
-
         super.onRemove(worldIn, pos, facing, playerIn);
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
     @Optional.Method(modid = "theoneprobe")
     public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
         super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
@@ -150,12 +223,15 @@ public class ModuleTeleport extends ModuleBase {
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
+    @Optional.Method(modid = "waila")
     public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         List<String> tooltips = super.getWailaBody(itemStack, accessor, config);
         tooltips.add(I18n.format("modularitemframe.tooltip.tele_valid", hasValidConnection(accessor.getWorld(), null)));
         return tooltips;
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();

@@ -13,13 +13,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
-import java.awt.*;
 import java.nio.FloatBuffer;
 import java.util.Random;
+import java.util.function.Predicate;
 
+@SideOnly(Side.CLIENT)
 public class RenderUtils {
 
 	private static void rotateItemOnFacing(@Nonnull EnumFacing facing, float rotation, float offset) {
@@ -45,7 +48,7 @@ public class RenderUtils {
 		GlStateManager.translate(0.0F, 0.0F, -0.5125F + offset);
 	}
 
-	public static void renderItem(ItemStack stack, @Nonnull EnumFacing facing, float rotation, float offset) {
+	public static void renderItem(ItemStack stack, @Nonnull EnumFacing facing, float rotation, float offset, ItemCameraTransforms.TransformType transformType) {
 		if (!stack.isEmpty()) {
 			rotateItemOnFacing(facing, rotation, offset);
 			RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
@@ -54,20 +57,17 @@ public class RenderUtils {
 			GlStateManager.disableLighting();
 
 			GlStateManager.scale(0.5F, 0.5F, 0.5F);
-			GlStateManager.pushAttrib();
 			RenderHelper.enableStandardItemLighting();
 			if (itemRenderer.shouldRenderItemIn3D(stack)) {
 				GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
 			}
-			itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED);
+			itemRenderer.renderItem(stack, transformType);
 			RenderHelper.disableStandardItemLighting();
-			GlStateManager.popAttrib();
 
 			GlStateManager.enableLighting();
 			GlStateManager.popMatrix();
 		}
 	}
-
 
 	public static void renderFluid(FluidStack fluid, BlockPos pos, double x, double y, double z, double x1, double y1, double z1, double x2, double y2, double z2, int color, TextureAtlasSprite top, TextureAtlasSprite side) {
 
@@ -252,7 +252,19 @@ public class RenderUtils {
 	private static final FloatBuffer PROJECTION = GLAllocation.createDirectFloatBuffer(16);
 	private static FloatBuffer buffer = GLAllocation.createDirectFloatBuffer(16);
 
-	public static void renderEnd(FrameRenderer tesr, double x, double y, double z, EnumFacing facing) {
+	public static class RenderEndPosInfo {
+        public RenderEndPosInfo(BufferBuilder buffer, float color1, float color2, float color3) {
+            this.buffer = buffer;
+            this.color1 = color1;
+            this.color2 = color2;
+            this.color3 = color3;
+        }
+
+        public BufferBuilder buffer;
+	    public float color1, color2, color3;
+    }
+
+	public static void renderEnd(FrameRenderer tesr, double x, double y, double z, Predicate<RenderEndPosInfo> drawPos) {
 		GlStateManager.disableLighting();
 		RANDOM.setSeed(31100L);
 		GlStateManager.getFloat(2982, MODELVIEW);
@@ -305,50 +317,13 @@ public class RenderUtils {
 			GlStateManager.multMatrix(PROJECTION);
 			GlStateManager.multMatrix(MODELVIEW);
 			Tessellator tessellator = Tessellator.getInstance();
-			BufferBuilder BufferBuilder = tessellator.getBuffer();
-			BufferBuilder.begin(7, DefaultVertexFormats.POSITION_COLOR);
+			BufferBuilder buffer = tessellator.getBuffer();
+			buffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
 			float f3 = (RANDOM.nextFloat() * 0.5F + 0.1F) * f1;
 			float f4 = (RANDOM.nextFloat() * 0.5F + 0.4F) * f1;
 			float f5 = (RANDOM.nextFloat() * 0.5F + 0.5F) * f1;
 
-			switch (facing) {
-				case DOWN:
-					BufferBuilder.pos(x + 0.85d, y + 0.08d, z + 0.85d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.85d, y + 0.08d, z + 0.14d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.14d, y + 0.08d, z + 0.14d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.14d, y + 0.08d, z + 0.85d).color(f3, f4, f5, 1.0F).endVertex();
-					break;
-				case UP:
-					BufferBuilder.pos(x + 0.85d, y + 0.92d, z + 0.16d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.85d, y + 0.92d, z + 0.85d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.16d, y + 0.92d, z + 0.85d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.16d, y + 0.92d, z + 0.16d).color(f3, f4, f5, 1.0F).endVertex();
-					break;
-				case NORTH:
-					BufferBuilder.pos(x + 0.85d, y + 0.85d, z + 0.08d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.14d, y + 0.85d, z + 0.08d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.14d, y + 0.14d, z + 0.08d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.85d, y + 0.14d, z + 0.08d).color(f3, f4, f5, 1.0F).endVertex();
-					break;
-				case SOUTH:
-					BufferBuilder.pos(x + 0.14d, y + 0.85d, z + 0.92d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.85d, y + 0.85d, z + 0.92d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.85d, y + 0.14d, z + 0.92d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.14d, y + 0.14d, z + 0.92d).color(f3, f4, f5, 1.0F).endVertex();
-					break;
-				case WEST:
-					BufferBuilder.pos(x + 0.08d, y + 0.85d, z + 0.16d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.08d, y + 0.85d, z + 0.85d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.08d, y + 0.16d, z + 0.85d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.08d, y + 0.16d, z + 0.16d).color(f3, f4, f5, 1.0F).endVertex();
-					break;
-				case EAST:
-					BufferBuilder.pos(x + 0.92d, y + 0.85d, z + 0.85d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.92d, y + 0.85d, z + 0.16d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.92d, y + 0.16d, z + 0.16d).color(f3, f4, f5, 1.0F).endVertex();
-					BufferBuilder.pos(x + 0.92d, y + 0.16d, z + 0.85d).color(f3, f4, f5, 1.0F).endVertex();
-					break;
-			}
+			drawPos.test(new RenderEndPosInfo(buffer, f3, f4, f5));
 
 			tessellator.draw();
 			GlStateManager.popMatrix();

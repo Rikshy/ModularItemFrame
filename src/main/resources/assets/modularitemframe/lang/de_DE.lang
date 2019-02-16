@@ -1,20 +1,32 @@
-tile.modularitemframe:modular_frame.name=Modularer Rahmen
+tile.modularitemframe.modular_frame.name=Modularer Rahmen
 
-item.modularitemframe:screwdriver.name=Schraubendreher
-item.modularitemframe:module_t1_item.name=Item Modul
-item.modularitemframe:module_t1_craft.name=Crafting Modul
-item.modularitemframe:module_t1_nullify.name=Nullify Modul
-item.modularitemframe:module_t1_tank.name=Tank Modul
-item.modularitemframe:module_t1_io.name=I/O Modul
-item.modularitemframe:module_t2_dispense.name=Spender Modul
-item.modularitemframe:module_t2_xp.name=XP Module
-item.modularitemframe:module_t2_vacuum.name=Vacuum Module
-item.modularitemframe:module_t2_trash_can.name=Mülleimer Modul
-item.modularitemframe:module_t2_craft_plus.name=Crafting Plus Modul
-item.modularitemframe:module_t3_tele.name=Teleport Module
-item.modularitemframe:module_t3_auto_crafting.name=Auto Crafting Modul
-item.modularitemframe:module_t3_fluid_dispenser.name=Flüssigkeit Spender Module
-item.modularitemframe:canvas.name=Leinwand
+item.modularitemframe.screwdriver.name=Schraubendreher
+item.modularitemframe.canvas.name=Leinwand
+item.modularitemframe.module_t1_item.name=Item Modul
+item.modularitemframe.module_t1_craft.name=Crafting Modul
+item.modularitemframe.module_t1_nullify.name=Nullify Modul
+item.modularitemframe.module_t1_tank.name=Tank Modul
+item.modularitemframe.module_t1_io.name=I/O Modul
+item.modularitemframe.module_t1_storage.name=Behälter Modul
+
+item.modularitemframe.module_t2_dispense.name=Spender Modul
+item.modularitemframe.module_t2_vacuum.name=Vacuum Module
+item.modularitemframe.module_t2_trashcan.name=Mülleimer Modul
+item.modularitemframe.module_t2_craft_plus.name=Crafting Plus Modul
+
+item.modularitemframe.module_t3_xp.name=XP Modul
+item.modularitemframe.module_t3_tele.name=Teleport Modul
+item.modularitemframe.module_t3_auto_crafting.name=Auto Crafting Modul
+item.modularitemframe.module_t3_fluid_dispenser.name=Flüssigkeit Spender Modul
+item.modularitemframe.module_t3_itemtele.name=Item Teleporter Modul
+item.modularitemframe.module_t3_xpvaruum.name=XP Vacuum Modul
+
+item.modularitemframe.upgrade_speed.name=Geschwindigkeits Aufwertung
+item.modularitemframe.upgrade_range.name=Reichweiten Aufwertung
+item.modularitemframe.upgrade_capacity.name=Speicher Aufwertung
+item.modularitemframe.upgrade_resist.name=Schutz Aufwertung
+item.modularitemframe.upgrade_security.name=Sicherheits Aufwertung
+
 
 modularitemframe.message.no_target=[ModularItemFrame] Keine Zielposition gesetzt - benutze dafür den Schraubenzieher
 modularitemframe.message.invalid_target=[ModularItemFrame] Kein Ender Rahmen an der Zielposition
@@ -25,10 +37,10 @@ modularitemframe.message.loc_saved=[ModularItemFrame] Position gespeichert
 modularitemframe.message.range_change=[ModularItemFrame] Spenderreichweite verändert auf %d
 modularitemframe.message.crafting_plus.player=[ModularItemFrame] Rahmen durchsucht nun auf das Spielerinventar
 modularitemframe.message.crafting_plus.no_player=[ModularItemFrame] Rahmen sucht nun nur im angehefteten Inventar
-modularitemframe.message.tank_mode_change=[ModularItemFrame] Tank Modus verändert zu %s
-modularitemframe.message.tank_mode_change.no=kein
-modularitemframe.message.tank_mode_change.in=Einlass
-modularitemframe.message.tank_mode_change.out=Auslass
+modularitemframe.message.mode_change=[ModularItemFrame] Modus verändert zu %s
+modularitemframe.mode.no=kein
+modularitemframe.mode.in=Einlass
+modularitemframe.mode.out=Auslass
 modularitemframe.message.screw_mode_change=[ModularItemFrame] Schraubendreher Modus verändert zu %s
 modularitemframe.message.screw_mode_change.rem=entfernen
 modularitemframe.message.screw_mode_change.inter=interagieren
@@ -37,23 +49,27 @@ modularitemframe.message.vacuum_mode_change=[ModularItemFrame] Vacuum Modus ver�
 modularitemframe.message.vacuum_range_change=[ModularItemFrame] Vacuum Reichweite %s auf %d geändert
 
 modularitemframe.module.empty=Leer
+modularitemframe.module.io=I/O
 modularitemframe.module.item=Item
 modularitemframe.module.craft=Crafting
 modularitemframe.module.tank=Tank
 modularitemframe.module.nullify=Nullify
-modularitemframe.module.tele=Teleport
+modularitemframe.module.storage=Behälter
+
+modularitemframe.module.crafting_plus=Crafting Plus
 modularitemframe.module.xp=XP
 modularitemframe.module.dispense=Spender
 modularitemframe.module.vacuum=Vacuum
-modularitemframe.module.io=I/O
 modularitemframe.module.trash_can=Mülleimer
-modularitemframe.module.crafting_plus=Crafting Plus
+
 modularitemframe.module.auto_crafting=Auto Crafting
+modularitemframe.module.tele=Teleport
 modularitemframe.module.fluid_dispenser=Flüssigkeit Spender
+modularitemframe.module.itemtele=Item Teleport
 
 modularitemframe.tooltip.module=Modul: %s
 modularitemframe.tooltip.capacity=%dmb / %dmb
-modularitemframe.tooltip.tankmode=Tankmodus: %s
+modularitemframe.tooltip.mode=Modus: %s
 modularitemframe.tooltip.tele_valid=Valides Ziel: %s
 modularitemframe.tooltip.xp_level=%d Level
 

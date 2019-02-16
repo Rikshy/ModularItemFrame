@@ -14,5 +14,7 @@ deploy:
   file_glob: true
   file: build/libs/*
   skip_cleanup: true
+  name: ModularItemFrame $TRAVIS_BUILD_NUMBER
   on:
-    tags: false
+    tag: false
+    branch: master

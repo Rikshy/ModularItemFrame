@@ -1,19 +1,21 @@
 {
   "type": "forge:ore_shaped",
   "result": {
-    "item": "modularitemframe:module_t1_item"
+    "item": "modularitemframe:module_t1",
+    "data": 0
   },
   "pattern": [
+    "S S",
     " C ",
-    "C#C",
-    " C "
+    "S S"
   ],
   "key": {
-    "#": {
-      "item": "minecraft:item_frame"
-    },
     "C": {
       "item": "modularitemframe:canvas"
+    },
+    "S": {
+      "type": "forge:ore_dict",
+      "ore": "stickWood"
     }
   }
 }

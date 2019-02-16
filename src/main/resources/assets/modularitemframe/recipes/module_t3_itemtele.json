@@ -1,0 +1,34 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "modularitemframe:module_t3",
+    "data": 2
+  },
+  "pattern": [
+    "ODO",
+    "#C#",
+    "OVO"
+  ],
+  "key": {
+    "#": {
+      "type": "forge:ore_dict",
+      "ore": "enderpearl"
+    },
+    "V": {
+      "item": "modularitemframe:module_t2",
+      "data": 4
+    },
+    "D": {
+      "item": "modularitemframe:module_t2",
+      "data": 1
+    },
+    "C": {
+      "type": "forge:ore_dict",
+      "ore": "chestEnder"
+    },
+    "O": {
+      "type": "forge:ore_dict",
+      "ore": "obsidian"
+    }
+  }
+}

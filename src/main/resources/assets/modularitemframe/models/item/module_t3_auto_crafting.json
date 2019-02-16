@@ -1,0 +1,6 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "modularitemframe:items/module_t3_auto_crafting"
+	}
+}

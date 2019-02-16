@@ -1,0 +1,30 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "modularitemframe:module_t3",
+    "data": 0
+  },
+  "pattern": [
+    "OCO",
+    "D#D",
+    "OCO"
+  ],
+  "key": {
+    "#": {
+      "item": "modularitemframe:module_t2",
+      "data": 0
+    },
+    "C": {
+      "item": "modularitemframe:module_t1",
+      "data": 2
+    },
+    "D": {
+      "item": "modularitemframe:module_t2",
+      "data": 1
+    },
+    "O": {
+      "type": "forge:ore_dict",
+      "ore": "obsidian"
+    }
+  }
+}

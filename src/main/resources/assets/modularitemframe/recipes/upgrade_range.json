@@ -1,0 +1,24 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "modularitemframe:upgrade",
+    "data": 2,
+    "count": 2
+  },
+  "pattern": [
+    "AAA",
+    "B#B",
+    "AAA"
+  ],
+  "key": {
+    "#": {
+      "item": "modularitemframe:modular_frame"
+    },
+    "B": {
+      "item": "minecraft:bow"
+    },
+    "A": {
+      "item": "minecraft:arrow"
+    }
+  }
+}

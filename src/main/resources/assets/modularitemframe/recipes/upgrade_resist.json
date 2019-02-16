@@ -1,0 +1,21 @@
+{
+  "type": "forge:ore_shaped",
+  "result": {
+    "item": "modularitemframe:upgrade",
+    "data": 0
+  },
+  "pattern": [
+    "OOO",
+    " # ",
+    "OOO"
+  ],
+  "key": {
+    "#": {
+      "item": "modularitemframe:modular_frame"
+    },
+    "O": {
+      "type": "forge:ore_dict",
+      "ore": "obsidian"
+    }
+  }
+}

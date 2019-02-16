@@ -1,9 +1,9 @@
 package de.shyrik.modularitemframe.common.module.t2;
 
-import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
+import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +16,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -24,20 +25,24 @@ import javax.annotation.Nonnull;
 
 public class ModuleDispense extends ModuleBase {
 
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2_dispense");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_dispense");
     private static final String NBT_RANGE = "range";
 
-    public int range = 0;
+    private int range = 0;
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/drop_frame_bg");
+        return BG_LOC;
     }
 
     @Nonnull
     @Override
+    @SideOnly(Side.CLIENT)
     public ResourceLocation innerTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
+        return BlockModularFrame.INNER_HARD_LOC;
     }
 
     @Override
@@ -47,8 +52,7 @@ public class ModuleDispense extends ModuleBase {
 
     @Override
     public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
-        if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return;
-
+        int countRange = tile.getRangeUpCount();
         if (!world.isRemote && countRange > 0) {
             if (playerIn.isSneaking()) range--;
             else range++;
@@ -61,8 +65,6 @@ public class ModuleDispense extends ModuleBase {
 
     @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return false;
-
         if (!worldIn.isRemote) {
             ItemStack held = playerIn.getHeldItem(hand);
             if (!playerIn.isSneaking() && !held.isEmpty()) {
@@ -76,12 +78,12 @@ public class ModuleDispense extends ModuleBase {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (!world.isRemote) {
-            if (world.getTotalWorldTime() % (60 - 10 * countSpeed) != 0) return;
+            if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
             EnumFacing facing = tile.blockFacing();
-            TileEntity tile = world.getTileEntity(pos.offset(facing, Math.min(range, countRange) + 1));
-            if (tile != null) {
-                IItemHandlerModifiable inv = (IItemHandlerModifiable) tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+            TileEntity targetTile = world.getTileEntity(pos.offset(facing, Math.min(range, tile.getRangeUpCount()) + 1));
+            if (targetTile != null) {
+                IItemHandlerModifiable inv = (IItemHandlerModifiable) targetTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
                 if (inv != null) {
                     for (int slot = 0; slot < inv.getSlots(); slot++) {
                         if (!inv.getStackInSlot(slot).isEmpty()) {
@@ -95,6 +97,7 @@ public class ModuleDispense extends ModuleBase {
         }
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = super.serializeNBT();

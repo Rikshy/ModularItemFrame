@@ -1,8 +1,7 @@
 package de.shyrik.modularitemframe.api;
 
-import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
+import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.module.t1.ModuleItem;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import mcjty.theoneprobe.api.IProbeHitData;
@@ -17,7 +16,6 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -28,6 +26,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -36,18 +36,10 @@ import java.util.List;
 
 public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 
-    private static final String NBT_RANGE = "countrange";
-    private static final String NBT_SPEED = "countspeed";
-
 	protected TileModularFrame tile;
-
-	protected int countSpeed = 0;
-	protected int countRange = 0;
-	protected int countCapacity = 0;
 
 	public void setTile(TileModularFrame te) {
 		tile = te;
-		onUpgradesChanged();
 	}
 
 	/**
@@ -57,6 +49,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 * @return [Nonnull] {@link ResourceLocation} to the Texture
 	 */
 	@Nonnull
+	@SideOnly(Side.CLIENT)
 	public abstract ResourceLocation frontTexture();
 
     /**
@@ -66,8 +59,9 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
      * @return [Nonnull] {@link ResourceLocation} to the Texture
      */
     @Nonnull
+	@SideOnly(Side.CLIENT)
     public ResourceLocation innerTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/default_inner");
+        return BlockModularFrame.INNER_DEF_LOC;
     }
 
     /**
@@ -77,6 +71,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
      * @return [Nonnull] {@link ResourceLocation} to the Texture
      */
     @Nonnull
+	@SideOnly(Side.CLIENT)
     public ResourceLocation backTexture() {
         return new ResourceLocation("minecraft", "blocks/log_birch_top");
     }
@@ -100,6 +95,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 * @param model Contains the model of the frame
 	 * @return baked model ofc
 	 */
+	@SideOnly(Side.CLIENT)
 	public IBakedModel bakeModel(IModel model) {
 		if (bakedModel == null || reloadModel) {
 			bakedModel = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, location -> {
@@ -123,6 +119,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 *
 	 * @param tesr instance of the current {@link FrameRenderer}
 	 */
+	@SideOnly(Side.CLIENT)
 	public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 	}
 
@@ -139,6 +136,10 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 * @param driver the driver who was used
 	 */
 	public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
+
+	}
+
+	public void onFrameUpgradesChanged() {
 
 	}
 
@@ -163,28 +164,14 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	/**
 	 * Called when module is removed with the {@link de.shyrik.modularitemframe.common.item.ItemScrewdriver screwdriver}
 	 * or destroyed.
-	 * If you want the module to drop, make sure to call the super method
 	 */
 	public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
-		Item item = Item.getByNameOrId(ModuleRegistry.getModuleId(tile.module.getClass()).toString());
-		if (item instanceof ItemModule) {
-			ItemStack remain = new ItemStack(item);
-			if (playerIn != null)
-				remain = ItemUtils.giveStack(ItemUtils.getPlayerInv(playerIn), remain);
-			if (!remain.isEmpty())
-				ItemUtils.ejectStack(worldIn, tile.getPos(), facing, remain);
-		}
 	}
-
-	public void onUpgradesChanged() {
-	    countRange = tile.countUpgradeOfType(UpgradeBase.UpgradeRange.class);
-	    countSpeed = tile.countUpgradeOfType(UpgradeBase.UpgradeSpeed.class);
-	    countCapacity = tile.countUpgradeOfType(UpgradeBase.UpgradeCapacity.class);
-    }
 
 	/**
 	 * The One Probe information handling
 	 */
+	@SideOnly(Side.CLIENT)
 	@Optional.Method(modid = "theoneprobe")
 	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
 		probeInfo.horizontal().text(I18n.format("modularitemframe.tooltip.module", getModuleName()));
@@ -194,6 +181,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 * Waila/Hwyla information handling
 	 */
 	@Nonnull
+	@SideOnly(Side.CLIENT)
 	@Optional.Method(modid = "waila")
 	public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		List<String> tips = new ArrayList<>();
@@ -201,16 +189,24 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 		return tips;
 	}
 
+	@Nonnull
+	public NBTTagCompound writeUpdateNBT(@Nonnull NBTTagCompound cmp) {
+	    return cmp;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void readUpdateNBT(@Nonnull NBTTagCompound cmp) {
+
+    }
+
 	/**
 	 * NBT serialization in case there are some data to be saved!
 	 * this gets synced automatically
 	 */
+	@Nonnull
 	@Override
 	public NBTTagCompound serializeNBT() {
-		NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setInteger(NBT_RANGE, countRange);
-        nbt.setInteger(NBT_SPEED, countSpeed);
-        return nbt;
+		return new NBTTagCompound();
 	}
 
 	/**
@@ -218,7 +214,5 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 */
 	@Override
 	public void deserializeNBT(NBTTagCompound nbtTagCompound) {
-        if (nbtTagCompound.hasKey(NBT_RANGE)) countRange = nbtTagCompound.getInteger(NBT_RANGE);
-        if (nbtTagCompound.hasKey(NBT_SPEED)) countSpeed = nbtTagCompound.getInteger(NBT_SPEED);
 	}
 }

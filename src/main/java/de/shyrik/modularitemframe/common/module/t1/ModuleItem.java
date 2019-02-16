@@ -1,7 +1,6 @@
 package de.shyrik.modularitemframe.common.module.t1;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
@@ -12,6 +11,7 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -21,23 +21,27 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ModuleItem extends ModuleBase {
 
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1_item");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_item");
     private static final String NBT_DISPLAY = "display";
     private static final String NBT_ROTATION = "rotation";
 
-    public int rotation = 0;
-    public ItemStack displayItem = ItemStack.EMPTY;
+    private int rotation = 0;
+    private ItemStack displayItem = ItemStack.EMPTY;
 
     @Nonnull
+    @SideOnly(Side.CLIENT)
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/item_frame_bg");
+        return BG_LOC;
     }
 
     @Override
@@ -45,10 +49,7 @@ public class ModuleItem extends ModuleBase {
         return I18n.format("modularitemframe.module.item");
     }
 
-    protected float scale = 0.9f;
-    protected float offset = 0.05F;
-
-    public void rotate(EntityPlayer player) {
+    private void rotate(EntityPlayer player) {
         if (player.isSneaking()) {
             rotation += 20;
         } else {
@@ -59,13 +60,14 @@ public class ModuleItem extends ModuleBase {
     }
 
     @Override
-    public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    @SideOnly(Side.CLIENT)
+    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.pushMatrix();
         GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
-        GlStateManager.scale(scale, scale, scale);
+        GlStateManager.scale(0.9f, 0.9f, 0.9f);
         GlStateManager.pushMatrix();
 
-        RenderUtils.renderItem(displayItem, tile.blockFacing(), rotation, offset);
+        RenderUtils.renderItem(displayItem, tile.blockFacing(), rotation, 0.05F, ItemCameraTransforms.TransformType.FIXED);
 
         GlStateManager.popMatrix();
         GlStateManager.popMatrix();
@@ -80,8 +82,6 @@ public class ModuleItem extends ModuleBase {
 
     @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (playerIn instanceof FakePlayer && !ConfigValues.AllowFakePlayers) return false;
-
         if (!worldIn.isRemote) {
             if (playerIn.isSneaking()) {
                 ItemStack copy = playerIn.getHeldItem(hand).copy();
@@ -103,6 +103,7 @@ public class ModuleItem extends ModuleBase {
 
     @Nonnull
     @Override
+    @Optional.Method(modid = "waila")
     public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         List<String> tips = super.getWailaBody(itemStack, accessor, config);
         if (!displayItem.isEmpty()) tips.add("Display: " + displayItem.getDisplayName());
@@ -110,11 +111,12 @@ public class ModuleItem extends ModuleBase {
     }
 
 
+    @Nonnull
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();
         compound.setTag(NBT_DISPLAY, displayItem.serializeNBT());
-        compound.setInteger("rotation", rotation);
+        compound.setInteger(NBT_ROTATION, rotation);
         return compound;
     }
 
