@@ -1,11 +1,11 @@
 package de.shyrik.modularitemframe.init;
 
+import de.shyrik.modularitemframe.ModularItemFrame;
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
-@GameRegistry.ObjectHolder("modularitemframe")
+@ObjectHolder(ModularItemFrame.MOD_ID)
 public class Blocks {
-
-    @GameRegistry.ObjectHolder("modular_frame")
-    public static final Block MODULAR_FRAME = null;
+    public static Block MODULAR_FRAME;
 }

@@ -19,8 +19,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -32,14 +32,14 @@ public class ModuleAutoCrafting extends ModuleCraftingPlus {
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation frontTexture() {
         return BG_LOC;
     }
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation innerTexture() {
         return BlockModularFrame.INNER_HARDEST_LOC;
     }
@@ -65,7 +65,7 @@ public class ModuleAutoCrafting extends ModuleCraftingPlus {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (world.isRemote) return;
-        if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
+        if (world.getGameTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
         IItemHandlerModifiable handler = (IItemHandlerModifiable) tile.getAttachedInventory();
         if (handler != null) {
@@ -87,6 +87,6 @@ public class ModuleAutoCrafting extends ModuleCraftingPlus {
             }
         }
 
-        NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.BLOCK_LADDER_STEP.getSoundName().toString(), SoundCategory.BLOCKS.getName(), 0.3F, 0.7F), tile.getPos(), world.provider.getDimension());
+        NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.BLOCK_LADDER_STEP.getName().toString(), SoundCategory.BLOCKS.getName(), 0.3F, 0.7F), tile.getPos(), world.provider.getDimension());
     }
 }

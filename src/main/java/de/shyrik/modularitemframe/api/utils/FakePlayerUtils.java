@@ -1,6 +1,5 @@
 package de.shyrik.modularitemframe.api.utils;
 
-import com.google.common.base.Predicates;
 import com.mojang.authlib.GameProfile;
 import com.mojang.realmsclient.util.Pair;
 import net.minecraft.block.material.Material;
@@ -26,7 +25,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -68,7 +67,7 @@ public class FakePlayerUtils {
      * Only store this as a WeakReference, or you'll cause memory leaks.
      */
     public static UsefulFakePlayer getPlayer(World world, GameProfile profile) {
-        return PLAYERS.computeIfAbsent(Pair.of(profile, world.provider.getDimension()), p -> {
+        return PLAYERS.computeIfAbsent(Pair.of(profile, 1), p -> { //TODO DIM ID?
             UsefulFakePlayer player = new UsefulFakePlayer(world, p.first());
             player.connection = new NetHandlerSpaghettiServer(player);
             return player;
@@ -132,23 +131,23 @@ public class FakePlayerUtils {
         Vec3d base = new Vec3d(player.posX, player.posY, player.posZ);
         Vec3d look = player.getLookVec();
         Vec3d target = base.add(look.x * range, look.y * range, look.z * range);
-        RayTraceResult trace = world.rayTraceBlocks(base, target, false, false, true);
+        RayTraceResult trace = world.rayTraceBlocks(base, target, RayTraceFluidMode.NEVER, false, true);
         RayTraceResult traceEntity = traceEntities(player, base, target, world);
         RayTraceResult toUse = trace == null ? traceEntity : trace;
 
         if (trace != null && traceEntity != null) {
             double d1 = trace.hitVec.distanceTo(base);
             double d2 = traceEntity.hitVec.distanceTo(base);
-            toUse = traceEntity.typeOfHit == RayTraceResult.Type.ENTITY && d1 > d2 ? traceEntity : trace;
+            toUse = traceEntity.type == RayTraceResult.Type.ENTITY && d1 > d2 ? traceEntity : trace;
         }
 
         if (toUse == null) return player.getHeldItemMainhand();
 
         ItemStack itemstack = player.getHeldItemMainhand();
-        if (toUse.typeOfHit == RayTraceResult.Type.ENTITY) {
-            if (processUseEntity(player, world, toUse.entityHit, toUse, CPacketUseEntity.Action.INTERACT_AT)) return player.getHeldItemMainhand();
-            else if (processUseEntity(player, world, toUse.entityHit, null, CPacketUseEntity.Action.INTERACT)) return player.getHeldItemMainhand();
-        } else if (toUse.typeOfHit == RayTraceResult.Type.BLOCK) {
+        if (toUse.type == RayTraceResult.Type.ENTITY) {
+            if (processUseEntity(player, world, toUse.entity, toUse, CPacketUseEntity.Action.INTERACT_AT)) return player.getHeldItemMainhand();
+            else if (processUseEntity(player, world, toUse.entity, null, CPacketUseEntity.Action.INTERACT)) return player.getHeldItemMainhand();
+        } else if (toUse.type == RayTraceResult.Type.BLOCK) {
             BlockPos blockpos = toUse.getBlockPos();
             IBlockState state = world.getBlockState(blockpos);
             if (state != sourceState && state.getMaterial() != Material.AIR) {
@@ -160,7 +159,7 @@ public class FakePlayerUtils {
             }
         }
 
-        if(toUse.typeOfHit == RayTraceResult.Type.MISS) {
+        if(toUse.type == RayTraceResult.Type.MISS) {
             for(int i = 1; i <= 5; i++) {
                 IBlockState state = world.getBlockState(pos.offset(side, i));
                 if (state != sourceState && state.getMaterial() != Material.AIR) {
@@ -170,7 +169,7 @@ public class FakePlayerUtils {
             }
         }
 
-        if (itemstack.isEmpty() && (toUse.typeOfHit == RayTraceResult.Type.MISS)) ForgeHooks.onEmptyClick(player, EnumHand.MAIN_HAND);
+        if (itemstack.isEmpty() && (toUse.type == RayTraceResult.Type.MISS)) ForgeHooks.onEmptyClick(player, EnumHand.MAIN_HAND);
         if (!itemstack.isEmpty()) player.interactionManager.processRightClick(player, world, itemstack, EnumHand.MAIN_HAND);
         return player.getHeldItemMainhand();
     }
@@ -188,41 +187,41 @@ public class FakePlayerUtils {
         Vec3d base = new Vec3d(player.posX, player.posY, player.posZ);
         Vec3d look = player.getLookVec();
         Vec3d target = base.add(look.x * range, look.y * range, look.z * range);
-        RayTraceResult trace = world.rayTraceBlocks(base, target, false, false, true);
+        RayTraceResult trace = world.rayTraceBlocks(base, target, RayTraceFluidMode.NEVER, false, true);
         RayTraceResult traceEntity = traceEntities(player, base, target, world);
         RayTraceResult toUse = trace == null ? traceEntity : trace;
 
         if (trace != null && traceEntity != null) {
             double d1 = trace.hitVec.distanceTo(base);
             double d2 = traceEntity.hitVec.distanceTo(base);
-            toUse = traceEntity.typeOfHit == RayTraceResult.Type.ENTITY && d1 > d2 ? traceEntity : trace;
+            toUse = traceEntity.type == RayTraceResult.Type.ENTITY && d1 > d2 ? traceEntity : trace;
         }
 
         if (toUse == null) return player.getHeldItemMainhand();
 
         ItemStack itemstack = player.getHeldItemMainhand();
-        if (toUse.typeOfHit == RayTraceResult.Type.ENTITY) {
-            if (processUseEntity(player, world, toUse.entityHit, null, CPacketUseEntity.Action.ATTACK)) return player.getHeldItemMainhand();
-        } else if (toUse.typeOfHit == RayTraceResult.Type.BLOCK) {
+        if (toUse.type == RayTraceResult.Type.ENTITY) {
+            if (processUseEntity(player, world, toUse.entity, null, CPacketUseEntity.Action.ATTACK)) return player.getHeldItemMainhand();
+        } else if (toUse.type == RayTraceResult.Type.BLOCK) {
             BlockPos blockpos = toUse.getBlockPos();
             IBlockState state = world.getBlockState(blockpos);
             if (state != sourceState && state.getMaterial() != Material.AIR) {
-                player.interactionManager.onBlockClicked(blockpos, toUse.sideHit);
+                player.interactionManager.startDestroyBlock(blockpos, toUse.sideHit);
                 return player.getHeldItemMainhand();
             }
         }
 
-        if(toUse.typeOfHit == RayTraceResult.Type.MISS) {
+        if(toUse.type == RayTraceResult.Type.MISS) {
             for(int i = 1; i <= 5; i++) {
                 IBlockState state = world.getBlockState(pos.offset(side, i));
                 if (state != sourceState && state.getMaterial() != Material.AIR) {
-                    player.interactionManager.onBlockClicked(pos.offset(side, i), side.getOpposite());
+                    player.interactionManager.startDestroyBlock(pos.offset(side, i), side.getOpposite());
                     return player.getHeldItemMainhand();
                 }
             }
         }
 
-        if (itemstack.isEmpty() && (toUse.typeOfHit == RayTraceResult.Type.MISS)) ForgeHooks.onEmptyLeftClick(player);
+        if (itemstack.isEmpty() && (toUse.type == RayTraceResult.Type.MISS)) ForgeHooks.onEmptyLeftClick(player);
         return player.getHeldItemMainhand();
     }
 
@@ -237,13 +236,13 @@ public class FakePlayerUtils {
         RayTraceResult result = null;
         Vec3d vec3d3 = null;
         AxisAlignedBB search = new AxisAlignedBB(base.x, base.y, base.z, target.x, target.y, target.z).grow(.5, .5, .5);
-        List<Entity> list = world.getEntitiesInAABBexcluding(player, search, Predicates.and(EntitySelectors.NOT_SPECTATING, entity -> entity != null && entity.canBeCollidedWith()));
+        List<Entity> list = world.getEntitiesInAABBexcluding(player, search, entity -> entity != null && entity.canBeCollidedWith());
         double d2 = 5;
 
         for (int j = 0; j < list.size(); ++j) {
             Entity entity1 = list.get(j);
 
-            AxisAlignedBB aabb = entity1.getEntityBoundingBox().grow(entity1.getCollisionBorderSize());
+            AxisAlignedBB aabb = entity1.getBoundingBox().grow(entity1.getCollisionBorderSize());
             RayTraceResult raytraceresult = aabb.calculateIntercept(base, target);
 
             if (aabb.contains(base)) {
@@ -318,10 +317,10 @@ public class FakePlayerUtils {
      * A copy-paste of the SideOnly {@link Entity#rayTrace(double, float)}
      */
     public static RayTraceResult rayTrace(UsefulFakePlayer player, World world, double reachDist, float partialTicks) {
-        Vec3d vec3d = player.getPositionEyes(partialTicks);
+        Vec3d vec3d = player.getEyePosition(partialTicks);
         Vec3d vec3d1 = player.getLook(partialTicks);
         Vec3d vec3d2 = vec3d.add(vec3d1.x * reachDist, vec3d1.y * reachDist, vec3d1.z * reachDist);
-        return world.rayTraceBlocks(vec3d, vec3d2, false, false, true);
+        return world.rayTraceBlocks(vec3d, vec3d2, RayTraceFluidMode.NEVER, false, true);
     }
 
     public static class NetHandlerSpaghettiServer extends NetHandlerPlayServer {

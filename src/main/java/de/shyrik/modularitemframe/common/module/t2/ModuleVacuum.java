@@ -15,14 +15,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
@@ -42,16 +41,21 @@ public class ModuleVacuum extends ModuleBase {
     private int rangeY = ConfigValues.BaseVacuumRange;
     private int rangeZ = ConfigValues.BaseVacuumRange;
 
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
+
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation frontTexture() {
         return BG_LOC;
     }
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation innerTexture() {
         return BlockModularFrame.INNER_HARD_LOC;
     }
@@ -83,14 +87,14 @@ public class ModuleVacuum extends ModuleBase {
 
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
-        if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
+        if (world.getGameTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
         IItemHandlerModifiable handler = (IItemHandlerModifiable) tile.getAttachedInventory();
         if (handler != null) {
             List<EntityItem> entities = world.getEntitiesWithinAABB(EntityItem.class, getVacuumBB(pos));
             for (EntityItem entity : entities) {
                 ItemStack entityStack = entity.getItem();
-                if (entity.isDead || entityStack.isEmpty() || ItemUtils.getFittingSlot(handler, entityStack) < 0)
+                if (!entity.isAlive() || entityStack.isEmpty() || ItemUtils.getFittingSlot(handler, entityStack) < 0)
                     continue;
 
                 ItemStack remain = ItemUtils.giveStack(handler, entityStack);
@@ -106,20 +110,20 @@ public class ModuleVacuum extends ModuleBase {
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = super.serializeNBT();
-        nbt.setInteger(NBT_MODE, mode.getIndex());
-        nbt.setInteger(NBT_RANGEX, rangeX);
-        nbt.setInteger(NBT_RANGEY, rangeY);
-        nbt.setInteger(NBT_RANGEZ, rangeZ);
+        nbt.putInt(NBT_MODE, mode.getIndex());
+        nbt.putInt(NBT_RANGEX, rangeX);
+        nbt.putInt(NBT_RANGEY, rangeY);
+        nbt.putInt(NBT_RANGEZ, rangeZ);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_MODE)) mode = EnumMode.VALUES[nbt.getInteger(NBT_MODE)];
-        if (nbt.hasKey(NBT_RANGEX)) rangeX = nbt.getInteger(NBT_RANGEX);
-        if (nbt.hasKey(NBT_RANGEY)) rangeY = nbt.getInteger(NBT_RANGEY);
-        if (nbt.hasKey(NBT_RANGEZ)) rangeZ = nbt.getInteger(NBT_RANGEZ);
+        if (nbt.hasUniqueId(NBT_MODE)) mode = EnumMode.VALUES[nbt.getInt(NBT_MODE)];
+        if (nbt.hasUniqueId(NBT_RANGEX)) rangeX = nbt.getInt(NBT_RANGEX);
+        if (nbt.hasUniqueId(NBT_RANGEY)) rangeY = nbt.getInt(NBT_RANGEY);
+        if (nbt.hasUniqueId(NBT_RANGEZ)) rangeZ = nbt.getInt(NBT_RANGEZ);
     }
 
     private AxisAlignedBB getVacuumBB(@Nonnull BlockPos pos) {

@@ -18,8 +18,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -42,14 +42,14 @@ public class ModuleTrashCan extends ModuleBase {
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation frontTexture() {
         return frontTex.get(texIndex);
     }
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation innerTexture() {
         return BlockModularFrame.INNER_HARD_LOC;
     }
@@ -67,24 +67,22 @@ public class ModuleTrashCan extends ModuleBase {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (!world.isRemote) {
-            if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
+            if (world.getGameTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
             EnumFacing facing = tile.blockFacing();
             TileEntity tileTarget = world.getTileEntity(pos.offset(facing));
             if (tileTarget != null) {
                 IItemHandlerModifiable trash = (IItemHandlerModifiable) tileTarget.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
-                if (trash != null) {
-                    for (int slot = 0; slot < trash.getSlots(); slot++) {
-                        if (!trash.getStackInSlot(slot).isEmpty()) {
-                            trash.setStackInSlot(slot, ItemStack.EMPTY);
-                            NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.BLOCK_LAVA_EXTINGUISH.getSoundName().toString(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), pos, world.provider.getDimension());
-                            break;
-                        }
+                for (int slot = 0; slot < trash.getSlots(); slot++) {
+                    if (!trash.getStackInSlot(slot).isEmpty()) {
+                        trash.setStackInSlot(slot, ItemStack.EMPTY);
+                        NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.BLOCK_LAVA_EXTINGUISH.getName().toString(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), pos, world.provider.getDimension());
+                        break;
                     }
                 }
             }
         } else {
-            if (world.getTotalWorldTime() % 10 == 0) {
+            if (world.getGameTime() % 10 == 0) {
                 texIndex = texIndex < frontTex.size() - 1 ? texIndex + 1 : 0;
                 reloadModel = true;
             }

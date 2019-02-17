@@ -12,12 +12,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
@@ -27,14 +27,14 @@ public class ModuleFluidDispenser extends ModuleBase {
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation frontTexture() {
         return BG_LOC;
     }
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation innerTexture() {
         return BlockModularFrame.INNER_HARDEST_LOC;
     }
@@ -51,14 +51,14 @@ public class ModuleFluidDispenser extends ModuleBase {
 
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
-        if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) == 0) return;
+        if (world.getGameTime() % (60 - 10 * tile.getSpeedUpCount()) == 0) return;
         EnumFacing facing = tile.blockFacing();
         if (!world.isAirBlock(pos.offset(facing.getOpposite()))) return;
 
         TileEntity neighbor = tile.getAttachedTile();
         if (neighbor == null) return;
 
-        IFluidHandler handler = neighbor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
+        IFluidHandler handler = neighbor.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite()).orElse(null);
         if (handler == null) return;
 
         if (FluidUtil.tryPlaceFluid(null, world, pos.offset(facing.getOpposite()), handler, handler.drain(Fluid.BUCKET_VOLUME, false)))

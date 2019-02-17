@@ -9,10 +9,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
 public class GuiCraftingFrame extends GuiContainer {
 
     /**
@@ -27,16 +24,17 @@ public class GuiCraftingFrame extends GuiContainer {
     }
 
     @Override
-    protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-        Slot slot = this.getSlotAtPosition(mouseX, mouseY);
+    public boolean mouseDragged(double mouseX, double mouseY, int clickedMouseButton, double timeSinceLastClick, double p_mouseDragged_8_) {
+        Slot slot = this.getSlotAtPosition((int)mouseX, (int)mouseY);
         ItemStack itemstack = mc.player.inventory.getItemStack();
 
         if (slot instanceof GhostSlot && Container.canAddItemToSlot(slot, itemstack, true) && slot.isItemValid(itemstack) && inventorySlots.canDragIntoSlot(slot)) {
             dragSplittingSlots.add(slot);
             dragSplitting = true;
         } else {
-            super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
+            return super.mouseDragged(mouseX, mouseY, clickedMouseButton, timeSinceLastClick, p_mouseDragged_8_);
         }
+        return true;
     }
 
     private Slot getSlotAtPosition(int x, int y) {
@@ -59,7 +57,7 @@ public class GuiCraftingFrame extends GuiContainer {
      */
     @Override
     protected void drawGuiContainerBackgroundLayer(final float partialTicks, final int mouseX, final int mouseY) {
-        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+        GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
 
         mc.getTextureManager().bindTexture(CF_GUI_TEXTURE);
 

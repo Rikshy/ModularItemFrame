@@ -15,11 +15,9 @@ import mcjty.theoneprobe.api.ProbeMode;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -27,6 +25,8 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
@@ -50,7 +50,7 @@ public class ModuleTeleport extends ModuleBase {
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation frontTexture() {
         return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_item");
     }
@@ -61,7 +61,7 @@ public class ModuleTeleport extends ModuleBase {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         RenderUtils.renderEnd(renderer, x, y, z, info -> {
             switch (tile.blockFacing()) {
@@ -120,14 +120,13 @@ public class ModuleTeleport extends ModuleBase {
                 if (playerIn.isBeingRidden()) {
                     playerIn.removePassengers();
                 }
-                if (playerIn.isRiding()) {
-                    playerIn.dismountRidingEntity();
-                }
+
+                playerIn.stopRiding();
 
                 if (playerIn.attemptTeleport(target.getX() + 0.5F, target.getY() + 0.5F, target.getZ() + 0.5F)) {
                     NetworkHandler.sendAround(new TeleportEffectPacket(playerIn.getPosition()), playerIn.getPosition(), playerIn.dimension);
 
-                    playerIn.rotationYaw = getRotationYaw(worldIn.getBlockState(linkedLoc).getValue(BlockModularFrame.FACING).getOpposite());
+                    playerIn.rotationYaw = getRotationYaw(worldIn.getBlockState(linkedLoc).get(BlockModularFrame.FACING).getOpposite());
 
                     NetworkHandler.sendAround(new TeleportEffectPacket(target), target, playerIn.dimension);
                 }

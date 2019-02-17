@@ -4,16 +4,10 @@ import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.module.t1.ModuleItem;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.ProbeMode;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
@@ -23,24 +17,26 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 
 	protected TileModularFrame tile;
+	ItemModule parent;
 
 	public void setTile(TileModularFrame te) {
 		tile = te;
 	}
+
+	public ItemModule getParent() { return parent; }
+
+	public abstract ResourceLocation getId();
 
 	/**
 	 * Is called when the {@link FrameRenderer} wants to render the module for the first time.
@@ -49,7 +45,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 * @return [Nonnull] {@link ResourceLocation} to the Texture
 	 */
 	@Nonnull
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public abstract ResourceLocation frontTexture();
 
     /**
@@ -59,7 +55,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
      * @return [Nonnull] {@link ResourceLocation} to the Texture
      */
     @Nonnull
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
     public ResourceLocation innerTexture() {
         return BlockModularFrame.INNER_DEF_LOC;
     }
@@ -71,7 +67,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
      * @return [Nonnull] {@link ResourceLocation} to the Texture
      */
     @Nonnull
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
     public ResourceLocation backTexture() {
         return new ResourceLocation("minecraft", "blocks/log_birch_top");
     }
@@ -95,18 +91,19 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 * @param model Contains the model of the frame
 	 * @return baked model ofc
 	 */
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public IBakedModel bakeModel(IModel model) {
 		if (bakedModel == null || reloadModel) {
-			bakedModel = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, location -> {
-				if (location.getPath().contains("default_front"))
-					return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(frontTexture().toString());
-				if (location.getPath().contains("default_back"))
-					return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(backTexture().toString());
-				if (location.getPath().contains("default_inner"))
-				    return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(innerTexture().toString());
-				return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
-			});
+			model.bake(resourceLocation -> model, loc -> {
+				if (loc.toString().contains("default_front"))
+					return Minecraft.getInstance().getTextureMap().getSprite(frontTexture());
+				if (loc.toString().contains("default_back"))
+					return Minecraft.getInstance().getTextureMap().getSprite(backTexture());
+				if (loc.toString().contains("default_inner"))
+					return Minecraft.getInstance().getTextureMap().getSprite(innerTexture());
+				return Minecraft.getInstance().getTextureMap().getSprite((ResourceLocation) loc);
+			}, model.getDefaultState(), false, DefaultVertexFormats.ITEM);
+
 			reloadModel = false;
 		}
 		return bakedModel;
@@ -119,7 +116,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 *
 	 * @param tesr instance of the current {@link FrameRenderer}
 	 */
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 	}
 
@@ -168,33 +165,11 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
 	}
 
-	/**
-	 * The One Probe information handling
-	 */
-	@SideOnly(Side.CLIENT)
-	@Optional.Method(modid = "theoneprobe")
-	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-		probeInfo.horizontal().text(I18n.format("modularitemframe.tooltip.module", getModuleName()));
-	}
-
-	/**
-	 * Waila/Hwyla information handling
-	 */
-	@Nonnull
-	@SideOnly(Side.CLIENT)
-	@Optional.Method(modid = "waila")
-	public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-		List<String> tips = new ArrayList<>();
-		tips.add(I18n.format("modularitemframe.tooltip.module", getModuleName()));
-		return tips;
-	}
-
 	@Nonnull
 	public NBTTagCompound writeUpdateNBT(@Nonnull NBTTagCompound cmp) {
 	    return cmp;
 	}
 
-	@SideOnly(Side.CLIENT)
 	public void readUpdateNBT(@Nonnull NBTTagCompound cmp) {
 
     }

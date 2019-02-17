@@ -4,19 +4,16 @@ import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-@SideOnly(Side.CLIENT)
-public class FrameRenderer extends TileEntitySpecialRenderer<TileModularFrame> {
+public class FrameRenderer extends TileEntityRenderer<TileModularFrame> {
 
     private IModel model = null;
 
@@ -44,11 +41,11 @@ public class FrameRenderer extends TileEntitySpecialRenderer<TileModularFrame> {
         else GlStateManager.shadeModel(GL11.GL_FLAT);
 
 
-        GlStateManager.translate(x, y, z); // Translate pad to coords here
+        GlStateManager.translated(x, y, z); // Translate pad to coords here
         GlStateManager.disableRescaleNormal();
         rotateFrameOnFacing(te.blockFacing(), 0);
 
-        Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(modelFrame, 1.0F, 1, 1, 1);
+        Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(modelFrame, 1.0F, 1, 1, 1);
 
         GlStateManager.disableBlend();
         GlStateManager.enableCull();
@@ -67,26 +64,26 @@ public class FrameRenderer extends TileEntitySpecialRenderer<TileModularFrame> {
             case NORTH:
                 break;
             case SOUTH:
-                GlStateManager.translate(1.0F, 0.0F, 1.0F);
-                GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+                GlStateManager.translatef(1.0F, 0.0F, 1.0F);
+                GlStateManager.rotatef(180.0F, 0.0F, 1.0F, 0.0F);
                 break;
             case WEST:
-                GlStateManager.translate(0.0F, 0F, 1.0F);
-                GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
+                GlStateManager.translatef(0.0F, 0F, 1.0F);
+                GlStateManager.rotatef(90.0F, 0.0F, 1.0F, 0.0F);
                 break;
             case EAST:
-                GlStateManager.translate(1.0F, 0.0F, 0.0F);
-                GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
+                GlStateManager.translatef(1.0F, 0.0F, 0.0F);
+                GlStateManager.rotatef(-90.0F, 0.0F, 1.0F, 0.0F);
                 break;
             case DOWN:
-                GlStateManager.translate(0.0F, 0.0F, 1.0F);
-                GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
+                GlStateManager.translatef(0.0F, 0.0F, 1.0F);
+                GlStateManager.rotatef(-90.0F, 1.0F, 0.0F, 0.0F);
                 break;
             case UP:
-                GlStateManager.translate(0.0F, 1.0F, 0.0F);
-                GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
+                GlStateManager.translatef(0.0F, 1.0F, 0.0F);
+                GlStateManager.rotatef(90.0F, 1.0F, 0.0F, 0.0F);
         }
-        GlStateManager.rotate(rotation * 90.0F, 0.0F, 0.0F, 1.0F);
-        GlStateManager.translate((r == 1 || r == 2) ? -1 : 0, (r == 3 || r == 2) ? -1 : 0, 0);
+        GlStateManager.rotatef(rotation * 90.0F, 0.0F, 0.0F, 1.0F);
+        GlStateManager.translatef((r == 1 || r == 2) ? -1 : 0, (r == 3 || r == 2) ? -1 : 0, 0);
     }
 }

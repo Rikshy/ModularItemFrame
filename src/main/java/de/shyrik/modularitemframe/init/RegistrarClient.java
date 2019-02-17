@@ -6,14 +6,12 @@ import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemUpgrade;
 import de.shyrik.modularitemframe.common.module.t1.*;
-import de.shyrik.modularitemframe.common.module.t2.ModuleCraftingPlus;
+import de.shyrik.modularitemframe.common.module.t2.*;
 import de.shyrik.modularitemframe.common.module.t2.ModuleDispense;
 import de.shyrik.modularitemframe.common.module.t2.ModuleTrashCan;
-import de.shyrik.modularitemframe.common.module.t2.ModuleVacuum;
+import de.shyrik.modularitemframe.common.module.t3.*;
 import de.shyrik.modularitemframe.common.module.t3.ModuleAutoCrafting;
-import de.shyrik.modularitemframe.common.module.t3.ModuleFluidDispenser;
-import de.shyrik.modularitemframe.common.module.t3.ModuleItemTeleporter;
-import de.shyrik.modularitemframe.common.module.t3.ModuleXP;
+import de.shyrik.modularitemframe.common.module.t3.ItemModuleTeleporter;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -71,19 +69,19 @@ public class RegistrarClient {
 
                 ModuleAutoCrafting.BG_LOC,
                 ModuleFluidDispenser.BG_LOC,
-                ModuleItemTeleporter.BG_IN,
-                ModuleItemTeleporter.BG_OUT,
-                ModuleItemTeleporter.BG_NONE,
+                ItemModuleTeleporter.BG_IN,
+                ItemModuleTeleporter.BG_OUT,
+                ItemModuleTeleporter.BG_NONE,
                 ModuleXP.BG_LOC
         );
     }
 
     private static void registerAllItemModel(Item... items) {
         for (Item item : items) {
-            if (item instanceof ItemModule) {
+            if (item instanceof ModuleItem) {
                 NonNullList<ItemStack> list = NonNullList.create();
                 item.getSubItems(ModularItemFrame.TAB, list);
-                list.forEach(stack -> registerItemModel(item, stack.getItemDamage(), ((ItemModule) item).getModuleId(stack)));
+                list.forEach(stack -> registerItemModel(item, stack.getItemDamage(), ((ModuleItem) item).getModuleId(stack)));
             } else if (item instanceof ItemUpgrade) {
                 NonNullList<ItemStack> list = NonNullList.create();
                 item.getSubItems(ModularItemFrame.TAB, list);

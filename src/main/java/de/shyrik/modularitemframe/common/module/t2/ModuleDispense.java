@@ -16,8 +16,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -33,14 +33,14 @@ public class ModuleDispense extends ModuleBase {
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation frontTexture() {
         return BG_LOC;
     }
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation innerTexture() {
         return BlockModularFrame.INNER_HARD_LOC;
     }
@@ -78,19 +78,17 @@ public class ModuleDispense extends ModuleBase {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (!world.isRemote) {
-            if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
+            if (world.getGameTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
             EnumFacing facing = tile.blockFacing();
             TileEntity targetTile = world.getTileEntity(pos.offset(facing, Math.min(range, tile.getRangeUpCount()) + 1));
             if (targetTile != null) {
                 IItemHandlerModifiable inv = (IItemHandlerModifiable) targetTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
-                if (inv != null) {
-                    for (int slot = 0; slot < inv.getSlots(); slot++) {
-                        if (!inv.getStackInSlot(slot).isEmpty()) {
-                            ItemUtils.ejectStack(world, pos, facing, inv.getStackInSlot(slot));
-                            inv.setStackInSlot(slot, ItemStack.EMPTY);
-                            break;
-                        }
+                for (int slot = 0; slot < inv.getSlots(); slot++) {
+                    if (!inv.getStackInSlot(slot).isEmpty()) {
+                        ItemUtils.ejectStack(world, pos, facing, inv.getStackInSlot(slot));
+                        inv.setStackInSlot(slot, ItemStack.EMPTY);
+                        break;
                     }
                 }
             }
@@ -101,13 +99,13 @@ public class ModuleDispense extends ModuleBase {
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = super.serializeNBT();
-        nbt.setInteger(NBT_RANGE, range);
+        nbt.putInt(NBT_RANGE, range);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_RANGE)) range = nbt.getInteger(NBT_RANGE);
+        if (nbt.hasUniqueId(NBT_RANGE)) range = nbt.getInt(NBT_RANGE);
     }
 }

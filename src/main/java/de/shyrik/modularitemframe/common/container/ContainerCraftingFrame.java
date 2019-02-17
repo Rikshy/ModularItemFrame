@@ -33,7 +33,7 @@ public class ContainerCraftingFrame extends Container {
         matrix = new FrameCrafting(this, frameInventory, 3, 3);
         matrix.onCraftMatrixChanged();
 
-        this.addSlotToContainer(new SlotCrafting(player, this.matrix, this.craftResult, 0, 124, 35) {
+        addSlot(new SlotCrafting(player, this.matrix, this.craftResult, 0, 124, 35) {
             @Override
             public boolean canTakeStack(EntityPlayer playerIn) {
                 return false;
@@ -41,7 +41,7 @@ public class ContainerCraftingFrame extends Container {
         });
         for (int row = 0; row < FRAME_SLOTS_PER_ROW; ++row) {
             for (int col = 0; col < FRAME_SLOTS_PER_ROW; ++col) {
-                addSlotToContainer(new GhostSlot(matrix, col + row * FRAME_SLOTS_PER_ROW, 30 + col * 18, 17 + row * 18));
+                addSlot(new GhostSlot(matrix, col + row * FRAME_SLOTS_PER_ROW, 30 + col * 18, 17 + row * 18));
             }
         }
 
@@ -49,12 +49,12 @@ public class ContainerCraftingFrame extends Container {
         if (playerInventory != null) {
             for (int row = 0; row < INV_ROWS; ++row) {
                 for (int col = 0; col < SLOTS_PER_ROW; ++col) {
-                    addSlotToContainer(new SlotItemHandler(playerInventory, col + row * SLOTS_PER_ROW + SLOTS_PER_ROW, 8 + col * 18, 84 + row * 18));
+                    addSlot(new SlotItemHandler(playerInventory, col + row * SLOTS_PER_ROW + SLOTS_PER_ROW, 8 + col * 18, 84 + row * 18));
                 }
             }
 
             for (int col = 0; col < SLOTS_PER_ROW; ++col) {
-                addSlotToContainer(new SlotItemHandler(playerInventory, col, 8 + col * 18, 142));
+                addSlot(new SlotItemHandler(playerInventory, col, 8 + col * 18, 142));
             }
         }
     }

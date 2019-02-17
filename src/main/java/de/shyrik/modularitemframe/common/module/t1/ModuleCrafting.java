@@ -8,19 +8,17 @@ import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
 import de.shyrik.modularitemframe.common.container.IContainerCallbacks;
+import de.shyrik.modularitemframe.common.container.InteractionObject;
 import de.shyrik.modularitemframe.common.network.NetworkHandler;
 import de.shyrik.modularitemframe.common.network.packet.PlaySoundPacket;
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.ProbeMode;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -28,18 +26,16 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
+import javax.annotation.Nullable;
 
-public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
+public class ModuleCrafting extends ModuleBase implements IContainerCallbacks, IInteractionObject {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1_craft");
     public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_crafting");
@@ -50,9 +46,13 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
     private ItemStack displayItem = ItemStack.EMPTY;
     private ItemStackHandler ghostInventory = new ItemStackHandler(9);
 
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
+
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
     public ResourceLocation frontTexture() {
         return BG_LOC;
     }
@@ -63,14 +63,13 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
-        GlStateManager.scale(0.7F, 0.7F, 0.7F);
+        GlStateManager.translated(x + 0.5D, y + 0.5D, z + 0.5D);
+        GlStateManager.scaled(0.7F, 0.7F, 0.7F);
         GlStateManager.pushMatrix();
 
-        RenderUtils.renderItem(displayItem, tile.blockFacing(), 0, -0.05F, ItemCameraTransforms.TransformType.FIXED);
+        RenderUtils.renderItem(displayItem, tile.blockFacing(), 0, -0.05F);
 
         GlStateManager.popMatrix();
         GlStateManager.popMatrix();
@@ -79,6 +78,7 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
     @Override
     public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
         if (!world.isRemote) {
+            playerIn.displayGui(this);
             playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, world, pos.getX(), pos.getY(), pos.getZ());
             tile.markDirty();
         }
@@ -150,37 +150,6 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    @Optional.Method(modid = "theoneprobe")
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
-        if (recipe != null && !recipe.getRecipeOutput().isEmpty()) {
-            IProbeInfo input = probeInfo.horizontal().text("Input:");
-            List<ItemStack> stacks = new ArrayList<>();
-            for (int slot = 0; slot < ghostInventory.getSlots(); ++slot) {
-                ItemStack stack = ghostInventory.getStackInSlot(slot);
-                if (!stack.isEmpty()) {
-                    if (!ItemUtils.increaseStackInList(stacks, stack)) stacks.add(stack.copy());
-                }
-            }
-
-            for (ItemStack stack : stacks) {
-                input.item(stack);
-            }
-        }
-    }
-
-    @Nonnull
-    @Override
-    @SideOnly(Side.CLIENT)
-    @Optional.Method(modid = "waila")
-    public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        List<String> tips = super.getWailaBody(itemStack, accessor, config);
-        tips.add("output: " + recipe.getRecipeOutput().getDisplayName());
-        return tips;
-    }
-
-    @Override
     public void onContainerCraftingResultChanged(InventoryCraftResult result) {
         displayItem = result.getStackInSlot(0);
         recipe = result.getRecipeUsed();
@@ -191,15 +160,43 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();
-        compound.setTag(NBT_DISPLAY, displayItem.serializeNBT());
-        compound.setTag(NBT_GHOSTINVENTORY, ghostInventory.serializeNBT());
+        compound.put(NBT_DISPLAY, displayItem.serializeNBT());
+        compound.put(NBT_GHOSTINVENTORY, ghostInventory.serializeNBT());
         return compound;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_DISPLAY)) displayItem = new ItemStack(nbt.getCompoundTag(NBT_DISPLAY));
-        if (nbt.hasKey(NBT_GHOSTINVENTORY)) ghostInventory.deserializeNBT(nbt.getCompoundTag(NBT_GHOSTINVENTORY));
+        if (nbt.hasUniqueId(NBT_DISPLAY)) displayItem = ItemStack.read(nbt.getCompound(NBT_DISPLAY));
+        if (nbt.hasUniqueId(NBT_GHOSTINVENTORY)) ghostInventory.deserializeNBT(nbt.getCompound(NBT_GHOSTINVENTORY));
+    }
+
+    @Nonnull
+    @Override
+    public Container createContainer(@Nonnull InventoryPlayer playerInventory, @Nonnull EntityPlayer playerIn) {
+        return new ContainerCraftingFrame(ItemUtils.getPlayerInv(playerIn), ghostInventory, playerIn, this);
+    }
+
+    @Nonnull
+    @Override
+    public String getGuiID() {
+        return GuiHandler.CRAFTING_FRAME;
+    }
+
+    @Override
+    public ITextComponent getName() {
+        return null;
+    }
+
+    @Override
+    public boolean hasCustomName() {
+        return false;
+    }
+
+    @Nullable
+    @Override
+    public ITextComponent getCustomName() {
+        return null;
     }
 }

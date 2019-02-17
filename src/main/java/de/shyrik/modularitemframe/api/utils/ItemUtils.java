@@ -5,9 +5,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
@@ -147,7 +147,7 @@ public class ItemUtils {
     }
 
     public static boolean simpleAreStacksEqual(ItemStack stack, ItemStack stack2) {
-        return stack.getItem() == stack2.getItem() && stack.getItemDamage() == stack2.getItemDamage();
+        return stack.getItem() == stack2.getItem() && stack.getDamage() == stack2.getDamage();
     }
 
     public static void ejectStack(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, ItemStack stack) {
@@ -223,6 +223,6 @@ public class ItemUtils {
             craft.setInventorySlotContents(i, stack.copy());
         }
 
-        return CraftingManager.findMatchingRecipe(craft, world);
+        return new RecipeManager().getRecipe(craft, world);
     }
 }

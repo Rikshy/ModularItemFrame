@@ -1,10 +1,12 @@
 package de.shyrik.modularitemframe.init;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
+import de.shyrik.modularitemframe.api.ItemModule;
+import de.shyrik.modularitemframe.api.ItemUpgrade;
+import de.shyrik.modularitemframe.api.ModuleBase;
+import de.shyrik.modularitemframe.api.UpgradeBase;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
-import de.shyrik.modularitemframe.common.item.ItemModule;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
-import de.shyrik.modularitemframe.common.item.ItemUpgrade;
 import de.shyrik.modularitemframe.common.module.t1.*;
 import de.shyrik.modularitemframe.common.module.t2.*;
 import de.shyrik.modularitemframe.common.module.t3.*;
@@ -13,13 +15,12 @@ import de.shyrik.modularitemframe.common.upgrade.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemBucket;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.OreDictionary;
 
 @Mod.EventBusSubscriber
 public class Registrar {
@@ -29,63 +30,70 @@ public class Registrar {
         event.getRegistry().registerAll(
                 asDefault(new BlockModularFrame(), BlockModularFrame.LOC)
         );
+    }
 
-        GameRegistry.registerTileEntity(TileModularFrame.class, BlockModularFrame.LOC);
+    @SubscribeEvent
+    public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
+        TileEntityType.register(BlockModularFrame.LOC.toString(), TileEntityType.Builder.create(TileModularFrame::new));
     }
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
-        event.getRegistry().registerAll(
-                asItem(Blocks.MODULAR_FRAME, BlockModularFrame.LOC),
+        event.getRegistry().registerAll(asItem(Blocks.MODULAR_FRAME, BlockModularFrame.LOC),
 
                 asDefault(new ItemScrewdriver(), ItemScrewdriver.LOC),
 
                 //Canvas
-                asDefault(new Item(), new ResourceLocation(ModularItemFrame.MOD_ID, "canvas")),
+                asDefault(new Item(new Item.Properties()), new ResourceLocation(ModularItemFrame.MOD_ID, "canvas")),
 
                 //Tier 1
-                asDefault(new ItemModule(ModuleItem.LOC)
-                                .addVariant(ModuleIO.LOC)
-                                .addVariant(ModuleCrafting.LOC)
-                                .addVariant(ModuleNullify.LOC)
-                                .addVariant(ModuleStorage.LOC)
-                                .addVariant(ModuleTank.LOC),
-                        new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1")),
+                asModule(ModuleIO.class, ModuleIO.LOC),
+                asModule(ModuleItem.class, ModuleItem.LOC),
+                asModule(ModuleCrafting.class, ModuleCrafting.LOC),
+                asModule(ModuleNullify.class, ModuleNullify.LOC),
+                asModule(ModuleStorage.class, ModuleStorage.LOC),
+                asModule(ModuleTank.class, ModuleTank.LOC),
+
                 //Tier 2
-                asDefault(new ItemModule(ModuleCraftingPlus.LOC)
-                                .addVariant(ModuleDispense.LOC)
-                                .addVariant(ModuleTrashCan.LOC)
-                                .addVariant(ModuleUse.LOC)
-                                .addVariant(ModuleVacuum.LOC),
-                        new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2")),
+                asModule(ModuleCraftingPlus.class, ModuleCraftingPlus.LOC),
+                asModule(ModuleDispense.class, ModuleDispense.LOC),
+                asModule(ModuleTrashCan.class, ModuleTrashCan.LOC),
+                asModule(ModuleUse.class, ModuleUse.LOC),
+                asModule(ModuleVacuum.class, ModuleVacuum.LOC),
+
                 //Tier 3
-                asDefault(new ItemModule(ModuleAutoCrafting.LOC)
-                                .addVariant(ModuleFluidDispenser.LOC)
-                                .addVariant(ModuleItemTeleporter.LOC)
-                                .addVariant(ModuleTeleport.LOC)
-                                .addVariant(ModuleXP.LOC),
-                        new ResourceLocation(ModularItemFrame.MOD_ID, "module_t3")),
+                asModule(ModuleAutoCrafting.class, ModuleAutoCrafting.LOC),
+                asModule(ModuleFluidDispenser.class, ModuleFluidDispenser.LOC),
+                asModule(ItemModuleTeleporter.class, ItemModuleTeleporter.LOC),
+                asModule(ModuleTeleport.class, ModuleTeleport.LOC),
+                asModule(ModuleXP.class, ModuleXP.LOC),
 
                 //Upgrades
-                asDefault(new ItemUpgrade(UpgradeBlastResist.LOC)
-                        .addVariant(UpgradeSpeed.LOC)
-                        .addVariant(UpgradeRange.LOC)
-                        .addVariant(UpgradeCapacity.LOC),
-                        new ResourceLocation(ModularItemFrame.MOD_ID, "upgrade")
-                )
+                asUpgrade(UpgradeBlastResist.class, UpgradeBlastResist.LOC),
+                asUpgrade(UpgradeSpeed.class, UpgradeSpeed.LOC),
+                asUpgrade(UpgradeRange.class, UpgradeRange.LOC),
+                asUpgrade(UpgradeCapacity.class, UpgradeCapacity.LOC)
 
         );
     }
 
+    private static Item asModule(Class<? extends ModuleBase> module, ResourceLocation id) {
+        return asDefault(new ItemModule(module, id), id);
+    }
+
+    private static Item asUpgrade(Class<? extends UpgradeBase> upgrade, ResourceLocation id) {
+        return asDefault(new ItemUpgrade(upgrade, id), id);
+    }
+
     private static Block asDefault(Block block, ResourceLocation loc) {
-        return block.setRegistryName(loc).setCreativeTab(ModularItemFrame.TAB).setTranslationKey(loc.toString().replace(':', '.'));
+        return block.setRegistryName(loc);
     }
 
     private static Item asDefault(Item item, ResourceLocation loc) {
-        return item.setRegistryName(loc).setCreativeTab(ModularItemFrame.TAB).setTranslationKey(loc.toString().replace(':', '.'));
+        return item.setRegistryName(loc);
     }
 
     private static Item asItem(Block block, ResourceLocation loc) {
-        return new ItemBlock(block).setRegistryName(loc);
+        return new ItemBlock(block, new Item.Properties()).setRegistryName(loc);
     }
 }

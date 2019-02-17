@@ -7,14 +7,7 @@ import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
-import de.shyrik.modularitemframe.common.network.NetworkHandler;
-import de.shyrik.modularitemframe.common.network.packet.SpawnParticlesPacket;
 import de.shyrik.modularitemframe.common.tile.TileModularFrame;
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.ProbeMode;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.item.EntityItem;
@@ -24,22 +17,20 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public class ModuleItemTeleporter extends ModuleBase {
+public class ItemModuleTeleporter extends ModuleBase {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t3_itemtele");
     public static final ResourceLocation BG_IN = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t3_itemtelein");
@@ -57,7 +48,7 @@ public class ModuleItemTeleporter extends ModuleBase {
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation frontTexture() {
         switch (direction) {
             case VACUUM:
@@ -72,13 +63,13 @@ public class ModuleItemTeleporter extends ModuleBase {
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation innerTexture() {
         return BlockModularFrame.INNER_HARDEST_LOC;
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         if(direction == EnumMode.NONE) {
             RenderUtils.renderEnd(renderer, x, y, z, info -> {
@@ -132,18 +123,18 @@ public class ModuleItemTeleporter extends ModuleBase {
 
     @Override
     public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
-        NBTTagCompound nbt = driver.getTagCompound();
+        NBTTagCompound nbt = driver.getTag();
         if (playerIn.isSneaking()) {
             if (nbt == null) nbt = new NBTTagCompound();
-            nbt.setLong(NBT_LINK, tile.getPos().toLong());
-            driver.setTagCompound(nbt);
+            nbt.putLong(NBT_LINK, tile.getPos().toLong());
+            driver.setTag(nbt);
             playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.loc_saved"));
         } else {
-            if (nbt != null && nbt.hasKey(NBT_LINK)) {
+            if (nbt != null && nbt.hasUniqueId(NBT_LINK)) {
                 BlockPos tmp = BlockPos.fromLong(nbt.getLong(NBT_LINK));
                 TileEntity targetTile = tile.getWorld().getTileEntity(tmp);
                 int countRange = tile.getRangeUpCount();
-                if (!(targetTile instanceof TileModularFrame) || !((((TileModularFrame) targetTile).module instanceof ModuleItemTeleporter)))
+                if (!(targetTile instanceof TileModularFrame) || !((((TileModularFrame) targetTile).module instanceof ItemModuleTeleporter)))
                     playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.invalid_target"));
                 else if (tile.getPos().getDistance(tmp.getX(), tmp.getY(), tmp.getZ()) > ConfigValues.BaseTeleportRange + (countRange * 10)) {
                     playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.too_far", ConfigValues.BaseTeleportRange + (countRange * 10)));
@@ -152,14 +143,14 @@ public class ModuleItemTeleporter extends ModuleBase {
                     direction = EnumMode.DISPENSE;
                     reloadModel = true;
 
-                    ModuleItemTeleporter targetModule = (ModuleItemTeleporter) ((TileModularFrame) targetTile).module;
+                    ItemModuleTeleporter targetModule = (ItemModuleTeleporter) ((TileModularFrame) targetTile).module;
                     targetModule.linkedLoc = tile.getPos();
                     targetModule.direction = EnumMode.VACUUM;
                     targetModule.reloadModel = true;
 
                     playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.link_established"));
-                    nbt.removeTag(NBT_LINK);
-                    driver.setTagCompound(nbt);
+                    nbt.remove(NBT_LINK);
+                    driver.setTag(nbt);
 
                     targetTile.markDirty();
                     tile.markDirty();
@@ -176,7 +167,7 @@ public class ModuleItemTeleporter extends ModuleBase {
         ItemStack held = playerIn.getHeldItem(hand);
 
         if (!held.isEmpty()) {
-            ItemUtils.ejectStack(worldIn, linkedLoc, worldIn.getBlockState(linkedLoc).getValue(BlockModularFrame.FACING), held);
+            ItemUtils.ejectStack(worldIn, linkedLoc, worldIn.getBlockState(linkedLoc).get(BlockModularFrame.FACING), held);
             held.setCount(0);
         }
         return true;
@@ -185,7 +176,7 @@ public class ModuleItemTeleporter extends ModuleBase {
     @Override
     public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
         if (hasValidConnection(worldIn)) {
-            ModuleItemTeleporter targetModule = (ModuleItemTeleporter) ((TileModularFrame) Objects.requireNonNull(worldIn.getTileEntity(linkedLoc))).module;
+            ItemModuleTeleporter targetModule = (ItemModuleTeleporter) ((TileModularFrame) Objects.requireNonNull(worldIn.getTileEntity(linkedLoc))).module;
             targetModule.linkedLoc = null;
             targetModule.direction = EnumMode.NONE;
             targetModule.reloadModel = true;
@@ -197,38 +188,18 @@ public class ModuleItemTeleporter extends ModuleBase {
         if (direction != EnumMode.VACUUM) return;
         if (ConfigValues.DisableAutomaticItemTransfer) return;
         if (!hasValidConnection(world)) return;
-        if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
+        if (world.getGameTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
         List<EntityItem> entities = world.getEntitiesWithinAABB(EntityItem.class, getVacuumBB(pos));
         for (EntityItem entity : entities) {
             ItemStack entityStack = entity.getItem();
-            if (entity.isDead || entityStack.isEmpty()) continue;
+            if (!entity.isAlive() || entityStack.isEmpty()) continue;
 
-            ItemUtils.ejectStack(world, linkedLoc, world.getBlockState(linkedLoc).getValue(BlockModularFrame.FACING), entityStack);
-            entity.setDead();
-            NetworkHandler.sendAround(new SpawnParticlesPacket(EnumParticleTypes.EXPLOSION_NORMAL.getParticleID(), entity.getPosition(), 1), entity.getPosition(), entity.dimension);
+            ItemUtils.ejectStack(world, linkedLoc, world.getBlockState(linkedLoc).get(BlockModularFrame.FACING), entityStack);
+            entity.remove();
+            //NetworkHandler.sendAround(new SpawnParticlesPacket(EnumParticleTypes.EXPLOSION_NORMAL.getParticleID(), entity.getPosition(), 1), entity.getPosition(), entity.dimension);
             break;
         }
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    @Optional.Method(modid = "theoneprobe")
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
-        probeInfo.horizontal().text(I18n.format("modularitemframe.tooltip.tele_valid", hasValidConnection(world)));
-        probeInfo.horizontal().text(I18n.format("modularitemframe.tooltip.mode", direction.getName()));
-    }
-
-    @Nonnull
-    @Override
-    @SideOnly(Side.CLIENT)
-    @Optional.Method(modid = "waila")
-    public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        List<String> tooltips = super.getWailaBody(itemStack, accessor, config);
-        tooltips.add(I18n.format("modularitemframe.tooltip.tele_valid", hasValidConnection(accessor.getWorld())));
-        tooltips.add(I18n.format("modularitemframe.tooltip.mode", direction.getName()));
-        return tooltips;
     }
 
     @Nonnull
@@ -236,10 +207,10 @@ public class ModuleItemTeleporter extends ModuleBase {
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();
         if (linkedLoc != null) {
-            compound.setInteger(NBT_LINKX, linkedLoc.getX());
-            compound.setInteger(NBT_LINKY, linkedLoc.getY());
-            compound.setInteger(NBT_LINKZ, linkedLoc.getZ());
-            compound.setInteger(NBT_DIR, direction.index);
+            compound.putInt(NBT_LINKX, linkedLoc.getX());
+            compound.putInt(NBT_LINKY, linkedLoc.getY());
+            compound.putInt(NBT_LINKZ, linkedLoc.getZ());
+            compound.putInt(NBT_DIR, direction.index);
         }
         return compound;
     }
@@ -247,17 +218,17 @@ public class ModuleItemTeleporter extends ModuleBase {
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_LINKX))
-            linkedLoc = new BlockPos(nbt.getInteger(NBT_LINKX), nbt.getInteger(NBT_LINKY), nbt.getInteger(NBT_LINKZ));
-        if (nbt.hasKey(NBT_DIR)) direction = EnumMode.values()[nbt.getInteger(NBT_DIR)];
+        if (nbt.hasUniqueId(NBT_LINKX))
+            linkedLoc = new BlockPos(nbt.getInt(NBT_LINKX), nbt.getInt(NBT_LINKY), nbt.getInt(NBT_LINKZ));
+        if (nbt.hasUniqueId(NBT_DIR)) direction = EnumMode.values()[nbt.getInt(NBT_DIR)];
     }
 
     private boolean hasValidConnection(@Nonnull World world) {
         if (linkedLoc == null) return false;
         TileEntity tile = world.getTileEntity(linkedLoc);
         if (!(tile instanceof TileModularFrame)
-                || !(((TileModularFrame) tile).module instanceof ModuleItemTeleporter)
-                || ((ModuleItemTeleporter) ((TileModularFrame) tile).module).direction != EnumMode.DISPENSE)
+                || !(((TileModularFrame) tile).module instanceof ItemModuleTeleporter)
+                || ((ItemModuleTeleporter) ((TileModularFrame) tile).module).direction != EnumMode.DISPENSE)
             return false;
         return true;
     }

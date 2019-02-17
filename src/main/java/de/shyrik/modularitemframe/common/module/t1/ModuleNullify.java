@@ -23,11 +23,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
@@ -43,17 +43,8 @@ public class ModuleNullify extends ModuleBase {
     private final TextureAtlasSprite still;
     private final TextureAtlasSprite flowing;
 
-    public ModuleNullify() {
-        super();
-        lavaStack = FluidUtil.getFluidContained(new ItemStack(Items.LAVA_BUCKET));
-        assert lavaStack != null;
-        Fluid lava = lavaStack.getFluid();
-        still = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(lava.getStill().toString());
-        flowing = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(lava.getFlowing().toString());
-    }
-
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
@@ -85,6 +76,15 @@ public class ModuleNullify extends ModuleBase {
         GlStateManager.popMatrix();
     }
 
+    public ModuleNullify() {
+        super();
+        lavaStack = FluidUtil.getFluidContained(new ItemStack(Items.LAVA_BUCKET)).orElse(null);
+        assert lavaStack != null;
+        Fluid lava = lavaStack.getFluid();
+        still = Minecraft.getInstance().getTextureMap().getSprite(lava.getStill());
+        flowing = Minecraft.getInstance().getTextureMap().getSprite(lava.getFlowing());
+    }
+
     @Override
     public String getModuleName() {
         return I18n.format("modularitemframe.module.nullify");
@@ -92,7 +92,7 @@ public class ModuleNullify extends ModuleBase {
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation frontTexture() {
         return BG_LOC;
     }
@@ -110,11 +110,11 @@ public class ModuleNullify extends ModuleBase {
                     lastStack = held.copy();
                 }
                 held.setCount(0);
-                NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.BLOCK_LAVA_EXTINGUISH.getSoundName().toString(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), tile.getPos(), worldIn.provider.getDimension());
+                NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.BLOCK_LAVA_EXTINGUISH.getName().toString(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), tile.getPos(), worldIn.provider.getDimension());
             } else if (playerIn.isSneaking() && held.isEmpty() && !lastStack.isEmpty()) {
                 playerIn.setHeldItem(hand, lastStack);
                 lastStack = ItemStack.EMPTY;
-                NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.ENTITY_ENDERPEARL_THROW.getSoundName().toString(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), tile.getPos(), worldIn.provider.getDimension());
+                NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.ENTITY_ENDER_PEARL_THROW.getName().toString(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), tile.getPos(), worldIn.provider.getDimension());
             }
         }
         return true;
@@ -124,13 +124,13 @@ public class ModuleNullify extends ModuleBase {
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();
-        compound.setTag(NBT_LASTSTACK, lastStack.serializeNBT());
+        compound.put(NBT_LASTSTACK, lastStack.serializeNBT());
         return compound;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_LASTSTACK)) lastStack = new ItemStack(nbt.getCompoundTag(NBT_LASTSTACK));
+        if (nbt.hasUniqueId(NBT_LASTSTACK)) lastStack = ItemStack.read(nbt.getCompound(NBT_LASTSTACK));
     }
 }

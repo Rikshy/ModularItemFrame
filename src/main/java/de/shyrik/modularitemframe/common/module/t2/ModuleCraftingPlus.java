@@ -12,8 +12,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
@@ -34,14 +34,14 @@ public class ModuleCraftingPlus extends ModuleCrafting {
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation frontTexture() {
         return BG_LOC;
     }
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation innerTexture() {
         return BlockModularFrame.INNER_HARD_LOC;
     }
@@ -56,7 +56,7 @@ public class ModuleCraftingPlus extends ModuleCrafting {
                 mode = EnumMode.values()[mode.getIndex() + 1 >= EnumMode.values().length ? 0 : mode.getIndex() + 1];
                 playerIn.sendMessage(new TextComponentTranslation(mode.getName()));
             } else {
-                playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, world, pos.getX(), pos.getY(), pos.getZ());
+                playerIn.displayGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, world, pos.getX(), pos.getY(), pos.getZ());
                 tile.markDirty();
             }
         }
@@ -77,14 +77,14 @@ public class ModuleCraftingPlus extends ModuleCrafting {
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = super.serializeNBT();
-        nbt.setInteger(NBT_MODE, mode.getIndex());
+        nbt.putInt(NBT_MODE, mode.getIndex());
         return nbt;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_MODE)) mode = EnumMode.values()[nbt.getInteger(NBT_MODE)];
+        if (nbt.hasUniqueId(NBT_MODE)) mode = EnumMode.values()[nbt.getInt(NBT_MODE)];
     }
 
     public enum EnumMode {

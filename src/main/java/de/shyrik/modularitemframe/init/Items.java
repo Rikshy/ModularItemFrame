@@ -1,17 +1,11 @@
 package de.shyrik.modularitemframe.init;
 
+import de.shyrik.modularitemframe.ModularItemFrame;
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.ObjectHolder;
 
-@GameRegistry.ObjectHolder("modularitemframe")
+@ObjectHolder(ModularItemFrame.MOD_ID)
 public class Items {
 
-    public static final Item SCREWDRIVER = null;
-
-    public static final Item CANVAS = null;
-    public static final Item MODULE_T1 = null;
-    public static final Item MODULE_T2 = null;
-    public static final Item MODULE_T3 = null;
-
-    public static final Item UPGRADE = null;
+    public static Item SCREWDRIVER;
 }

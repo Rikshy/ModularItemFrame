@@ -4,14 +4,8 @@ import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.ProbeMode;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -21,12 +15,10 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 public class ModuleItem extends ModuleBase {
 
@@ -39,7 +31,7 @@ public class ModuleItem extends ModuleBase {
     private ItemStack displayItem = ItemStack.EMPTY;
 
     @Nonnull
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation frontTexture() {
         return BG_LOC;
     }
@@ -60,11 +52,11 @@ public class ModuleItem extends ModuleBase {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
-        GlStateManager.scale(0.9f, 0.9f, 0.9f);
+        GlStateManager.translated(x + 0.5D, y + 0.5D, z + 0.5D);
+        GlStateManager.scalef(0.9f, 0.9f, 0.9f);
         GlStateManager.pushMatrix();
 
         RenderUtils.renderItem(displayItem, tile.blockFacing(), rotation, 0.05F, ItemCameraTransforms.TransformType.FIXED);
@@ -93,37 +85,20 @@ public class ModuleItem extends ModuleBase {
         return true;
     }
 
-    @Override
-    @Optional.Method(modid = "theoneprobe")
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
-        if (!displayItem.isEmpty())
-            probeInfo.horizontal().text("Display:").item(displayItem).text(displayItem.getDisplayName());
-    }
-
-    @Nonnull
-    @Override
-    @Optional.Method(modid = "waila")
-    public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        List<String> tips = super.getWailaBody(itemStack, accessor, config);
-        if (!displayItem.isEmpty()) tips.add("Display: " + displayItem.getDisplayName());
-        return tips;
-    }
-
 
     @Nonnull
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();
-        compound.setTag(NBT_DISPLAY, displayItem.serializeNBT());
-        compound.setInteger(NBT_ROTATION, rotation);
+        compound.put(NBT_DISPLAY, displayItem.serializeNBT());
+        compound.putInt(NBT_ROTATION, rotation);
         return compound;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_DISPLAY)) displayItem = new ItemStack(nbt.getCompoundTag(NBT_DISPLAY));
-        if (nbt.hasKey(NBT_ROTATION)) rotation = nbt.getInteger(NBT_ROTATION);
+        if (nbt.hasUniqueId(NBT_DISPLAY)) displayItem = new ItemStack(nbt.getCompound(NBT_DISPLAY));
+        if (nbt.hasUniqueId(NBT_ROTATION)) rotation = nbt.getInt(NBT_ROTATION);
     }
 }

@@ -1,93 +1,69 @@
 buildscript {
     repositories {
-        jcenter()
         maven { url = "http://files.minecraftforge.net/maven" }
+        jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "$mod_version.$patch_version"
+version = "0.1"
 group = "de.shyrik"
-archivesBaseName = "modularitemframe-$mc_version"
+archivesBaseName = "modularitemframe-1.13.2"
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
-}
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    version = "$mc_version-$forge_version"
-    runDir = "run"
+    mappings channel: 'snapshot', version: '20190216-1.13.1'
+    //makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
-    mappings = "$mcp_version"
-    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    runs {
+        client = {
+            // recommended logging data for a userdev environment
+            properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // recommended logging level for the console
+            properties 'forge.logging.console.level': 'debug'
+            workingDirectory project.file('run').canonicalPath
+            source sourceSets.main
+        }
+        server = {
+            // recommended logging data for a userdev environment
+            properties 'forge.logging.markers': 'SCAN,REGISTRIES,REGISTRYDUMP'
+            // recommended logging level for the console
+            properties 'forge.logging.console.level': 'debug'
+            workingDirectory project.file('run').canonicalPath
+            source sourceSets.main
+        }
+    }
 
-    replace '@GRADLE:VERSION@', "$mod_version"
+    //replace '@GRADLE:VERSION@', "$mod_version"
 
-    replaceIn 'ModularItemFrame.java'
+    //replaceIn 'ModularItemFrame.java'
 }
 
 repositories {
     mavenCentral()
-    maven { url = "http://dvs1.progwml6.com/files/maven" }
-    maven { url = "http://maven.tterrag.com/" }
+    //maven { url = "http://dvs1.progwml6.com/files/maven" }
+    //maven { url = "http://maven.tterrag.com/" }
     //maven { url = "http://maven.blamejared.com" }
     //maven { url = 'http://maven.mcmoddev.com' }
-    maven { url = "http://tehnut.info/maven" }
-    maven { url = "http://maven.amadornes.com/" }
+    //maven { url = "http://tehnut.info/maven" }
+    //maven { url = "http://maven.amadornes.com/" }
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12.2:$jei_version:api"
-    deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:1.12-$top_version"
-    deobfCompile "mcp.mobius.waila:Hwyla:$hwyla_version" + "_1.12.2:api"
-    deobfCompile "MCMultiPart2:MCMultiPart:$mcmp_version"
+    minecraft "net.minecraftforge:forge:1.13.2-25.0.13"
+    //deobfCompile "mezz.jei:jei_1.12.2:$jei_version:api"
+    //deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:1.12-$top_version"
+    //deobfCompile "mcp.mobius.waila:Hwyla:$hwyla_version" + "_1.12.2:api"
+    //deobfCompile "MCMultiPart2:MCMultiPart:$mcmp_version"
     //compile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-$ct_version"
     //compile "net.darkhax.tesla:Tesla-1.12.2:$tesla_version"
 
-    runtime "mezz.jei:jei_1.12.2:$jei_version"
-}
-
-processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    // copy everything else except the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
-
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-    classifier = 'deobf'
-}
-
-tasks.build.dependsOn('sourceJar', 'deobfJar')
-
-artifacts {
-    archives deobfJar
-    archives sourceJar
-}
-
-idea {
-    module {
-        inheritOutputDirs = false
-        outputDir = compileJava.destinationDir
-        testOutputDir = compileTestJava.destinationDir
-    }
+    //runtime "mezz.jei:jei_1.12.2:$jei_version"
 }
