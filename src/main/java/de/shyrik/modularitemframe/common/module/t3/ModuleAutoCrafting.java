@@ -45,6 +45,11 @@ public class ModuleAutoCrafting extends ModuleCraftingPlus {
     }
 
     @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
+
+    @Override
     public String getModuleName() {
         return I18n.format("modularitemframe.module.crafting_plus");
     }
@@ -52,7 +57,8 @@ public class ModuleAutoCrafting extends ModuleCraftingPlus {
     @Override
     public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
         if (!world.isRemote) {
-            playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, world, pos.getX(), pos.getY(), pos.getZ());
+            //playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, world, pos.getX(), pos.getY(), pos.getZ());
+            playerIn.displayGui(this);
             tile.markDirty();
         }
     }
@@ -87,6 +93,6 @@ public class ModuleAutoCrafting extends ModuleCraftingPlus {
             }
         }
 
-        NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.BLOCK_LADDER_STEP.getName().toString(), SoundCategory.BLOCKS.getName(), 0.3F, 0.7F), tile.getPos(), world.provider.getDimension());
+        NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.BLOCK_LADDER_STEP.getName(), SoundCategory.BLOCKS.getName(), 0.3F, 0.7F), world, tile.getPos(), 32);
     }
 }

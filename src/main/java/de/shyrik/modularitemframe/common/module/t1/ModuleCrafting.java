@@ -8,15 +8,15 @@ import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
 import de.shyrik.modularitemframe.common.container.IContainerCallbacks;
-import de.shyrik.modularitemframe.common.container.InteractionObject;
 import de.shyrik.modularitemframe.common.network.NetworkHandler;
 import de.shyrik.modularitemframe.common.network.packet.PlaySoundPacket;
+import net.minecraft.block.BlockChest;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryCraftResult;
@@ -24,9 +24,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -63,13 +67,13 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks, I
     }
 
     @Override
-    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage) {
         GlStateManager.pushMatrix();
         GlStateManager.translated(x + 0.5D, y + 0.5D, z + 0.5D);
         GlStateManager.scaled(0.7F, 0.7F, 0.7F);
         GlStateManager.pushMatrix();
 
-        RenderUtils.renderItem(displayItem, tile.blockFacing(), 0, -0.05F);
+        RenderUtils.renderItem(displayItem, tile.blockFacing(), 0, -0.05F, ItemCameraTransforms.TransformType.FIXED);
 
         GlStateManager.popMatrix();
         GlStateManager.popMatrix();
@@ -79,7 +83,6 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks, I
     public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
         if (!world.isRemote) {
             playerIn.displayGui(this);
-            playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, world, pos.getX(), pos.getY(), pos.getZ());
             tile.markDirty();
         }
     }
@@ -87,7 +90,7 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks, I
     @Override
     public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (!hasValidRecipe())
-            playerIn.openGui(ModularItemFrame.instance, GuiHandler.getMetaGuiId(GuiHandler.CRAFTING_FRAME, facing), worldIn, pos.getX(), pos.getY(), pos.getZ());
+            playerIn.displayGui(this);
         else {
             if (!worldIn.isRemote) {
                 if (playerIn.isSneaking()) craft(playerIn, true);
@@ -98,17 +101,9 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks, I
         return true;
     }
 
-    @Override
-    public ContainerCraftingFrame createContainer(final EntityPlayer player) {
-        final IItemHandlerModifiable playerInventory = ItemUtils.getPlayerInv(player);
-
-        return new ContainerCraftingFrame(playerInventory, ghostInventory, player, this);
-    }
-
     private void craft(EntityPlayer player, boolean fullStack) {
         final IItemHandlerModifiable playerInventory = ItemUtils.getPlayerInv(player);
         final IItemHandlerModifiable workingInv = getWorkingInventories(playerInventory);
-
         if (recipe == null) reloadRecipe();
 
         if (workingInv == null || recipe == null || recipe.getRecipeOutput().isEmpty() || !ItemUtils.canCraft(workingInv, recipe.getIngredients()))
@@ -181,12 +176,12 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks, I
     @Nonnull
     @Override
     public String getGuiID() {
-        return GuiHandler.CRAFTING_FRAME;
+        return "modularitemframe:craft";
     }
 
     @Override
     public ITextComponent getName() {
-        return null;
+        return new TextComponentTranslation("gui.modularitemframe.craft.name");
     }
 
     @Override

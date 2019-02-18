@@ -28,6 +28,11 @@ public class ModuleCraftingPlus extends ModuleCrafting {
     public EnumMode mode = EnumMode.PLAYER;
 
     @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
+
+    @Override
     public String getModuleName() {
         return I18n.format("modularitemframe.module.crafting_plus");
     }
@@ -56,7 +61,8 @@ public class ModuleCraftingPlus extends ModuleCrafting {
                 mode = EnumMode.values()[mode.getIndex() + 1 >= EnumMode.values().length ? 0 : mode.getIndex() + 1];
                 playerIn.sendMessage(new TextComponentTranslation(mode.getName()));
             } else {
-                playerIn.displayGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, world, pos.getX(), pos.getY(), pos.getZ());
+                playerIn.displayGui(this);
+                //playerIn.displayGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, world, pos.getX(), pos.getY(), pos.getZ());
                 tile.markDirty();
             }
         }

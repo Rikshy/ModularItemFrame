@@ -1,49 +1,32 @@
 package de.shyrik.modularitemframe.init;
 
-import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
-import de.shyrik.modularitemframe.common.item.ItemModule;
-import de.shyrik.modularitemframe.common.item.ItemUpgrade;
+import de.shyrik.modularitemframe.common.block.TileModularFrame;
 import de.shyrik.modularitemframe.common.module.t1.*;
-import de.shyrik.modularitemframe.common.module.t2.*;
+import de.shyrik.modularitemframe.common.module.t2.ModuleCraftingPlus;
 import de.shyrik.modularitemframe.common.module.t2.ModuleDispense;
 import de.shyrik.modularitemframe.common.module.t2.ModuleTrashCan;
-import de.shyrik.modularitemframe.common.module.t3.*;
-import de.shyrik.modularitemframe.common.module.t3.ModuleAutoCrafting;
+import de.shyrik.modularitemframe.common.module.t2.ModuleVacuum;
 import de.shyrik.modularitemframe.common.module.t3.ItemModuleTeleporter;
-import de.shyrik.modularitemframe.common.tile.TileModularFrame;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import de.shyrik.modularitemframe.common.module.t3.ModuleAutoCrafting;
+import de.shyrik.modularitemframe.common.module.t3.ModuleFluidDispenser;
+import de.shyrik.modularitemframe.common.module.t3.ModuleXP;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
-@Mod.EventBusSubscriber(Side.CLIENT)
+@Mod.EventBusSubscriber(Dist.CLIENT)
 public class RegistrarClient {
 
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
-        registerAllItemModel(
-                Item.getItemFromBlock(Blocks.MODULAR_FRAME),
-
-                Items.SCREWDRIVER,
-                Items.CANVAS,
-                Items.MODULE_T1,
-                Items.MODULE_T2,
-                Items.MODULE_T3,
-
-                Items.UPGRADE
-        );
-
         ClientRegistry.bindTileEntitySpecialRenderer(TileModularFrame.class, new FrameRenderer());
     }
 
@@ -76,34 +59,9 @@ public class RegistrarClient {
         );
     }
 
-    private static void registerAllItemModel(Item... items) {
-        for (Item item : items) {
-            if (item instanceof ModuleItem) {
-                NonNullList<ItemStack> list = NonNullList.create();
-                item.getSubItems(ModularItemFrame.TAB, list);
-                list.forEach(stack -> registerItemModel(item, stack.getItemDamage(), ((ModuleItem) item).getModuleId(stack)));
-            } else if (item instanceof ItemUpgrade) {
-                NonNullList<ItemStack> list = NonNullList.create();
-                item.getSubItems(ModularItemFrame.TAB, list);
-                list.forEach(stack -> registerItemModel(item, stack.getItemDamage(), ((ItemUpgrade) item).getUpgradeId(stack)));
-            } else registerItemModel(item);
-        }
-    }
-
-    private static void registerItemModel(Item item) {
-        registerItemModel(item, 0, item.getRegistryName());
-    }
-
-    private static void registerItemModel(Item item, int meta, ResourceLocation location) {
-        registerItemModel(item, meta, location, "inventory");
-    }
-
-    private static void registerItemModel(Item item, int meta, ResourceLocation location, String variant) {
-        ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(location, variant));
-    }
 
     private static void registerAllTex(TextureMap map, ResourceLocation... locations) {
         for (ResourceLocation tex : locations)
-            map.registerSprite(tex);
+            map.registerSprite(Minecraft.getInstance().getResourceManager(), tex);
     }
 }

@@ -1,11 +1,15 @@
-package de.shyrik.modularitemframe.common.tile;
+package de.shyrik.modularitemframe.common.block;
 
 import de.shyrik.modularitemframe.api.*;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
-import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.module.ModuleEmpty;
 import de.shyrik.modularitemframe.common.network.packet.FrameTileUpdatePacket;
-import de.shyrik.modularitemframe.common.upgrade.*;
+import de.shyrik.modularitemframe.common.upgrade.UpgradeBlastResist;
+import de.shyrik.modularitemframe.common.upgrade.UpgradeCapacity;
+import de.shyrik.modularitemframe.common.upgrade.UpgradeRange;
+import de.shyrik.modularitemframe.common.upgrade.UpgradeSpeed;
+import de.shyrik.modularitemframe.init.ConfigValues;
+import de.shyrik.modularitemframe.init.Tiles;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -36,14 +40,15 @@ public class TileModularFrame extends TileEntity implements ITickable {
     private static final String NBTUPGRADES = "upgrades";
 
     public ModuleBase module;
-    private List<UpgradeBase> upgrades = new ArrayList<>();
+    List<UpgradeBase> upgrades = new ArrayList<>();
 
     public TileModularFrame(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
+        setModule(new ModuleEmpty());
     }
 
     public TileModularFrame() {
-        setModule(new ModuleEmpty());
+        this(Tiles.FRAME);
     }
 
     //region <upgrade>

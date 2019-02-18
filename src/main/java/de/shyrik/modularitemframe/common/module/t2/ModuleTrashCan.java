@@ -40,6 +40,11 @@ public class ModuleTrashCan extends ModuleBase {
     );
     private int texIndex = 0;
 
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
+
     @Nonnull
     @Override
     @OnlyIn(Dist.CLIENT)
@@ -76,7 +81,7 @@ public class ModuleTrashCan extends ModuleBase {
                 for (int slot = 0; slot < trash.getSlots(); slot++) {
                     if (!trash.getStackInSlot(slot).isEmpty()) {
                         trash.setStackInSlot(slot, ItemStack.EMPTY);
-                        NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.BLOCK_LAVA_EXTINGUISH.getName().toString(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), pos, world.provider.getDimension());
+                        NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.BLOCK_LAVA_EXTINGUISH.getName(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), world, pos, 32);
                         break;
                     }
                 }

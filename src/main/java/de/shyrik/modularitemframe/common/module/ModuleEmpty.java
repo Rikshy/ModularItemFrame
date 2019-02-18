@@ -16,8 +16,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nonnull;
 
 public class ModuleEmpty extends ModuleBase {
+    private static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_empty");
     private static final ResourceLocation FG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/default_front");
     private static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/default_back");
+
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
 
     @Nonnull
     @Override

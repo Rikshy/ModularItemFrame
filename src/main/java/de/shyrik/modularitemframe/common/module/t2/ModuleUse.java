@@ -7,14 +7,9 @@ import de.shyrik.modularitemframe.api.utils.FakePlayerUtils;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.ProbeMode;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -25,15 +20,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -54,6 +47,11 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
     private ItemStack displayItem = ItemStack.EMPTY;
     private WeakReference<FakePlayerUtils.UsefulFakePlayer> player;
 
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
+
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
@@ -61,36 +59,36 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    @OnlyIn(Dist.CLIENT)
+    public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage) {
         GlStateManager.pushMatrix();
-        GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
+        GlStateManager.translated(x + 0.5D, y + 0.5D, z + 0.5D);
         GlStateManager.pushMatrix();
 
         EnumFacing facing = tile.blockFacing();
         switch (facing) {
             case DOWN:
-                GlStateManager.rotate(rotation, 1.0F, 0.0F, 0.0F);
+                GlStateManager.rotatef(rotation, 1.0F, 0.0F, 0.0F);
                 RenderUtils.renderItem(displayItem, facing, 180.0F, 0.5F, ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
                 break;
             case UP:
-                GlStateManager.rotate(rotation, 1.0F, 0.0F, 0.0F);
+                GlStateManager.rotatef(rotation, 1.0F, 0.0F, 0.0F);
                 RenderUtils.renderItem(displayItem, facing, 180.0F, 0.5F, ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
                 break;
             case NORTH:
-                GlStateManager.rotate(rotation, 1.0F, 0.0F, 0.0F);
+                GlStateManager.rotatef(rotation, 1.0F, 0.0F, 0.0F);
                 RenderUtils.renderItem(displayItem, facing, 180.0F, 0.5F, ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
                 break;
             case SOUTH:
-                GlStateManager.rotate(rotation * -1, 1.0F, 0.0F, 0.0F);
+                GlStateManager.rotatef(rotation * -1, 1.0F, 0.0F, 0.0F);
                 RenderUtils.renderItem(displayItem, facing, 180.0F, 0.5F, ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
                 break;
             case WEST:
-                GlStateManager.rotate(rotation * -1, 0.0F, 0.0F, 1.0F);
+                GlStateManager.rotatef(rotation * -1, 0.0F, 0.0F, 1.0F);
                 RenderUtils.renderItem(displayItem, facing, 180.0F, 0.5F, ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
                 break;
             case EAST:
-                GlStateManager.rotate(rotation, 0.0F, 0.0F, 1.0F);
+                GlStateManager.rotatef(rotation, 0.0F, 0.0F, 1.0F);
                 RenderUtils.renderItem(displayItem, facing, 180.0F, 0.5F, ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
                 break;
         }
@@ -185,60 +183,34 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
         return ItemStack.EMPTY;
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    @Optional.Method(modid = "theoneprobe")
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
-        String txt = isSneaking ? I18n.format("modularitemframe.mode.sn") + " + " : "";
-        txt += rightClick ? I18n.format("modularitemframe.mode.rc") : I18n.format("modularitemframe.mode.lc");
-        probeInfo.horizontal().text(I18n.format("modularitemframe.tooltip.mode", txt));
-        if (!displayItem.isEmpty())
-            probeInfo.horizontal().text("Held:").item(displayItem).text(displayItem.getDisplayName());
-    }
-
-    @Nonnull
-    @Override
-    @SideOnly(Side.CLIENT)
-    @Optional.Method(modid = "waila")
-    public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        List<String> tips = super.getWailaBody(itemStack, accessor, config);
-        String mode = isSneaking ? I18n.format("modularitemframe.mode.sn") + " + " : "";
-        mode += rightClick ? I18n.format("modularitemframe.mode.rc") : I18n.format("modularitemframe.mode.lc");
-        tips.add(I18n.format("modularitemframe.tooltip.mode", mode));
-        if (!displayItem.isEmpty()) tips.add("Display: " + displayItem.getDisplayName() + " (" + displayItem.getCount() + ")");
-        return tips;
-    }
-
     @Nonnull
     @Override
     public NBTTagCompound writeUpdateNBT(@Nonnull NBTTagCompound cmp) {
-        cmp.setInteger(NBT_ROTATION, rotation);
+        cmp.putInt(NBT_ROTATION, rotation);
         return cmp;
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
     public void readUpdateNBT(@Nonnull NBTTagCompound cmp) {
-        if (cmp.hasKey(NBT_ROTATION)) rotation = cmp.getInteger(NBT_ROTATION);
+        if (cmp.hasUniqueId(NBT_ROTATION)) rotation = cmp.getInt(NBT_ROTATION);
     }
 
     @Nonnull
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound compound = super.serializeNBT();
-        compound.setTag(NBT_DISPLAY, displayItem.serializeNBT());
-        compound.setBoolean(NBT_SNEAK, isSneaking);
-        compound.setBoolean(NBT_RIGHT, rightClick);
+        compound.put(NBT_DISPLAY, displayItem.serializeNBT());
+        compound.putBoolean(NBT_SNEAK, isSneaking);
+        compound.putBoolean(NBT_RIGHT, rightClick);
         return compound;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_DISPLAY)) displayItem = new ItemStack(nbt.getCompoundTag(NBT_DISPLAY));
-        if (nbt.hasKey(NBT_SNEAK)) isSneaking = nbt.getBoolean(NBT_SNEAK);
-        if (nbt.hasKey(NBT_RIGHT)) rightClick = nbt.getBoolean(NBT_RIGHT);
+        if (nbt.hasUniqueId(NBT_DISPLAY)) displayItem = ItemStack.read(nbt.getCompound(NBT_DISPLAY));
+        if (nbt.hasUniqueId(NBT_SNEAK)) isSneaking = nbt.getBoolean(NBT_SNEAK);
+        if (nbt.hasUniqueId(NBT_RIGHT)) rightClick = nbt.getBoolean(NBT_RIGHT);
     }
 
     @Override

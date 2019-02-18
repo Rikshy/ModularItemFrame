@@ -1,23 +1,14 @@
 package de.shyrik.modularitemframe;
 
-import de.shyrik.modularitemframe.client.gui.GuiHandler;
-import de.shyrik.modularitemframe.common.module.t1.*;
-import de.shyrik.modularitemframe.common.module.t2.*;
-import de.shyrik.modularitemframe.common.module.t3.*;
 import de.shyrik.modularitemframe.common.network.NetworkHandler;
-import de.shyrik.modularitemframe.common.upgrade.UpgradeBlastResist;
-import de.shyrik.modularitemframe.common.upgrade.UpgradeCapacity;
-import de.shyrik.modularitemframe.common.upgrade.UpgradeRange;
-import de.shyrik.modularitemframe.common.upgrade.UpgradeSpeed;
+import de.shyrik.modularitemframe.init.ConfigValues;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.network.NetworkRegistry;
-
-import java.util.List;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(ModularItemFrame.MOD_ID)
 public class ModularItemFrame {
@@ -26,17 +17,21 @@ public class ModularItemFrame {
     public static final ResourceLocation CHANNEL = new ResourceLocation(MOD_ID, "??");
 
     public ModularItemFrame() {
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::config);
 
-    }
-    public void addInformation(ItemTooltipEvent event) {
-        List<ITextComponent> tooltip = event.getToolTip();
-
-        boolean a = tooltip.stream().filter(text -> text.getString().equals("When in Main Hand")).findAny().map(tooltip::indexOf).get() == -1;
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigValues.SPEC);
     }
 
-
-    public void preInit(FMLPreInitializationEvent event) {
-        NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
+    @SubscribeEvent
+    public void setup(FMLCommonSetupEvent event) {
+        //NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
         NetworkHandler.registerPackets();
+    }
+
+    public void config(ModConfig.ModConfigEvent event)
+    {
+        if (event.getConfig().getSpec() == ConfigValues.SPEC)
+            ConfigValues.load();
     }
 }

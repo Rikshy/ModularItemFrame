@@ -12,4 +12,9 @@ public class UpgradeBlastResist extends UpgradeBase {
     public int getMaxCount() {
         return 1;
     }
+
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
 }

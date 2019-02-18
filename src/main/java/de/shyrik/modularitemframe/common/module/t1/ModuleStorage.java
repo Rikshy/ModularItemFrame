@@ -38,6 +38,11 @@ public class ModuleStorage extends ModuleBase {
     private long lastClick;
     private ItemStack lastStack = ItemStack.EMPTY;
 
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
+
     @Nonnull
     @Override
     public ResourceLocation frontTexture() {
@@ -51,7 +56,7 @@ public class ModuleStorage extends ModuleBase {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage) {
         GlStateManager.pushMatrix();
         GlStateManager.translated(x + 0.5D, y + 0.5D, z + 0.5D);
         GlStateManager.scaled(0.7F, 0.7F, 0.7F);

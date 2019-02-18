@@ -45,7 +45,7 @@ public class ModuleNullify extends ModuleBase {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage) {
         GlStateManager.pushMatrix();
         GlStateManager.enableBlend();
 
@@ -90,6 +90,11 @@ public class ModuleNullify extends ModuleBase {
         return I18n.format("modularitemframe.module.nullify");
     }
 
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
+
     @Nonnull
     @Override
     @OnlyIn(Dist.CLIENT)
@@ -110,11 +115,11 @@ public class ModuleNullify extends ModuleBase {
                     lastStack = held.copy();
                 }
                 held.setCount(0);
-                NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.BLOCK_LAVA_EXTINGUISH.getName().toString(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), tile.getPos(), worldIn.provider.getDimension());
+                NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.BLOCK_LAVA_EXTINGUISH.getName(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), worldIn, tile.getPos(), 32);
             } else if (playerIn.isSneaking() && held.isEmpty() && !lastStack.isEmpty()) {
                 playerIn.setHeldItem(hand, lastStack);
                 lastStack = ItemStack.EMPTY;
-                NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.ENTITY_ENDER_PEARL_THROW.getName().toString(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), tile.getPos(), worldIn.provider.getDimension());
+                NetworkHandler.sendAround(new PlaySoundPacket(pos, SoundEvents.ENTITY_ENDER_PEARL_THROW.getName(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), worldIn, tile.getPos(), 32);
             }
         }
         return true;

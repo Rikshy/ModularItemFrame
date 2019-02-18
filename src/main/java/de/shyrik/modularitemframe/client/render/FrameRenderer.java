@@ -1,7 +1,7 @@
 package de.shyrik.modularitemframe.client.render;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.common.tile.TileModularFrame;
+import de.shyrik.modularitemframe.common.block.TileModularFrame;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -29,7 +29,7 @@ public class FrameRenderer extends TileEntityRenderer<TileModularFrame> {
     }
 
     @Override
-    public void render(TileModularFrame te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void render(TileModularFrame te, double x, double y, double z, float partialTicks, int destroyStage) {
         GlStateManager.pushMatrix();
         GlStateManager.disableCull();
         GlStateManager.enableBlend();
@@ -51,7 +51,7 @@ public class FrameRenderer extends TileEntityRenderer<TileModularFrame> {
         GlStateManager.enableCull();
         GlStateManager.popMatrix();
 
-        te.module.specialRendering(this, x, y, z, partialTicks, destroyStage, alpha);
+        te.module.specialRendering(this, x, y, z, partialTicks, destroyStage);
     }
 
     public void bindTex(ResourceLocation location) {

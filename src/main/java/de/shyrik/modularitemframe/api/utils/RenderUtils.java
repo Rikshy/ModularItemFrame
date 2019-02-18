@@ -3,7 +3,7 @@ package de.shyrik.modularitemframe.api.utils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -12,9 +12,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
@@ -22,7 +22,7 @@ import java.nio.FloatBuffer;
 import java.util.Random;
 import java.util.function.Predicate;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class RenderUtils {
 
 	private static void rotateItemOnFacing(@Nonnull EnumFacing facing, float rotation, float offset) {
@@ -30,36 +30,35 @@ public class RenderUtils {
 			case NORTH:
 				break;
 			case SOUTH:
-				GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+				GlStateManager.rotatef(180.0F, 0.0F, 1.0F, 0.0F);
 				break;
 			case WEST:
-				GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
+				GlStateManager.rotatef(90.0F, 0.0F, 1.0F, 0.0F);
 				break;
 			case EAST:
-				GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
+				GlStateManager.rotatef(-90.0F, 0.0F, 1.0F, 0.0F);
 				break;
 			case DOWN:
-				GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
+				GlStateManager.rotatef(-90.0F, 1.0F, 0.0F, 0.0F);
 				break;
 			case UP:
-				GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
+				GlStateManager.rotatef(90.0F, 1.0F, 0.0F, 0.0F);
 		}
-		GlStateManager.rotate(rotation, 0.0F, 0.0F, 1.0F);
-		GlStateManager.translate(0.0F, 0.0F, -0.5125F + offset);
+		GlStateManager.rotatef(rotation, 0.0F, 0.0F, 1.0F);
+		GlStateManager.translatef(0.0F, 0.0F, -0.5125F + offset);
 	}
 
 	public static void renderItem(ItemStack stack, @Nonnull EnumFacing facing, float rotation, float offset, ItemCameraTransforms.TransformType transformType) {
 		if (!stack.isEmpty()) {
 			rotateItemOnFacing(facing, rotation, offset);
-			RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
+			ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
 			GlStateManager.pushMatrix();
 			GlStateManager.disableLighting();
-
-			GlStateManager.scale(0.5F, 0.5F, 0.5F);
+			GlStateManager.scalef(0.5F, 0.5F, 0.5F);
 			RenderHelper.enableStandardItemLighting();
 			if (itemRenderer.shouldRenderItemIn3D(stack)) {
-				GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+				GlStateManager.rotatef(180.0F, 0.0F, 1.0F, 0.0F);
 			}
 			itemRenderer.renderItem(stack, transformType);
 			RenderHelper.disableStandardItemLighting();
@@ -71,13 +70,13 @@ public class RenderUtils {
 
 	public static void renderFluid(FluidStack fluid, BlockPos pos, double x, double y, double z, double x1, double y1, double z1, double x2, double y2, double z2, int color, TextureAtlasSprite top, TextureAtlasSprite side) {
 
-		final Minecraft mc = Minecraft.getMinecraft();
+		final Minecraft mc = Minecraft.getInstance();
 		final Tessellator tessellator = Tessellator.getInstance();
 		final BufferBuilder buffer = tessellator.getBuffer();
 		final int brightness = mc.world.getCombinedLight(pos, fluid.getFluid().getLuminosity());
 
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
-		mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		mc.getRenderManager().textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
 		GlStateManager.pushMatrix();
 		RenderHelper.disableStandardItemLighting();
@@ -89,7 +88,7 @@ public class RenderUtils {
 		} else {
 			GL11.glShadeModel(GL11.GL_FLAT);
 		}
-		GlStateManager.translate(x, y, z);
+		GlStateManager.translated(x, y, z);
 
 		addTexturedQuad(buffer, top, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, EnumFacing.DOWN, color, brightness);
 		addTexturedQuad(buffer, side, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, EnumFacing.NORTH, color, brightness);
@@ -239,9 +238,9 @@ public class RenderUtils {
 		final float z = (float) (pos.getZ() - TileEntityRendererDispatcher.staticPlayerZ);
 
 		if (offset) {
-			GlStateManager.translate(x + 0.5, y + 0.5, z + 0.5);
+			GlStateManager.translated(x + 0.5, y + 0.5, z + 0.5);
 		} else {
-			GlStateManager.translate(x, y, z);
+			GlStateManager.translated(x, y, z);
 		}
 	}
 
@@ -267,8 +266,8 @@ public class RenderUtils {
 	public static void renderEnd(FrameRenderer tesr, double x, double y, double z, Predicate<RenderEndPosInfo> drawPos) {
 		GlStateManager.disableLighting();
 		RANDOM.setSeed(31100L);
-		GlStateManager.getFloat(2982, MODELVIEW);
-		GlStateManager.getFloat(2983, PROJECTION);
+		GlStateManager.getFloatv(2982, MODELVIEW);
+		GlStateManager.getFloatv(2983, PROJECTION);
 		double d0 = x * x + y * y + z * z;
 		int i = getPasses(d0);
 		boolean flag = false;
@@ -287,7 +286,7 @@ public class RenderUtils {
 			if (j >= 1) {
 				tesr.bindTex(END_PORTAL_TEXTURE);
 				flag = true;
-				Minecraft.getMinecraft().entityRenderer.setupFogColor(true);
+				Minecraft.getInstance().gameRenderer.setupFogColor(true);
 			}
 
 			if (j == 1) {
@@ -295,27 +294,27 @@ public class RenderUtils {
 				GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
 			}
 
-			GlStateManager.texGen(GlStateManager.TexGen.S, 9216);
-			GlStateManager.texGen(GlStateManager.TexGen.T, 9216);
-			GlStateManager.texGen(GlStateManager.TexGen.R, 9216);
-			GlStateManager.texGen(GlStateManager.TexGen.S, 9474, getBuffer(1.0F, 0.0F, 0.0F, 0.0F));
-			GlStateManager.texGen(GlStateManager.TexGen.T, 9474, getBuffer(0.0F, 1.0F, 0.0F, 0.0F));
-			GlStateManager.texGen(GlStateManager.TexGen.R, 9474, getBuffer(0.0F, 0.0F, 1.0F, 0.0F));
-			GlStateManager.enableTexGenCoord(GlStateManager.TexGen.S);
-			GlStateManager.enableTexGenCoord(GlStateManager.TexGen.T);
-			GlStateManager.enableTexGenCoord(GlStateManager.TexGen.R);
+			GlStateManager.texGenMode(GlStateManager.TexGen.S, 9216);
+			GlStateManager.texGenMode(GlStateManager.TexGen.T, 9216);
+			GlStateManager.texGenMode(GlStateManager.TexGen.R, 9216);
+			GlStateManager.texGenParam(GlStateManager.TexGen.S, 9474, getBuffer(1.0F, 0.0F, 0.0F, 0.0F));
+			GlStateManager.texGenParam(GlStateManager.TexGen.T, 9474, getBuffer(0.0F, 1.0F, 0.0F, 0.0F));
+			GlStateManager.texGenParam(GlStateManager.TexGen.R, 9474, getBuffer(0.0F, 0.0F, 1.0F, 0.0F));
+			GlStateManager.enableTexGen(GlStateManager.TexGen.S);
+			GlStateManager.enableTexGen(GlStateManager.TexGen.T);
+			GlStateManager.enableTexGen(GlStateManager.TexGen.R);
 			GlStateManager.popMatrix();
 			GlStateManager.matrixMode(5890);
 			GlStateManager.pushMatrix();
 			GlStateManager.loadIdentity();
-			GlStateManager.translate(0.5F, 0.5F, 0.0F);
-			GlStateManager.scale(0.5F, 0.5F, 1.0F);
+			GlStateManager.translatef(0.5F, 0.5F, 0.0F);
+			GlStateManager.scalef(0.5F, 0.5F, 1.0F);
 			float f2 = (float) (j + 1);
-			GlStateManager.translate(17.0F / f2, (2.0F + f2 / 1.5F) * ((float) Minecraft.getSystemTime() % 800000.0F / 800000.0F), 0.0F);
-			GlStateManager.rotate((f2 * f2 * 4321.0F + f2 * 9.0F) * 2.0F, 0.0F, 0.0F, 1.0F);
-			GlStateManager.scale(4.5F - f2 / 4.0F, 4.5F - f2 / 4.0F, 1.0F);
-			GlStateManager.multMatrix(PROJECTION);
-			GlStateManager.multMatrix(MODELVIEW);
+			GlStateManager.translatef(17.0F / f2, (2.0F + f2 / 1.5F) * ((float) System.currentTimeMillis() % 800000.0F / 800000.0F), 0.0F);
+			GlStateManager.rotatef((f2 * f2 * 4321.0F + f2 * 9.0F) * 2.0F, 0.0F, 0.0F, 1.0F);
+			GlStateManager.scalef(4.5F - f2 / 4.0F, 4.5F - f2 / 4.0F, 1.0F);
+			GlStateManager.multMatrixf(PROJECTION);
+			GlStateManager.multMatrixf(MODELVIEW);
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder buffer = tessellator.getBuffer();
 			buffer.begin(7, DefaultVertexFormats.POSITION_COLOR);
@@ -332,13 +331,13 @@ public class RenderUtils {
 		}
 
 		GlStateManager.disableBlend();
-		GlStateManager.disableTexGenCoord(GlStateManager.TexGen.S);
-		GlStateManager.disableTexGenCoord(GlStateManager.TexGen.T);
-		GlStateManager.disableTexGenCoord(GlStateManager.TexGen.R);
+		GlStateManager.disableTexGen(GlStateManager.TexGen.S);
+		GlStateManager.disableTexGen(GlStateManager.TexGen.T);
+		GlStateManager.disableTexGen(GlStateManager.TexGen.R);
 		GlStateManager.enableLighting();
 
 		if (flag) {
-			Minecraft.getMinecraft().entityRenderer.setupFogColor(false);
+			Minecraft.getInstance().gameRenderer.setupFogColor(false);
 		}
 	}
 

@@ -1,17 +1,20 @@
 package de.shyrik.modularitemframe.common.module.t3;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ConfigValues;
+import de.shyrik.modularitemframe.init.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
-import de.shyrik.modularitemframe.common.tile.TileModularFrame;
+import de.shyrik.modularitemframe.common.block.TileModularFrame;
+import de.shyrik.modularitemframe.common.network.NetworkHandler;
+import de.shyrik.modularitemframe.common.network.packet.SpawnParticlesPacket;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Particles;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -46,6 +49,11 @@ public class ItemModuleTeleporter extends ModuleBase {
     private BlockPos linkedLoc = null;
     private EnumMode direction = EnumMode.NONE;
 
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
+
     @Nonnull
     @Override
     @OnlyIn(Dist.CLIENT)
@@ -70,7 +78,7 @@ public class ItemModuleTeleporter extends ModuleBase {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage) {
         if(direction == EnumMode.NONE) {
             RenderUtils.renderEnd(renderer, x, y, z, info -> {
                 switch (tile.blockFacing()) {
@@ -197,7 +205,7 @@ public class ItemModuleTeleporter extends ModuleBase {
 
             ItemUtils.ejectStack(world, linkedLoc, world.getBlockState(linkedLoc).get(BlockModularFrame.FACING), entityStack);
             entity.remove();
-            //NetworkHandler.sendAround(new SpawnParticlesPacket(EnumParticleTypes.EXPLOSION_NORMAL.getParticleID(), entity.getPosition(), 1), entity.getPosition(), entity.dimension);
+            NetworkHandler.sendAround(new SpawnParticlesPacket(Particles.EXPLOSION.getId(), entity.getPosition(), 1), world, entity.getPosition(), 32);
             break;
         }
     }

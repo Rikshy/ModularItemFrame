@@ -1,16 +1,10 @@
 package de.shyrik.modularitemframe.common.module.t1;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ConfigValues;
+import de.shyrik.modularitemframe.init.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.ProbeMode;
-import mcjty.theoneprobe.apiimpl.styles.ProgressStyle;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -26,19 +20,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
 public class ModuleTank extends ModuleBase {
 
@@ -49,6 +41,11 @@ public class ModuleTank extends ModuleBase {
 
     public EnumMode mode = EnumMode.NONE;
     private FluidTank tank = new FluidTank(ConfigValues.TankFrameCapacity);
+
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
 
     @Nonnull
     @Override
@@ -68,8 +65,8 @@ public class ModuleTank extends ModuleBase {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    @OnlyIn(Dist.CLIENT)
+    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage) {
         if (tank != null && tank.getFluid() != null && tank.getFluidAmount() > 0) {
             GlStateManager.pushMatrix();
             GlStateManager.enableBlend();
@@ -77,8 +74,8 @@ public class ModuleTank extends ModuleBase {
             FluidStack fluid = tank.getFluid();
             double amount = (double) tank.getFluidAmount() / (double) tank.getCapacity();
             int color = fluid.getFluid().getColor(fluid);
-            final TextureAtlasSprite still = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(fluid.getFluid().getStill(fluid).toString());
-            final TextureAtlasSprite flowing = Minecraft.getMinecraft().getTextureMapBlocks().getTextureExtry(fluid.getFluid().getFlowing(fluid).toString());
+            final TextureAtlasSprite still = Minecraft.getInstance().getTextureMap().getSprite(fluid.getFluid().getStill(fluid));
+            final TextureAtlasSprite flowing = Minecraft.getInstance().getTextureMap().getSprite(fluid.getFluid().getFlowing(fluid));
 
             RenderUtils.translateAgainstPlayer(tile.getPos(), false);
 
@@ -134,12 +131,12 @@ public class ModuleTank extends ModuleBase {
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (!world.isRemote && mode != EnumMode.NONE && ConfigValues.TankTransferRate > 0) {
-            if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
+            if (world.getGameTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
             EnumFacing facing = tile.blockFacing();
             TileEntity tile = world.getTileEntity(pos.offset(facing));
             if (tile != null) {
-                IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite());
+                IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing.getOpposite()).orElse(null);
                 if (handler != null) {
                     if (mode == EnumMode.DRAIN)
                         FluidUtil.tryFluidTransfer(tank, handler, ConfigValues.TankTransferRate, true);
@@ -167,43 +164,21 @@ public class ModuleTank extends ModuleBase {
         }
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    @Optional.Method(modid = "theoneprobe")
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
-        int color = 0;
-        if (tank.getFluid() != null) color = tank.getFluid().getFluid().getColor();
-        probeInfo.horizontal().progress(tank.getFluidAmount(), tank.getCapacity(), new ProgressStyle().suffix("mB").alternateFilledColor(color));
-        probeInfo.horizontal().text(I18n.format("modularitemframe.tooltip.mode", this.mode.getName()));
-    }
-
-    @Nonnull
-    @Override
-    @SideOnly(Side.CLIENT)
-    @Optional.Method(modid = "waila")
-    public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        List<String> tooltips = super.getWailaBody(itemStack, accessor, config);
-        tooltips.add(I18n.format("modularitemframe.tooltip.capacity", tank.getFluidAmount(), tank.getCapacity()));
-        tooltips.add(I18n.format("modularitemframe.tooltip.mode", mode.getName()));
-        return tooltips;
-    }
-
     @Nonnull
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = super.serializeNBT();
-        nbt.setInteger(NBT_MODE, mode.getIndex());
-        nbt.setTag(NBT_TANK, tank.writeToNBT(new NBTTagCompound()));
+        nbt.putInt(NBT_MODE, mode.getIndex());
+        nbt.put(NBT_TANK, tank.writeToNBT(new NBTTagCompound()));
         return nbt;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_TANK)) tank.readFromNBT(nbt.getCompoundTag(NBT_TANK));
-        if (nbt.hasKey(NBT_MODE))
-            mode = ConfigValues.TankTransferRate > 0 ? EnumMode.VALUES[nbt.getInteger(NBT_MODE)] : EnumMode.NONE;
+        if (nbt.hasUniqueId(NBT_TANK)) tank.readFromNBT(nbt.getCompound(NBT_TANK));
+        if (nbt.hasUniqueId(NBT_MODE))
+            mode = ConfigValues.TankTransferRate > 0 ? EnumMode.VALUES[nbt.getInt(NBT_MODE)] : EnumMode.NONE;
     }
 
     public enum EnumMode {

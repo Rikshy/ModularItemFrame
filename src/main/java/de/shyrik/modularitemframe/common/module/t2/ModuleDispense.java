@@ -31,6 +31,11 @@ public class ModuleDispense extends ModuleBase {
 
     private int range = 0;
 
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
+
     @Nonnull
     @Override
     @OnlyIn(Dist.CLIENT)

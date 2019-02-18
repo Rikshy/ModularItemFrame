@@ -1,28 +1,28 @@
 package de.shyrik.modularitemframe.common.block;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ConfigValues;
+import de.shyrik.modularitemframe.init.ConfigValues;
+import de.shyrik.modularitemframe.api.ItemModule;
+import de.shyrik.modularitemframe.api.ItemUpgrade;
+import de.shyrik.modularitemframe.api.UpgradeBase;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
-import de.shyrik.modularitemframe.common.tile.TileModularFrame;
+import de.shyrik.modularitemframe.common.module.ModuleEmpty;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.IWorldReaderBase;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
@@ -44,13 +44,12 @@ public class BlockModularFrame extends Block {
             .hardnessAndResistance(4F)
             .sound(SoundType.WOOD);
 
-
-    private static final AxisAlignedBB UP_AABB = new AxisAlignedBB(0.125D, 1.0D, 0.125D, 0.875D, 0.895D, 0.875D);
-    private static final AxisAlignedBB DOWN_AABB = new AxisAlignedBB(0.125D, 0.0D, 0.125D, 0.875D, 0.11D, 0.875D);
-    private static final AxisAlignedBB NORTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 0.0D, 0.875D, 0.875D, 0.11D);
-    private static final AxisAlignedBB SOUTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 1.0D, 0.875D, 0.875D, 0.895D);
-    private static final AxisAlignedBB EAST_AABB = new AxisAlignedBB(0.895D, 0.125D, 0.125D, 1.0D, 0.875D, 0.875D);
-    private static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.0D, 0.125D, 0.125D, 0.11D, 0.875D, 0.875D);
+    private static final VoxelShape UP_SHAPE = Block.makeCuboidShape(0.125D, 1.0D, 0.125D, 0.875D, 0.895D, 0.875D);
+    private static final VoxelShape DOWN_SHAPE = Block.makeCuboidShape(0.125D, 0.0D, 0.125D, 0.875D, 0.11D, 0.875D);
+    private static final VoxelShape NORTH_SHAPE = Block.makeCuboidShape(0.125D, 0.125D, 0.0D, 0.875D, 0.875D, 0.11D);
+    private static final VoxelShape SOUTH_SHAPE = Block.makeCuboidShape(0.125D, 0.125D, 1.0D, 0.875D, 0.875D, 0.895D);
+    private static final VoxelShape EAST_SHAPE = Block.makeCuboidShape(0.895D, 0.125D, 0.125D, 1.0D, 0.875D, 0.875D);
+    private static final VoxelShape WEST_SHAPE = Block.makeCuboidShape(0.0D, 0.125D, 0.125D, 0.11D, 0.875D, 0.875D);
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "modular_frame");
     public static final ResourceLocation INNER_DEF_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
@@ -60,7 +59,7 @@ public class BlockModularFrame extends Block {
     public BlockModularFrame() {
         super(PROPERTIES);
 
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, EnumFacing.NORTH).with(FACING, EnumFacing.NORTH));
+        setDefaultState(this.stateContainer.getBaseState().with(FACING, EnumFacing.NORTH));
     }
 
     //region <tileentity>
@@ -82,12 +81,13 @@ public class BlockModularFrame extends Block {
 
     //region <interaction>
     @Override
-    public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
+    @SuppressWarnings("deprecation")
+    public void onBlockClicked(IBlockState state, World worldIn, BlockPos pos, EntityPlayer playerIn) {
         getTE(worldIn, pos).module.onBlockClicked(worldIn, pos, playerIn);
     }
 
-
     @Override
+    @SuppressWarnings("deprecation")
     public boolean onBlockActivated(IBlockState state, World worldIn, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         boolean moveHand = false;
         if (!(player instanceof FakePlayer) || ConfigValues.AllowFakePlayers) {
@@ -105,16 +105,16 @@ public class BlockModularFrame extends Block {
                     }
                 }
                 moveHand = true;
-            } else if (handItem.getItem() instanceof IModule && tile.acceptsModule()) {
+            } else if (handItem.getItem() instanceof ItemModule && tile.acceptsModule()) {
                 if (!worldIn.isRemote) {
-                    tile.setModule(((ItemModule) handItem.getItem()).getModuleId(handItem));
+                    tile.setModule(handItem.getItem().getRegistryName());
                     if (!player.isCreative()) player.getHeldItem(hand).shrink(1);
                     tile.markDirty();
                 }
                 moveHand = true;
             } else if (handItem.getItem() instanceof ItemUpgrade && tile.acceptsUpgrade()) {
                 if (!worldIn.isRemote) {
-                    if (tile.tryAddUpgrade(((ItemUpgrade) handItem.getItem()).getUpgradeId(handItem))) {
+                    if (tile.tryAddUpgrade(handItem.getItem().getRegistryName())) {
                         if (!player.isCreative()) player.getHeldItem(hand).shrink(1);
                         tile.markDirty();
                     }
@@ -150,65 +150,66 @@ public class BlockModularFrame extends Block {
     @Nonnull
     @Override
     @SuppressWarnings("deprecation")
-    public AxisAlignedBB getBoundingBox(IBlockState state, IWorldReaderBase source, BlockPos pos) {
+    public VoxelShape getShape(IBlockState state, IBlockReader worldIn, BlockPos pos) {
         switch (state.get(FACING)) {
             case UP:
-                return UP_AABB;
+                return UP_SHAPE;
             case DOWN:
-                return DOWN_AABB;
+                return DOWN_SHAPE;
             case NORTH:
-                return NORTH_AABB;
+                return NORTH_SHAPE;
             case SOUTH:
-                return SOUTH_AABB;
+                return SOUTH_SHAPE;
             case EAST:
-                return EAST_AABB;
+                return EAST_SHAPE;
             case WEST:
-                return WEST_AABB;
+                return WEST_SHAPE;
         }
-        return null;
-    }
 
-    @Override
-    public VoxelShape getShape(IBlockState state, IBlockReader worldIn, BlockPos pos) {
         return super.getShape(state, worldIn, pos);
     }
     //endregion
 
     //region <placing/breaking>
 
-
-
-    @Override
-    public boolean canPlaceBlockOnSide(@Nonnull World worldIn, @Nonnull BlockPos pos, EnumFacing side) {
-        BlockPos adjacent = pos.offset(side.getOpposite());
-        IBlockState state = worldIn.getBlockState(adjacent);
-        return (state.isSideSolid(worldIn, adjacent, side) || state.getMaterial().isSolid()) && !BlockRedstoneDiode.isDiode(state) && CompatHelper.canPlace(worldIn, adjacent, side);
+    public boolean canAttachTo(@Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, EnumFacing side) {
+        IBlockState state = worldIn.getBlockState(pos);
+        boolean flag = isExceptBlockForAttachWithPiston(state.getBlock());
+        return !flag && state.getBlockFaceShape(worldIn, pos, side) == BlockFaceShape.SOLID && !state.canProvidePower();
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public boolean isValidPosition(IBlockState state, IWorldReaderBase worldIn, BlockPos pos) {
-        BlockPos adjacent = pos.offset(side.getOpposite());
-        IBlockState state = worldIn.getBlockState(adjacent);
-        return (state.isSideSolid(worldIn, adjacent, side) || state.getMaterial().isSolid()) && !BlockRedstoneDiode.isDiode(state);
+        return canAttachTo(worldIn, pos, state.get(FACING));
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!worldIn.isRemote) {
-            if (!canPlaceBlockOnSide(worldIn, pos, state.get(FACING).getOpposite())) {
-                dropBlockAsItemWithChance(worldIn, pos, state, 0);
+            if (!canAttachTo(worldIn, pos, state.get(FACING).getOpposite())) {
+                dropBlockAsItemWithChance(state, worldIn, pos, Float.MAX_VALUE, 0);
                 worldIn.removeBlock(pos);
             }
         }
+    }
+
+    @Override
+    public void getDrops(IBlockState state, NonNullList<ItemStack> drops, World world, BlockPos pos, int fortune) {
+        TileModularFrame tile = getTE(world, pos);
+        if (!(tile.module instanceof ModuleEmpty))
+            drops.add(new ItemStack(tile.module.getParent()));
+        for (UpgradeBase upgrade : tile.upgrades)
+            drops.add(new ItemStack(upgrade.getParent()));
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onExplosion(ExplosionEvent.Detonate event) {
         List<BlockPos> toRemove = new ArrayList<>();
         for (BlockPos pos : event.getAffectedBlocks()) {
-            for (TileEntity tmp : CompatHelper.getTiles(event.getWorld(), pos)) {
+            TileEntity tmp = event.getWorld().getTileEntity(pos);
+            //for (TileEntity tmp : CompatHelper.getTiles(event.getWorld(), pos)) {
                 if (tmp instanceof TileModularFrame) {
                     TileModularFrame tile = (TileModularFrame) tmp;
                     if (tile.isBlastResist()) {
@@ -216,45 +217,23 @@ public class BlockModularFrame extends Block {
                         toRemove.add(tile.getPos());
                     }
                 }
-            }
+            //}
         }
         for (BlockPos pos : toRemove) {
             event.getAffectedBlocks().remove(pos);
         }
     }
-
-    @Override
-    public void breakBlock(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
-        getTE(worldIn, pos).module.onRemove(worldIn, pos, state.getValue(FACING), null);
-        getTE(worldIn, pos).dropUpgrades(null, state.getValue(FACING));
-        super.breakBlock(worldIn, pos, state);
-    }
     //endregion
 
     //region <state>
-    @Nonnull
     @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING);
-    }
-
-    @Nonnull
-    @Override
-    @SuppressWarnings("deprecation")
-    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return this.getStateFromMeta(meta).withProperty(FACING, facing.getOpposite());
-    }
-
-    @Nonnull
-    @Override
-    @SuppressWarnings("deprecation")
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(FACING, EnumFacing.byIndex(meta & 7));
+    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+        builder.add(FACING);
     }
 
     @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(FACING).getIndex();
+    public IBlockState getStateForPlacement(IBlockState state, EnumFacing facing, IBlockState state2, IWorld world, BlockPos pos1, BlockPos pos2, EnumHand hand) {
+        return state.with(FACING, facing.getOpposite());
     }
     //endregion
 
@@ -274,7 +253,6 @@ public class BlockModularFrame extends Block {
     public boolean doesSideBlockRendering(IBlockState state, IWorldReader world, BlockPos pos, EnumFacing face) {
         return true;
     }
-
     //endregion
 
     //region <other>
@@ -285,11 +263,6 @@ public class BlockModularFrame extends Block {
     }
 
     @Override
-    public boolean isPassable(IWorldReaderBase worldIn, BlockPos pos) {
-        return true;
-    }
-
-    @Override
     public boolean canCreatureSpawn(IBlockState state, IWorldReaderBase world, BlockPos pos, EntitySpawnPlacementRegistry.SpawnPlacementType type, @Nullable EntityType<? extends EntityLiving> entityType) {
         return false;
     }
@@ -297,6 +270,13 @@ public class BlockModularFrame extends Block {
     @Override
     public boolean canPlaceTorchOnTop(IBlockState state, @Nonnull IWorldReaderBase world, @Nonnull BlockPos pos) {
         return false;
+    }
+
+    @Nonnull
+    @Override
+    @SuppressWarnings("deprecation")
+    public BlockFaceShape getBlockFaceShape(IBlockReader worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+        return BlockFaceShape.UNDEFINED;
     }
     //endregion
 }

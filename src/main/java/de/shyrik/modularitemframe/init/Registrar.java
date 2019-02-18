@@ -10,7 +10,7 @@ import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.module.t1.*;
 import de.shyrik.modularitemframe.common.module.t2.*;
 import de.shyrik.modularitemframe.common.module.t3.*;
-import de.shyrik.modularitemframe.common.tile.TileModularFrame;
+import de.shyrik.modularitemframe.common.block.TileModularFrame;
 import de.shyrik.modularitemframe.common.upgrade.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -20,7 +20,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod.EventBusSubscriber
 public class Registrar {
@@ -34,7 +33,7 @@ public class Registrar {
 
     @SubscribeEvent
     public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-        TileEntityType.register(BlockModularFrame.LOC.toString(), TileEntityType.Builder.create(TileModularFrame::new));
+        Tiles.FRAME = TileEntityType.register(BlockModularFrame.LOC.toString(), TileEntityType.Builder.create(TileModularFrame::new));
     }
 
     @SubscribeEvent

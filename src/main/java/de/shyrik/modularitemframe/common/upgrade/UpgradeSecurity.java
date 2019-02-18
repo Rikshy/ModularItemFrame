@@ -11,4 +11,9 @@ public class UpgradeSecurity extends UpgradeBase {
     public int getMaxCount() {
         return 0;
     }
+
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
 }

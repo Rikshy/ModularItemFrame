@@ -334,10 +334,6 @@ public class FakePlayerUtils {
         }
 
         @Override
-        public void func_194308_a(CPacketPlaceRecipe p_194308_1_) {
-        }
-
-        @Override
         public void handleAnimation(CPacketAnimation packetIn) {
         }
 

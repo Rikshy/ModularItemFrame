@@ -12,5 +12,10 @@ public class UpgradeCapacity extends UpgradeBase {
     public int getMaxCount() {
         return 5;
     }
+
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
 }
 

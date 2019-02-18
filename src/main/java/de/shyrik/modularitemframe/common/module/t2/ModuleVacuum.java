@@ -1,7 +1,7 @@
 package de.shyrik.modularitemframe.common.module.t2;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ConfigValues;
+import de.shyrik.modularitemframe.init.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.utils.ItemUtils;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
@@ -11,6 +11,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Particles;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -98,9 +99,9 @@ public class ModuleVacuum extends ModuleBase {
                     continue;
 
                 ItemStack remain = ItemUtils.giveStack(handler, entityStack);
-                if (remain.isEmpty()) entity.setDead();
+                if (remain.isEmpty()) entity.remove();
                 else entity.setItem(remain);
-                NetworkHandler.sendAround(new SpawnParticlesPacket(EnumParticleTypes.EXPLOSION_NORMAL.getParticleID(), entity.getPosition(), 1), entity.getPosition(), entity.dimension);
+                NetworkHandler.sendAround(new SpawnParticlesPacket(Particles.EXPLOSION.getId(), entity.getPosition(), 1), entity.world, entity.getPosition(), 32);
                 break;
             }
         }

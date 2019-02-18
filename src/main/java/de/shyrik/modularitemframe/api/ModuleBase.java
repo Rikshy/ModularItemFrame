@@ -3,7 +3,7 @@ package de.shyrik.modularitemframe.api;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.module.t1.ModuleItem;
-import de.shyrik.modularitemframe.common.tile.TileModularFrame;
+import de.shyrik.modularitemframe.common.block.TileModularFrame;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -117,7 +117,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 * @param tesr instance of the current {@link FrameRenderer}
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+	public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage) {
 	}
 
 	/**

@@ -6,6 +6,7 @@ import de.shyrik.modularitemframe.api.utils.RenderUtils;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -30,6 +31,11 @@ public class ModuleItem extends ModuleBase {
     private int rotation = 0;
     private ItemStack displayItem = ItemStack.EMPTY;
 
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
+
     @Nonnull
     @OnlyIn(Dist.CLIENT)
     public ResourceLocation frontTexture() {
@@ -53,7 +59,7 @@ public class ModuleItem extends ModuleBase {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage) {
         GlStateManager.pushMatrix();
         GlStateManager.translated(x + 0.5D, y + 0.5D, z + 0.5D);
         GlStateManager.scalef(0.9f, 0.9f, 0.9f);
@@ -98,7 +104,7 @@ public class ModuleItem extends ModuleBase {
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
-        if (nbt.hasUniqueId(NBT_DISPLAY)) displayItem = new ItemStack(nbt.getCompound(NBT_DISPLAY));
+        if (nbt.hasUniqueId(NBT_DISPLAY)) displayItem = ItemStack.read(nbt.getCompound(NBT_DISPLAY));
         if (nbt.hasUniqueId(NBT_ROTATION)) rotation = nbt.getInt(NBT_ROTATION);
     }
 }

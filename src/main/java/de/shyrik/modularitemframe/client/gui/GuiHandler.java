@@ -2,7 +2,7 @@ package de.shyrik.modularitemframe.client.gui;
 
 import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
 import de.shyrik.modularitemframe.common.module.t1.ModuleCrafting;
-import de.shyrik.modularitemframe.common.tile.TileModularFrame;
+import de.shyrik.modularitemframe.common.block.TileModularFrame;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -23,7 +23,7 @@ public class GuiHandler implements IGuiHandler {
 
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        BlockPos pos = new BlockPos(x, y, z);
+        /*BlockPos pos = new BlockPos(x, y, z);
         final TileEntity tileEntity = CompatHelper.getTile(world, pos, EnumFacing.byIndex(ID & 7)).orElseThrow(() -> new RuntimeException("No valid tile entity at position " + pos));
 
         switch (ID >> 4) {
@@ -33,13 +33,14 @@ public class GuiHandler implements IGuiHandler {
                 }
             default:
                 return null;
-        }
+        }*/
+        return null;
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        BlockPos pos = new BlockPos(x, y, z);
+        /*BlockPos pos = new BlockPos(x, y, z);
         final TileEntity tileEntity = CompatHelper.getTile(world, pos, EnumFacing.byIndex(ID & 7)).orElseThrow(() -> new RuntimeException("No valid tile entity at position " + pos));
         switch (ID >> 4) {
             case CRAFTING_FRAME:
@@ -48,6 +49,7 @@ public class GuiHandler implements IGuiHandler {
                 break;
         }
 
+        return null;*/
         return null;
     }
 }
