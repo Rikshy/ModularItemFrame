@@ -1,31 +1,25 @@
 package de.shyrik.modularitemframe.common.network.packet;
 
-import de.shyrik.modularitemframe.common.network.NetworkHandler;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.SimpleSound;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.registry.IRegistry;
+import net.minecraftforge.fml.network.NetworkEvent;
 
-public class PlaySoundPacket implements IMessage, IMessageHandler<PlaySoundPacket, IMessage> {
-    private String soundId;
+import java.util.function.Supplier;
+
+public class PlaySoundPacket {
+    private ResourceLocation soundId;
     private BlockPos pos;
     private String soundCategory;
     private float volume;
     private float pitch;
 
-    public PlaySoundPacket() {
-    }
-
-    public PlaySoundPacket(BlockPos pos, String soundId, String soundCategory, float volume, float pitch) {
+    public PlaySoundPacket(BlockPos pos, ResourceLocation soundId, String soundCategory, float volume, float pitch) {
         this.soundId = soundId;
         this.pos = pos;
         this.soundCategory = soundCategory;
@@ -33,34 +27,30 @@ public class PlaySoundPacket implements IMessage, IMessageHandler<PlaySoundPacke
         this.pitch = pitch;
     }
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        pos = BlockPos.fromLong(buf.readLong());
-        soundId = ByteBufUtils.readUTF8String(buf);
-        soundCategory = ByteBufUtils.readUTF8String(buf);
-        volume = buf.readFloat();
-        pitch = buf.readFloat();
+    public static void encode(PlaySoundPacket msg, PacketBuffer buf) {
+        buf.writeLong(msg.pos.toLong());
+        buf.writeResourceLocation(msg.soundId);
+        buf.writeString(msg.soundCategory);
+        buf.writeFloat(msg.volume);
+        buf.writeFloat(msg.pitch);
     }
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeLong(pos.toLong());
-        ByteBufUtils.writeUTF8String(buf, soundId);
-        ByteBufUtils.writeUTF8String(buf, soundCategory);
-        buf.writeFloat(volume);
-        buf.writeFloat(pitch);
+    public static PlaySoundPacket decode(PacketBuffer buf) {
+        return new PlaySoundPacket(
+                BlockPos.fromLong(buf.readLong()),
+                buf.readResourceLocation(),
+                buf.readString(32767),
+                buf.readFloat(),
+                buf.readFloat()
+        );
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IMessage onMessage(PlaySoundPacket message, MessageContext ctx) {
-        NetworkHandler.getThreadListener(ctx).addScheduledTask(() -> {
-            SoundEvent sound = SoundEvent.REGISTRY.getObject(new ResourceLocation(message.soundId));
-            SoundCategory category = SoundCategory.getByName(message.soundCategory);
-            if (sound != null) {
-                Minecraft.getMinecraft().getSoundHandler().playSound(new PositionedSoundRecord(sound, category, message.volume, message.pitch, message.pos));
-            }
+    public static void handle(PlaySoundPacket msg, Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            Minecraft mc = Minecraft.getInstance();
+            SoundEvent sound = IRegistry.SOUND_EVENT.get(msg.soundId);
+            if (sound != null)
+                mc.getSoundHandler().play(new SimpleSound(sound, SoundCategory.valueOf(msg.soundCategory), msg.volume, msg.pitch, msg.pos));
         });
-        return null;
     }
 }

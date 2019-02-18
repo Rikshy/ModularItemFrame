@@ -125,7 +125,7 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks, I
                 }
             }
         } while (--craftAmount > 0);
-        NetworkHandler.sendAround(new PlaySoundPacket(tile.getPos(), SoundEvents.BLOCK_LADDER_STEP.getSoundName().toString(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), tile.getPos(), player.dimension);
+        NetworkHandler.sendAround(new PlaySoundPacket(tile.getPos(), SoundEvents.BLOCK_LADDER_STEP.getRegistryName(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), player.world, tile.getPos(), 32);
     }
 
     protected IItemHandlerModifiable getWorkingInventories(IItemHandlerModifiable playerInventory) {

@@ -1,56 +1,50 @@
 package de.shyrik.modularitemframe.common.network.packet;
 
-import de.shyrik.modularitemframe.common.network.NetworkHandler;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.particles.IParticleData;
+import net.minecraft.particles.ParticleType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.util.registry.IRegistry;
+import net.minecraftforge.fml.network.NetworkEvent;
 
-public class SpawnParticlesPacket implements IMessage, IMessageHandler<SpawnParticlesPacket, IMessage> {
-    private int particleId;
+import java.util.function.Supplier;
+
+public class SpawnParticlesPacket {
+    private ResourceLocation particleId;
     private BlockPos pos;
     private int amount;
 
-    public SpawnParticlesPacket() {
-    }
-
-    public SpawnParticlesPacket(int particleId, BlockPos pos, int amount) {
+    public SpawnParticlesPacket(ResourceLocation particleId, BlockPos pos, int amount) {
         this.particleId = particleId;
         this.pos = pos;
         this.amount = amount;
     }
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        particleId = buf.readInt();
-        pos = BlockPos.fromLong(buf.readLong());
-        amount = buf.readInt();
+    public static void encode(SpawnParticlesPacket msg, PacketBuffer buf) {
+        buf.writeResourceLocation(msg.particleId);
+        buf.writeLong(msg.pos.toLong());
+        buf.writeInt(msg.amount);
     }
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeInt(particleId);
-        buf.writeLong(pos.toLong());
-        buf.writeInt(amount);
+    public static SpawnParticlesPacket decode(PacketBuffer buf) {
+        return new SpawnParticlesPacket(
+                buf.readResourceLocation(),
+                BlockPos.fromLong(buf.readLong()),
+                buf.readInt()
+        );
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IMessage onMessage(SpawnParticlesPacket message, MessageContext ctx) {
-        NetworkHandler.getThreadListener(ctx).addScheduledTask(() -> {
-            EnumParticleTypes particle = EnumParticleTypes.getParticleFromId(message.particleId);
+    public static void handle(SpawnParticlesPacket msg, Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            ParticleType particle = IRegistry.PARTICLE_TYPE.get(msg.particleId);
             if (particle != null) {
-                Minecraft mc = Minecraft.getMinecraft();
-                for (int i = 0; i < amount; i++) {
-                    mc.world.spawnParticle(EnumParticleTypes.EXPLOSION_NORMAL, message.pos.getX(), message.pos.getY(), message.pos.getZ(), 0.0D, mc.world.rand.nextGaussian(), 0.0D);
+                Minecraft mc = Minecraft.getInstance();
+                for (int i = 0; i < msg.amount; i++) {
+                    mc.world.addParticle((IParticleData)particle, msg.pos.getX(), msg.pos.getY(), msg.pos.getZ(), 0.0D, mc.world.rand.nextGaussian(), 0.0D);
                 }
             }
         });
-        return null;
     }
 }
