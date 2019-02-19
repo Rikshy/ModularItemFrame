@@ -26,7 +26,7 @@ import java.util.List;
 
 public class ModuleXP extends ModuleBase {
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t3_xp");
-    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"blocks/module_t3_xp");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"block/module_t3_xp");
     private static final int MAX_XP = 21862;
 
     private static final String NBT_XP = "xp";
@@ -128,7 +128,7 @@ public class ModuleXP extends ModuleBase {
 
         List<EntityXPOrb> entities = world.getEntitiesWithinAABB(EntityXPOrb.class, getVacuumBB(pos));
         for (EntityXPOrb entity : entities) {
-            if (entity.removed) continue;
+            if (!entity.isAlive()) continue;
 
             addExperience(entity.getXpValue());
         }

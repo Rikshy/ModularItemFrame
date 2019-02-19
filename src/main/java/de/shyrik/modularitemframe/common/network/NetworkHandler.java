@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 public class NetworkHandler {
@@ -32,8 +33,7 @@ public class NetworkHandler {
         dispatcher.sendTo(msg, player.connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
     }
 
-    public static void sendAround(Object msg, World world, BlockPos pos, int range) {
-        for(EntityPlayerMP player : world.getPlayers(EntityPlayerMP.class, player -> pos.getDistance(player.getPosition()) < range))
-            sendTo(msg, player);
+    public static void sendAround(Object msg, World world, BlockPos pos, int radius) {
+        dispatcher.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), radius, world.dimension.getType())), msg);
     }
 }

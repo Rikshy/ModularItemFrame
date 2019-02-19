@@ -15,6 +15,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -39,7 +40,7 @@ import java.util.List;
 @Mod.EventBusSubscriber
 public class BlockModularFrame extends Block {
 
-    public static final DirectionProperty FACING = DirectionProperty.create("facing");
+    public static final DirectionProperty FACING = DirectionProperty.create("facing", EnumFacing.values());
     private static final Properties PROPERTIES = Properties.create(Material.WOOD)
             .hardnessAndResistance(4F)
             .sound(SoundType.WOOD);
@@ -52,14 +53,19 @@ public class BlockModularFrame extends Block {
     private static final VoxelShape WEST_SHAPE = Block.makeCuboidShape(0.0D, 0.125D, 0.125D, 0.11D, 0.875D, 0.875D);
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "modular_frame");
-    public static final ResourceLocation INNER_DEF_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
-    public static final ResourceLocation INNER_HARD_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
-    public static final ResourceLocation INNER_HARDEST_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hardest_inner");
+    public static final ResourceLocation INNER_DEF_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "block/hard_inner");
+    public static final ResourceLocation INNER_HARD_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "block/hard_inner");
+    public static final ResourceLocation INNER_HARDEST_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "block/hardest_inner");
 
     public BlockModularFrame() {
         super(PROPERTIES);
 
         setDefaultState(this.stateContainer.getBaseState().with(FACING, EnumFacing.NORTH));
+    }
+
+    @Override
+    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+        builder.add(FACING);
     }
 
     //region <tileentity>
@@ -171,17 +177,23 @@ public class BlockModularFrame extends Block {
     //endregion
 
     //region <placing/breaking>
-
-    public boolean canAttachTo(@Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, EnumFacing side) {
-        IBlockState state = worldIn.getBlockState(pos);
-        boolean flag = isExceptBlockForAttachWithPiston(state.getBlock());
-        return !flag && state.getBlockFaceShape(worldIn, pos, side) == BlockFaceShape.SOLID && !state.canProvidePower();
+    @Nullable
+    @Override
+    public IBlockState getStateForPlacement(BlockItemUseContext ctx) {
+        return getDefaultState().with(FACING, ctx.getNearestLookingDirection().getOpposite());
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public boolean isValidPosition(IBlockState state, IWorldReaderBase worldIn, BlockPos pos) {
-        return canAttachTo(worldIn, pos, state.get(FACING));
+        EnumFacing side = state.get(FACING);
+        return canAttachTo(worldIn, pos.offset(side.getOpposite()), side);
+    }
+
+    public boolean canAttachTo(@Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, EnumFacing side) {
+        IBlockState state = worldIn.getBlockState(pos);
+        boolean flag = isExceptBlockForAttachWithPiston(state.getBlock());
+        return !flag && state.getBlockFaceShape(worldIn, pos, side) == BlockFaceShape.SOLID;
     }
 
     @Override
@@ -222,18 +234,6 @@ public class BlockModularFrame extends Block {
         for (BlockPos pos : toRemove) {
             event.getAffectedBlocks().remove(pos);
         }
-    }
-    //endregion
-
-    //region <state>
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
-        builder.add(FACING);
-    }
-
-    @Override
-    public IBlockState getStateForPlacement(IBlockState state, EnumFacing facing, IBlockState state2, IWorld world, BlockPos pos1, BlockPos pos2, EnumHand hand) {
-        return state.with(FACING, facing.getOpposite());
     }
     //endregion
 

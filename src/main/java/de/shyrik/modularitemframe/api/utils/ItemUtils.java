@@ -7,12 +7,12 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.crafting.VanillaRecipeTypes;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -223,6 +223,6 @@ public class ItemUtils {
             craft.setInventorySlotContents(i, stack.copy());
         }
 
-        return new RecipeManager().getRecipe(craft, world);
+        return world.getRecipeManager().getRecipe(craft, world, VanillaRecipeTypes.CRAFTING);
     }
 }

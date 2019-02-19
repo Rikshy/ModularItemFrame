@@ -7,5 +7,5 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(ModularItemFrame.MOD_ID)
 public class Tiles {
 
-    public static TileEntityType FRAME;
+    public static TileEntityType MODULAR_FRAME;
 }

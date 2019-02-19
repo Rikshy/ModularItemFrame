@@ -7,8 +7,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.IRegistry;
 import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.registries.GameData;
 
 import java.util.function.Supplier;
 
@@ -48,7 +48,7 @@ public class PlaySoundPacket {
     public static void handle(PlaySoundPacket msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             Minecraft mc = Minecraft.getInstance();
-            SoundEvent sound = IRegistry.SOUND_EVENT.get(msg.soundId);
+            SoundEvent sound = GameData.getWrapper(SoundEvent.class).get(msg.soundId);
             if (sound != null)
                 mc.getSoundHandler().play(new SimpleSound(sound, SoundCategory.valueOf(msg.soundCategory), msg.volume, msg.pitch, msg.pos));
         });

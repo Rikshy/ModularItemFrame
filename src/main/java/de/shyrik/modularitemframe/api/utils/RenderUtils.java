@@ -60,7 +60,7 @@ public class RenderUtils {
 			if (itemRenderer.shouldRenderItemIn3D(stack)) {
 				GlStateManager.rotatef(180.0F, 0.0F, 1.0F, 0.0F);
 			}
-			itemRenderer.renderItem(stack, transformType);
+			itemRenderer.renderItem(stack, itemRenderer.getModelWithOverrides(stack));
 			RenderHelper.disableStandardItemLighting();
 
 			GlStateManager.enableLighting();

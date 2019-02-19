@@ -13,8 +13,8 @@ public class ItemModule extends Item {
 
     private static Map<ResourceLocation, Tuple<ItemModule, Class<? extends ModuleBase>>> MODULES = new HashMap<>();
 
-    public ItemModule(Class<? extends ModuleBase> moduleClass, ResourceLocation moduleId) {
-        super(new Properties());
+    public ItemModule(Properties props, Class<? extends ModuleBase> moduleClass, ResourceLocation moduleId) {
+        super(props);
         this.moduleId = moduleId;
         MODULES.put(moduleId, new Tuple<>(this, moduleClass));
     }

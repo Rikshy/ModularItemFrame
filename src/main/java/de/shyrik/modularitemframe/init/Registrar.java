@@ -6,22 +6,24 @@ import de.shyrik.modularitemframe.api.ItemUpgrade;
 import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.api.UpgradeBase;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
+import de.shyrik.modularitemframe.common.block.TileModularFrame;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
 import de.shyrik.modularitemframe.common.module.t1.*;
 import de.shyrik.modularitemframe.common.module.t2.*;
 import de.shyrik.modularitemframe.common.module.t3.*;
-import de.shyrik.modularitemframe.common.block.TileModularFrame;
-import de.shyrik.modularitemframe.common.upgrade.*;
+import de.shyrik.modularitemframe.common.upgrade.UpgradeBlastResist;
+import de.shyrik.modularitemframe.common.upgrade.UpgradeCapacity;
+import de.shyrik.modularitemframe.common.upgrade.UpgradeRange;
+import de.shyrik.modularitemframe.common.upgrade.UpgradeSpeed;
 import net.minecraft.block.Block;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber
 public class Registrar {
 
     @SubscribeEvent
@@ -32,18 +34,17 @@ public class Registrar {
     }
 
     @SubscribeEvent
-    public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-        Tiles.FRAME = TileEntityType.register(BlockModularFrame.LOC.toString(), TileEntityType.Builder.create(TileModularFrame::new));
+    public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
+        TileEntityType.register(BlockModularFrame.LOC.toString(), TileEntityType.Builder.create(TileModularFrame::new));
     }
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
-        event.getRegistry().registerAll(asItem(Blocks.MODULAR_FRAME, BlockModularFrame.LOC),
+        event.getRegistry().registerAll(
 
-                asDefault(new ItemScrewdriver(), ItemScrewdriver.LOC),
-
-                //Canvas
-                asDefault(new Item(new Item.Properties()), new ResourceLocation(ModularItemFrame.MOD_ID, "canvas")),
+                asItem(Blocks.MODULAR_FRAME, BlockModularFrame.LOC),
+                asDefault(new ItemScrewdriver(new Item.Properties().group(ModularItemFrame.GROUP)), ItemScrewdriver.LOC),
+                asDefault(new Item(new Item.Properties().group(ModularItemFrame.GROUP)), new ResourceLocation(ModularItemFrame.MOD_ID, "canvas")),
 
                 //Tier 1
                 asModule(ModuleIO.class, ModuleIO.LOC),
@@ -77,11 +78,11 @@ public class Registrar {
     }
 
     private static Item asModule(Class<? extends ModuleBase> module, ResourceLocation id) {
-        return asDefault(new ItemModule(module, id), id);
+        return asDefault(new ItemModule(new Item.Properties().group(ModularItemFrame.GROUP), module, id), id);
     }
 
     private static Item asUpgrade(Class<? extends UpgradeBase> upgrade, ResourceLocation id) {
-        return asDefault(new ItemUpgrade(upgrade, id), id);
+        return asDefault(new ItemUpgrade(new Item.Properties().group(ModularItemFrame.GROUP), upgrade, id), id);
     }
 
     private static Block asDefault(Block block, ResourceLocation loc) {
@@ -93,6 +94,8 @@ public class Registrar {
     }
 
     private static Item asItem(Block block, ResourceLocation loc) {
-        return new ItemBlock(block, new Item.Properties()).setRegistryName(loc);
+        Item item = asDefault(new ItemBlock(block, new Item.Properties().group(ModularItemFrame.GROUP)), loc);
+        Item.BLOCK_TO_ITEM.put(block, item);
+        return item;
     }
 }

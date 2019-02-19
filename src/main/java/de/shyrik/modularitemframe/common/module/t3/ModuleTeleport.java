@@ -49,7 +49,7 @@ public class ModuleTeleport extends ModuleBase {
     @Override
     @OnlyIn(Dist.CLIENT)
     public ResourceLocation frontTexture() {
-        return new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_item");
+        return new ResourceLocation(ModularItemFrame.MOD_ID, "block/module_t1_item");
     }
 
     @Override

@@ -35,7 +35,7 @@ import javax.annotation.Nullable;
 public class ModuleTank extends ModuleBase {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1_tank");
-    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_tank");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "block/module_t1_tank");
     private static final String NBT_MODE = "tankmode";
     private static final String NBT_TANK = "tank";
 

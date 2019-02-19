@@ -13,9 +13,10 @@ public class ItemUpgrade  extends Item {
 
     private static Map<ResourceLocation, Tuple<ItemUpgrade, Class<? extends UpgradeBase>>> UPGRADES = new HashMap<>();
 
-    public ItemUpgrade(Class<? extends UpgradeBase> moduleClass, ResourceLocation upgradeId) {
-        super(new Properties());
+    public ItemUpgrade(Properties prop, Class<? extends UpgradeBase> upgradeClass, ResourceLocation upgradeId) {
+        super(prop);
         this.upgradeId = upgradeId;
+        UPGRADES.put(upgradeId, new Tuple<>(this, upgradeClass));
     }
 
     public UpgradeBase createUpgrade() {

@@ -49,7 +49,7 @@ public class GuiCraftingFrame extends GuiContainer {
     }
 
     /**
-     * Draws the background layer of this container (behind the items).
+     * Draws the background layer of this container (behind the item).
      *
      * @param partialTicks How far into the current tick the game is, with 0.0 being the start of the tick and 1.0 being the end.
      * @param mouseX       Mouse x coordinate

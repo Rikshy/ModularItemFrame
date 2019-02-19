@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 
 public class ModuleStorage extends ModuleBase {
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1_storage");
-    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_storage");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "block/module_t1_storage");
 
     private static final String NBT_LAST = "lastclick";
     private static final String NBT_LASTSTACK = "laststack";

@@ -21,11 +21,10 @@ import java.util.List;
 
 public class ItemScrewdriver extends ItemTool {
     private static final String NBT_MODE = "mode";
-    private static final Item.Properties PROPERTIES = new Item.Properties();
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "screwdriver");
 
-    public ItemScrewdriver() {
-        super(3F,3F, ItemTier.IRON, new HashSet<>(), PROPERTIES);
+    public ItemScrewdriver(Properties props) {
+        super(3F,3F, ItemTier.IRON, new HashSet<>(), props);
     }
 
     @Override

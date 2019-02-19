@@ -29,9 +29,9 @@ import java.util.List;
 public class ModuleTrashCan extends ModuleBase {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2_trashcan");
-    public static final ResourceLocation BG_LOC1 = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_1");
-    public static final ResourceLocation BG_LOC2 = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_2");
-    public static final ResourceLocation BG_LOC3 = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_trashcan_3");
+    public static final ResourceLocation BG_LOC1 = new ResourceLocation(ModularItemFrame.MOD_ID, "block/module_t2_trashcan_1");
+    public static final ResourceLocation BG_LOC2 = new ResourceLocation(ModularItemFrame.MOD_ID, "block/module_t2_trashcan_2");
+    public static final ResourceLocation BG_LOC3 = new ResourceLocation(ModularItemFrame.MOD_ID, "block/module_t2_trashcan_3");
 
     private List<ResourceLocation> frontTex = ImmutableList.of(
             BG_LOC1,

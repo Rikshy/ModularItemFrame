@@ -69,7 +69,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
     @Nonnull
 	@OnlyIn(Dist.CLIENT)
     public ResourceLocation backTexture() {
-        return new ResourceLocation("minecraft", "blocks/log_birch_top");
+        return new ResourceLocation("minecraft", "block/log_birch_top");
     }
 
 	/**
@@ -102,7 +102,7 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 				if (loc.toString().contains("default_inner"))
 					return Minecraft.getInstance().getTextureMap().getSprite(innerTexture());
 				return Minecraft.getInstance().getTextureMap().getSprite((ResourceLocation) loc);
-			}, model.getDefaultState(), false, DefaultVertexFormats.ITEM);
+			}, model.getDefaultState(), false, DefaultVertexFormats.BLOCK);
 
 			reloadModel = false;
 		}

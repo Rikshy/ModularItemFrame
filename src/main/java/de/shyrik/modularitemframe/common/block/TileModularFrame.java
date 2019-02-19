@@ -48,7 +48,7 @@ public class TileModularFrame extends TileEntity implements ITickable {
     }
 
     public TileModularFrame() {
-        this(Tiles.FRAME);
+        this(Tiles.MODULAR_FRAME);
     }
 
     //region <upgrade>
@@ -184,7 +184,7 @@ public class TileModularFrame extends TileEntity implements ITickable {
         IBlockState state = world.getBlockState(pos);
         world.markBlockRangeForRenderUpdate(pos, pos);
         world.notifyBlockUpdate(pos, state, state, 3);
-        //world.scheduleBlockUpdate(pos, blockType, 0, 0);
+        world.getPendingBlockTicks().scheduleTick(pos, state.getBlock(), 0);
         super.markDirty();
     }
 

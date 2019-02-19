@@ -5,6 +5,7 @@ import de.shyrik.modularitemframe.common.block.TileModularFrame;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.util.EnumFacing;
@@ -17,10 +18,10 @@ public class FrameRenderer extends TileEntityRenderer<TileModularFrame> {
 
     private IModel model = null;
 
-    private IBakedModel getBakedModels(TileModularFrame te) {
+    private IBakedModel getBakedModel(TileModularFrame te) {
         if (model == null) {
             try {
-                model = ModelLoaderRegistry.getModel(new ResourceLocation(ModularItemFrame.MOD_ID, "block/modular_frame"));
+                model = ModelLoaderRegistry.getModel(new ModelResourceLocation(ModularItemFrame.MOD_ID, "modular_frame"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -34,7 +35,7 @@ public class FrameRenderer extends TileEntityRenderer<TileModularFrame> {
         GlStateManager.disableCull();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        IBakedModel modelFrame = getBakedModels(te);
+        IBakedModel modelFrame = getBakedModel(te);
 
         bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
         if (Minecraft.isAmbientOcclusionEnabled()) GlStateManager.shadeModel(GL11.GL_SMOOTH);

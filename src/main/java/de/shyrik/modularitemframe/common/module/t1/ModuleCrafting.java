@@ -42,7 +42,7 @@ import javax.annotation.Nullable;
 public class ModuleCrafting extends ModuleBase implements IContainerCallbacks, IInteractionObject {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1_craft");
-    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_crafting");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "block/module_t1_crafting");
     private static final String NBT_GHOSTINVENTORY = "ghostinventory";
     private static final String NBT_DISPLAY = "display";
 

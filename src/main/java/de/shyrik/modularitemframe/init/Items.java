@@ -7,6 +7,7 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(ModularItemFrame.MOD_ID)
 public class Items {
 
+    public static Item MODULAR_FRAME;
     public static Item SCREWDRIVER;
     public static Item CANVAS;
 
