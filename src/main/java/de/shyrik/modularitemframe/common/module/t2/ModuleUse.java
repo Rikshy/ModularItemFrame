@@ -1,45 +1,43 @@
 package de.shyrik.modularitemframe.common.module.t2;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleBase;
-import de.shyrik.modularitemframe.api.utils.FakePlayerUtils;
-import de.shyrik.modularitemframe.api.utils.ItemUtils;
-import de.shyrik.modularitemframe.api.utils.RenderUtils;
+import de.shyrik.modularitemframe.api.util.FakePlayerHelper;
+import de.shyrik.modularitemframe.api.util.FrameItemRenderer;
+import de.shyrik.modularitemframe.api.util.ItemHandlerHelper;
+import de.shyrik.modularitemframe.api.util.ItemHelper;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.ProbeMode;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
-import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
 public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2_use");
-    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_nyi");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "block/module_nyi");
 
     private static final GameProfile DEFAULT_CLICKER = new GameProfile(UUID.nameUUIDFromBytes("modularitemframe".getBytes()), "[Frame Clicker]");
 
@@ -52,7 +50,12 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
     private boolean rightClick = false;
     private int rotation = 0;
     private ItemStack displayItem = ItemStack.EMPTY;
-    private WeakReference<FakePlayerUtils.UsefulFakePlayer> player;
+    private WeakReference<FakePlayerHelper.UsefulFakePlayer> player;
+
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
 
     @Nonnull
     @Override
@@ -61,42 +64,29 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
-        GlStateManager.pushMatrix();
-
-        EnumFacing facing = tile.blockFacing();
+    @OnlyIn(Dist.CLIENT)
+    public void specialRendering(FrameRenderer tesr, @Nonnull MatrixStack matrixStack, float partialTicks, @Nonnull IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+        Direction facing = tile.blockFacing();
         switch (facing) {
             case DOWN:
-                GlStateManager.rotate(rotation, 1.0F, 0.0F, 0.0F);
-                RenderUtils.renderItem(displayItem, facing, 180.0F, 0.5F, ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
+            case NORTH:
+                FrameItemRenderer.renderOnFrame(displayItem, Direction.WEST, rotation, 0.5F, TransformType.FIRST_PERSON_RIGHT_HAND, matrixStack, buffer, combinedLight, combinedOverlay);
                 break;
             case UP:
-                GlStateManager.rotate(rotation, 1.0F, 0.0F, 0.0F);
-                RenderUtils.renderItem(displayItem, facing, 180.0F, 0.5F, ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
-                break;
-            case NORTH:
-                GlStateManager.rotate(rotation, 1.0F, 0.0F, 0.0F);
-                RenderUtils.renderItem(displayItem, facing, 180.0F, 0.5F, ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
-                break;
             case SOUTH:
-                GlStateManager.rotate(rotation * -1, 1.0F, 0.0F, 0.0F);
-                RenderUtils.renderItem(displayItem, facing, 180.0F, 0.5F, ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
+                FrameItemRenderer.renderOnFrame(displayItem, Direction.EAST, rotation, 0.5F, TransformType.FIRST_PERSON_RIGHT_HAND, matrixStack, buffer, combinedLight, combinedOverlay);
                 break;
             case WEST:
-                GlStateManager.rotate(rotation * -1, 0.0F, 0.0F, 1.0F);
-                RenderUtils.renderItem(displayItem, facing, 180.0F, 0.5F, ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
+                matrixStack.rotate(new Quaternion(0, 90.0F, 0.0F, true));
+                matrixStack.translate(-1, 0 ,0);
+                FrameItemRenderer.renderOnFrame(displayItem, Direction.WEST, rotation, 0.5F, TransformType.FIRST_PERSON_RIGHT_HAND, matrixStack, buffer, combinedLight, combinedOverlay);
                 break;
             case EAST:
-                GlStateManager.rotate(rotation, 0.0F, 0.0F, 1.0F);
-                RenderUtils.renderItem(displayItem, facing, 180.0F, 0.5F, ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
+                matrixStack.rotate(new Quaternion(0, 90.0F, 0.0F, true));
+                matrixStack.translate(-1, 0 ,0);
+                FrameItemRenderer.renderOnFrame(displayItem, Direction.EAST, rotation, 0.5F, TransformType.FIRST_PERSON_RIGHT_HAND, matrixStack, buffer, combinedLight, combinedOverlay);
                 break;
         }
-
-        GlStateManager.popMatrix();
-        GlStateManager.popMatrix();
     }
 
     @Override
@@ -105,12 +95,12 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
     }
 
     @Override
-    public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
-        if (!worldIn.isRemote) ItemUtils.ejectStack(worldIn, pos, facing, displayItem);
+    public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull Direction facing, @Nullable PlayerEntity playerIn) {
+        if (!worldIn.isRemote) ItemHelper.ejectStack(worldIn, pos, facing, displayItem);
     }
 
     @Override
-    public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public ActionResultType onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull PlayerEntity playerIn, @Nonnull Hand hand, @Nonnull Direction facing, BlockRayTraceResult hit) {
         if (!worldIn.isRemote) {
             ItemStack held = playerIn.getHeldItem(hand);
             if (held.isEmpty()) {
@@ -123,11 +113,11 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
                 }
             }
         }
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
     @Override
-    public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
+    public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull PlayerEntity playerIn, ItemStack driver) {
         if (!world.isRemote) {
             if (playerIn.isSneaking()) {
                 isSneaking = !isSneaking;
@@ -137,7 +127,7 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
             String mode = isSneaking ? I18n.format("modularitemframe.mode.sn") + " + " : "";
             mode += rightClick ? I18n.format("modularitemframe.mode.rc") : I18n.format("modularitemframe.mode.lc");
 
-            playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.mode_change", mode));
+            playerIn.sendMessage(new TranslationTextComponent("modularitemframe.message.mode_change", mode));
             tile.markDirty();
         }
     }
@@ -151,32 +141,32 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
                 tile.markDirty();
             } else {
                 if (rotation >= 360) {
-                    rotation = 0;
+                    rotation -= 360;
                     hitIt(world, pos);
                 }
-                rotation += 5 * (tile.getSpeedUpCount() + 1);
+                rotation += 15 * (tile.getSpeedUpCount() + 1);
                 tile.markDirty();
             }
         }
     }
 
     private void hitIt(World world, BlockPos pos) {
-        if (player == null) player = new WeakReference<>(FakePlayerUtils.getPlayer(world, DEFAULT_CLICKER));
+        if (player == null) player = new WeakReference<>(FakePlayerHelper.getPlayer(world, DEFAULT_CLICKER));
 
-        EnumFacing facing = tile.blockFacing().getOpposite();
-        FakePlayerUtils.setupFakePlayerForUse(player.get(), pos, facing, displayItem, isSneaking);
+        Direction facing = tile.blockFacing();
+        FakePlayerHelper.setupFakePlayerForUse(getPlayer(), pos, facing, displayItem, isSneaking);
         ItemStack result;
-        if (!rightClick)
-            result = FakePlayerUtils.leftClickInDirection(player.get(), world, pos, facing, world.getBlockState(pos), 1 + tile.getRangeUpCount());
+        if (rightClick)
+            result = FakePlayerHelper.rightClickInDirection(getPlayer(), world, pos.offset(facing), facing, world.getBlockState(pos), 2 + tile.getRangeUpCount());
         else
-            result = FakePlayerUtils.rightClickInDirection(player.get(), world, pos.offset(facing), facing, world.getBlockState(pos), 1 + tile.getRangeUpCount());
-        FakePlayerUtils.cleanupFakePlayerFromUse(player.get(), result, displayItem, this);
+            result = FakePlayerHelper.leftClickInDirection(getPlayer(), world, pos.offset(facing), facing, world.getBlockState(pos), 2 + tile.getRangeUpCount());
+        FakePlayerHelper.cleanupFakePlayerFromUse(player.get(), result, displayItem, this);
     }
 
     private ItemStack getNextStack() {
         IItemHandler handler = tile.getAttachedInventory();
         if (handler != null) {
-            int slot = ItemUtils.getFirstOccupiedSlot(handler);
+            int slot = ItemHandlerHelper.getFirstOccupiedSlot(handler);
             if (slot >= 0) {
                 return handler.extractItem(slot, handler.getStackInSlot(slot).getCount(), false);
             }
@@ -185,60 +175,28 @@ public class ModuleUse extends ModuleBase implements Consumer<ItemStack> {
         return ItemStack.EMPTY;
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    @Optional.Method(modid = "theoneprobe")
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
-        String txt = isSneaking ? I18n.format("modularitemframe.mode.sn") + " + " : "";
-        txt += rightClick ? I18n.format("modularitemframe.mode.rc") : I18n.format("modularitemframe.mode.lc");
-        probeInfo.horizontal().text(I18n.format("modularitemframe.tooltip.mode", txt));
-        if (!displayItem.isEmpty())
-            probeInfo.horizontal().text("Held:").item(displayItem).text(displayItem.getDisplayName());
+    FakePlayerHelper.UsefulFakePlayer getPlayer() {
+        return player.get();
     }
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
-    @Optional.Method(modid = "waila")
-    public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        List<String> tips = super.getWailaBody(itemStack, accessor, config);
-        String mode = isSneaking ? I18n.format("modularitemframe.mode.sn") + " + " : "";
-        mode += rightClick ? I18n.format("modularitemframe.mode.rc") : I18n.format("modularitemframe.mode.lc");
-        tips.add(I18n.format("modularitemframe.tooltip.mode", mode));
-        if (!displayItem.isEmpty()) tips.add("Display: " + displayItem.getDisplayName() + " (" + displayItem.getCount() + ")");
-        return tips;
-    }
-
-    @Nonnull
-    @Override
-    public NBTTagCompound writeUpdateNBT(@Nonnull NBTTagCompound cmp) {
-        cmp.setInteger(NBT_ROTATION, rotation);
+    public CompoundNBT serializeNBT() {
+        CompoundNBT cmp = super.serializeNBT();
+        cmp.put(NBT_DISPLAY, displayItem.serializeNBT());
+        cmp.putBoolean(NBT_SNEAK, isSneaking);
+        cmp.putBoolean(NBT_RIGHT, rightClick);
+        cmp.putInt(NBT_ROTATION, rotation);
         return cmp;
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void readUpdateNBT(@Nonnull NBTTagCompound cmp) {
-        if (cmp.hasKey(NBT_ROTATION)) rotation = cmp.getInteger(NBT_ROTATION);
-    }
-
-    @Nonnull
-    @Override
-    public NBTTagCompound serializeNBT() {
-        NBTTagCompound compound = super.serializeNBT();
-        compound.setTag(NBT_DISPLAY, displayItem.serializeNBT());
-        compound.setBoolean(NBT_SNEAK, isSneaking);
-        compound.setBoolean(NBT_RIGHT, rightClick);
-        return compound;
-    }
-
-    @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
-        super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_DISPLAY)) displayItem = new ItemStack(nbt.getCompoundTag(NBT_DISPLAY));
-        if (nbt.hasKey(NBT_SNEAK)) isSneaking = nbt.getBoolean(NBT_SNEAK);
-        if (nbt.hasKey(NBT_RIGHT)) rightClick = nbt.getBoolean(NBT_RIGHT);
+    public void deserializeNBT(CompoundNBT cmp) {
+        super.deserializeNBT(cmp);
+        if (cmp.contains(NBT_DISPLAY)) displayItem = ItemStack.read(cmp.getCompound(NBT_DISPLAY));
+        if (cmp.contains(NBT_SNEAK)) isSneaking = cmp.getBoolean(NBT_SNEAK);
+        if (cmp.contains(NBT_RIGHT)) rightClick = cmp.getBoolean(NBT_RIGHT);
+        if (cmp.contains(NBT_ROTATION)) rotation = cmp.getInt(NBT_ROTATION);
     }
 
     @Override

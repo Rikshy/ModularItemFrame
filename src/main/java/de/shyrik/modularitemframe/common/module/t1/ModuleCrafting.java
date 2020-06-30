@@ -1,48 +1,42 @@
 package de.shyrik.modularitemframe.common.module.t1;
 
+
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.api.ModuleBase;
-import de.shyrik.modularitemframe.api.utils.ItemUtils;
-import de.shyrik.modularitemframe.api.utils.RenderUtils;
-import de.shyrik.modularitemframe.client.gui.GuiHandler;
+import de.shyrik.modularitemframe.api.util.FrameItemRenderer;
+import de.shyrik.modularitemframe.api.util.ItemHandlerHelper;
+import de.shyrik.modularitemframe.api.util.ItemHelper;
 import de.shyrik.modularitemframe.client.render.FrameRenderer;
-import de.shyrik.modularitemframe.common.container.ContainerCraftingFrame;
-import de.shyrik.modularitemframe.common.container.IContainerCallbacks;
+import de.shyrik.modularitemframe.common.container.*;
 import de.shyrik.modularitemframe.common.network.NetworkHandler;
 import de.shyrik.modularitemframe.common.network.packet.PlaySoundPacket;
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.ProbeMode;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.InventoryCraftResult;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.CraftResultInventory;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
 
-    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1_craft");
-    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t1_crafting");
+    public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t1_crafting");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "block/module_t1_crafting");
     private static final String NBT_GHOSTINVENTORY = "ghostinventory";
     private static final String NBT_DISPLAY = "display";
 
@@ -50,44 +44,39 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
     private ItemStack displayItem = ItemStack.EMPTY;
     private ItemStackHandler ghostInventory = new ItemStackHandler(9);
 
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
+
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
     public ResourceLocation frontTexture() {
         return BG_LOC;
     }
 
     @Override
     public String getModuleName() {
-        return I18n.format("modularitemframe.module.craft");
+        return I18n.format("modularitemframe.module.crafting");
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    public void specialRendering(FrameRenderer renderer, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(x + 0.5D, y + 0.5D, z + 0.5D);
-        GlStateManager.scale(0.7F, 0.7F, 0.7F);
-        GlStateManager.pushMatrix();
-
-        RenderUtils.renderItem(displayItem, tile.blockFacing(), 0, -0.05F, ItemCameraTransforms.TransformType.FIXED);
-
-        GlStateManager.popMatrix();
-        GlStateManager.popMatrix();
+    public void specialRendering(FrameRenderer renderer, @Nonnull MatrixStack matrixStack, float partialTicks, @Nonnull IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+        FrameItemRenderer.renderOnFrame(displayItem, tile.blockFacing(), 0, 0.1F, TransformType.FIXED, matrixStack, buffer, combinedLight, combinedOverlay);
     }
 
     @Override
-    public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
+    public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull PlayerEntity playerIn, ItemStack driver) {
         if (!world.isRemote) {
-            playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, world, pos.getX(), pos.getY(), pos.getZ());
+            playerIn.openContainer(getContainer(tile.getBlockState(), world, pos));
             tile.markDirty();
         }
     }
 
     @Override
-    public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public ActionResultType onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull PlayerEntity playerIn, @Nonnull Hand hand, @Nonnull Direction facing, BlockRayTraceResult hit) {
         if (!hasValidRecipe())
-            playerIn.openGui(ModularItemFrame.instance, GuiHandler.getMetaGuiId(GuiHandler.CRAFTING_FRAME, facing), worldIn, pos.getX(), pos.getY(), pos.getZ());
+            playerIn.openContainer(getContainer(state, worldIn, pos));
         else {
             if (!worldIn.isRemote) {
                 if (playerIn.isSneaking()) craft(playerIn, true);
@@ -95,37 +84,29 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
             }
         }
         tile.markDirty();
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
-    @Override
-    public ContainerCraftingFrame createContainer(final EntityPlayer player) {
-        final IItemHandlerModifiable playerInventory = ItemUtils.getPlayerInv(player);
-
-        return new ContainerCraftingFrame(playerInventory, ghostInventory, player, this);
-    }
-
-    private void craft(EntityPlayer player, boolean fullStack) {
-        final IItemHandlerModifiable playerInventory = ItemUtils.getPlayerInv(player);
+    private void craft(PlayerEntity player, boolean fullStack) {
+        final IItemHandlerModifiable playerInventory = ItemHandlerHelper.getPlayerInv(player);
         final IItemHandlerModifiable workingInv = getWorkingInventories(playerInventory);
+        reloadRecipe();
 
-        if (recipe == null) reloadRecipe();
-
-        if (workingInv == null || recipe == null || recipe.getRecipeOutput().isEmpty() || !ItemUtils.canCraft(workingInv, recipe.getIngredients()))
+        if (workingInv == null || recipe == null || recipe.getRecipeOutput().isEmpty() || !ItemHandlerHelper.canCraft(workingInv, recipe.getIngredients()))
             return;
 
-        int craftAmount = fullStack ? Math.min(ItemUtils.countPossibleCrafts(workingInv, recipe), 64) : 1;
+        int craftAmount = fullStack ? Math.min(ItemHandlerHelper.countPossibleCrafts(workingInv, recipe), 64) : 1;
         do {
-            ItemStack remain = ItemUtils.giveStack(playerInventory, recipe.getRecipeOutput()); //use playerinventory here!
-            if (!remain.isEmpty()) ItemUtils.ejectStack(player.world, tile.getPos(), tile.blockFacing(), remain);
+            ItemStack remain = ItemHandlerHelper.giveStack(playerInventory, recipe.getRecipeOutput()); //use playerinventory here!
+            if (!remain.isEmpty()) ItemHelper.ejectStack(player.world, tile.getPos(), tile.blockFacing(), remain);
 
-            for (Ingredient ingredient : recipe.getIngredients()) {
+            for (Ingredient ingredient : ItemHelper.getIngredients(recipe)) {
                 if (ingredient.getMatchingStacks().length > 0) {
-                    ItemUtils.removeFromInventory(workingInv, ingredient.getMatchingStacks());
+                    ItemHandlerHelper.removeFromInventory(workingInv, ingredient.getMatchingStacks());
                 }
             }
         } while (--craftAmount > 0);
-        NetworkHandler.sendAround(new PlaySoundPacket(tile.getPos(), SoundEvents.BLOCK_LADDER_STEP.getSoundName().toString(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), tile.getPos(), player.dimension);
+        NetworkHandler.sendAround(new PlaySoundPacket(tile.getPos(), SoundEvents.BLOCK_LADDER_STEP.getRegistryName(), SoundCategory.BLOCKS.getName(), 0.4F, 0.7F), player.world, tile.getPos(), 32);
     }
 
     protected IItemHandlerModifiable getWorkingInventories(IItemHandlerModifiable playerInventory) {
@@ -138,50 +119,19 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
     }
 
     protected void reloadRecipe() {
-        recipe = ItemUtils.getRecipe(ghostInventory, tile.getWorld());
+        recipe = ItemHelper.getRecipe(ghostInventory, tile.getWorld());
         displayItem = recipe != null ? recipe.getRecipeOutput().copy() : ItemStack.EMPTY;
         tile.markDirty();
     }
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer player) {
+    public boolean isUsableByPlayer(PlayerEntity player) {
         BlockPos pos = tile.getPos();
         return player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64;
     }
 
     @Override
-    @SideOnly(Side.CLIENT)
-    @Optional.Method(modid = "theoneprobe")
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
-        if (recipe != null && !recipe.getRecipeOutput().isEmpty()) {
-            IProbeInfo input = probeInfo.horizontal().text("Input:");
-            List<ItemStack> stacks = new ArrayList<>();
-            for (int slot = 0; slot < ghostInventory.getSlots(); ++slot) {
-                ItemStack stack = ghostInventory.getStackInSlot(slot);
-                if (!stack.isEmpty()) {
-                    if (!ItemUtils.increaseStackInList(stacks, stack)) stacks.add(stack.copy());
-                }
-            }
-
-            for (ItemStack stack : stacks) {
-                input.item(stack);
-            }
-        }
-    }
-
-    @Nonnull
-    @Override
-    @SideOnly(Side.CLIENT)
-    @Optional.Method(modid = "waila")
-    public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        List<String> tips = super.getWailaBody(itemStack, accessor, config);
-        tips.add("output: " + recipe.getRecipeOutput().getDisplayName());
-        return tips;
-    }
-
-    @Override
-    public void onContainerCraftingResultChanged(InventoryCraftResult result) {
+    public void onContainerCraftingResultChanged(CraftResultInventory result) {
         displayItem = result.getStackInSlot(0);
         recipe = result.getRecipeUsed();
         tile.markDirty();
@@ -189,17 +139,31 @@ public class ModuleCrafting extends ModuleBase implements IContainerCallbacks {
 
     @Nonnull
     @Override
-    public NBTTagCompound serializeNBT() {
-        NBTTagCompound compound = super.serializeNBT();
-        compound.setTag(NBT_DISPLAY, displayItem.serializeNBT());
-        compound.setTag(NBT_GHOSTINVENTORY, ghostInventory.serializeNBT());
+    public CompoundNBT serializeNBT() {
+        CompoundNBT compound = super.serializeNBT();
+        compound.put(NBT_DISPLAY, displayItem.serializeNBT());
+        compound.put(NBT_GHOSTINVENTORY, ghostInventory.serializeNBT());
         return compound;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_DISPLAY)) displayItem = new ItemStack(nbt.getCompoundTag(NBT_DISPLAY));
-        if (nbt.hasKey(NBT_GHOSTINVENTORY)) ghostInventory.deserializeNBT(nbt.getCompoundTag(NBT_GHOSTINVENTORY));
+        if (nbt.contains(NBT_DISPLAY)) displayItem = ItemStack.read(nbt.getCompound(NBT_DISPLAY));
+        if (nbt.contains(NBT_GHOSTINVENTORY)) ghostInventory.deserializeNBT(nbt.getCompound(NBT_GHOSTINVENTORY));
+    }
+
+    @Nonnull
+    @Override
+    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
+        return new SimpleNamedContainerProvider((id, playerInventory, player) ->
+                new CraftingFrameContainer(
+                        id,
+                        ItemHandlerHelper.getPlayerInv(player),
+                        ghostInventory,
+                        player,
+                       this),
+                new TranslationTextComponent("gui.modularitemframe.crafting.name")
+        );
     }
 }

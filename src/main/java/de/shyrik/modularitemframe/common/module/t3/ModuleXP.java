@@ -1,31 +1,26 @@
 package de.shyrik.modularitemframe.common.module.t3;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ConfigValues;
+import de.shyrik.modularitemframe.api.util.ExperienceHelper;
+import de.shyrik.modularitemframe.init.ConfigValues;
 import de.shyrik.modularitemframe.api.ModuleBase;
-import de.shyrik.modularitemframe.api.utils.XpUtils;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.ProbeMode;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.item.EntityXPOrb;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.entity.item.ExperienceOrbEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +28,7 @@ import java.util.List;
 
 public class ModuleXP extends ModuleBase {
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"module_t3_xp");
-    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"blocks/module_t3_xp");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID,"block/module_t3_xp");
     private static final int MAX_XP = 21862;
 
     private static final String NBT_XP = "xp";
@@ -42,16 +37,21 @@ public class ModuleXP extends ModuleBase {
     private int experience;
     private int levels;
 
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
+
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation frontTexture() {
         return BG_LOC;
     }
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation innerTexture() {
         return BlockModularFrame.INNER_HARDEST_LOC;
     }
@@ -62,7 +62,7 @@ public class ModuleXP extends ModuleBase {
     }
 
     @Override
-    public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
+    public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull PlayerEntity playerIn) {
         if (!worldIn.isRemote) {
             if (playerIn.isSneaking()) drainContainerXpToReachPlayerLevel(playerIn, 0);
             else drainContainerXpToReachPlayerLevel(playerIn, playerIn.experienceLevel + 1);
@@ -71,26 +71,26 @@ public class ModuleXP extends ModuleBase {
     }
 
     @Override
-    public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (playerIn instanceof FakePlayer) return false;
+    public ActionResultType onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull PlayerEntity playerIn, @Nonnull Hand hand, @Nonnull Direction facing, BlockRayTraceResult hit) {
+        if (playerIn instanceof FakePlayer) return ActionResultType.FAIL;
 
         if (!worldIn.isRemote) {
             if (playerIn.isSneaking()) drainPlayerXpToReachPlayerLevel(playerIn, 0);
             else drainPlayerXpToReachPlayerLevel(playerIn, playerIn.experienceLevel - 1);
             tile.markDirty();
         }
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
-    private void drainPlayerXpToReachPlayerLevel(@Nonnull EntityPlayer player, int level) {
-        int targetXP = XpUtils.getExperienceForLevel(level);
-        int drainXP = XpUtils.getPlayerXP(player) - targetXP;
+    private void drainPlayerXpToReachPlayerLevel(@Nonnull PlayerEntity player, int level) {
+        int targetXP = ExperienceHelper.getExperienceForLevel(level);
+        int drainXP = ExperienceHelper.getPlayerXP(player) - targetXP;
         if (drainXP <= 0) {
             return;
         }
         drainXP = addExperience(drainXP);
         if (drainXP > 0) {
-            XpUtils.addPlayerXP(player, -drainXP);
+            ExperienceHelper.addPlayerXP(player, -drainXP);
         }
     }
 
@@ -101,36 +101,36 @@ public class ModuleXP extends ModuleBase {
         }
 
         experience += xpToAdd;
-        levels = XpUtils.getLevelForExperience(experience);
-        //experience = (experience - XpUtils.getExperienceForLevel(levels)) / XpUtils.getXpBarCapacity(levels);
+        levels = ExperienceHelper.getLevelForExperience(experience);
+        //experience = (experience - ExperienceHelper.getExperienceForLevel(levels)) / ExperienceHelper.getXpBarCapacity(levels);
         return xpToAdd;
     }
 
-    private void drainContainerXpToReachPlayerLevel(@Nonnull EntityPlayer player, int level) {
-        int requiredXP = level == 0 ? experience : XpUtils.getExperienceForLevel(level) - XpUtils.getPlayerXP(player);
+    private void drainContainerXpToReachPlayerLevel(@Nonnull PlayerEntity player, int level) {
+        int requiredXP = level == 0 ? experience : ExperienceHelper.getExperienceForLevel(level) - ExperienceHelper.getPlayerXP(player);
 
         requiredXP = Math.min(experience, requiredXP);
 
         addExperience(-requiredXP);
-        XpUtils.addPlayerXP(player, requiredXP);
+        ExperienceHelper.addPlayerXP(player, requiredXP);
     }
 
     @Override
-    public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
+    public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull Direction facing, @Nullable PlayerEntity playerIn) {
         super.onRemove(worldIn, pos, facing, playerIn);
         if (playerIn == null || playerIn instanceof FakePlayer)
-            worldIn.spawnEntity(new EntityXPOrb(worldIn, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, experience));
-        else playerIn.addExperience(experience);
+            worldIn.addEntity(new ExperienceOrbEntity(worldIn, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, experience));
+        else playerIn.giveExperiencePoints(experience);
     }
 
     @Override
     public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
         if (experience >= MAX_XP) return;
-        if (world.getTotalWorldTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
+        if (world.getGameTime() % (60 - 10 * tile.getSpeedUpCount()) != 0) return;
 
-        List<EntityXPOrb> entities = world.getEntitiesWithinAABB(EntityXPOrb.class, getVacuumBB(pos));
-        for (EntityXPOrb entity : entities) {
-            if (entity.isDead) continue;
+        List<ExperienceOrbEntity> entities = world.getEntitiesWithinAABB(ExperienceOrbEntity.class, getVacuumBB(pos));
+        for (ExperienceOrbEntity entity : entities) {
+            if (!entity.isAlive()) continue;
 
             addExperience(entity.getXpValue());
         }
@@ -140,52 +140,34 @@ public class ModuleXP extends ModuleBase {
         int range = ConfigValues.BaseVacuumRange + tile.getRangeUpCount();
         switch (tile.blockFacing()) {
             case DOWN:
-                return new AxisAlignedBB(pos.add(-range, 0, -range), pos.add(range, range, range));
-            case UP:
                 return new AxisAlignedBB(pos.add(-range, 0, -range), pos.add(range, -range, range));
+            case UP:
+                return new AxisAlignedBB(pos.add(-range, 0, -range), pos.add(range, range, range));
             case NORTH:
-                return new AxisAlignedBB(pos.add(-range, -range, 0), pos.add(range, range, range));
-            case SOUTH:
                 return new AxisAlignedBB(pos.add(-range, -range, 0), pos.add(range, range, -range));
+            case SOUTH:
+                return new AxisAlignedBB(pos.add(-range, -range, 0), pos.add(range, range, range));
             case WEST:
-                return new AxisAlignedBB(pos.add(0, -range, -range), pos.add(-range, range, range));
-            case EAST:
                 return new AxisAlignedBB(pos.add(0, -range, -range), pos.add(range, range, range));
+            case EAST:
+                return new AxisAlignedBB(pos.add(0, -range, -range), pos.add(-range, range, range));
         }
         return new AxisAlignedBB(pos, pos.add(1, 1, 1));
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    @Optional.Method(modid = "theoneprobe")
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
-        probeInfo.horizontal().text(I18n.format("modularitemframe.tooltip.xp_level", levels));
-    }
-
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
-    @Optional.Method(modid = "waila")
-    public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        List<String> tooltips = super.getWailaBody(itemStack, accessor, config);
-        tooltips.add(I18n.format("modularitemframe.tooltip.xp_level", levels));
-        return tooltips;
-    }
-
-    @Nonnull
-    @Override
-    public NBTTagCompound serializeNBT() {
-        NBTTagCompound nbt = super.serializeNBT();
-        nbt.setInteger(NBT_XP, experience);
-        nbt.setInteger(NBT_LEVEL, levels);
+    public CompoundNBT serializeNBT() {
+        CompoundNBT nbt = super.serializeNBT();
+        nbt.putInt(NBT_XP, experience);
+        nbt.putInt(NBT_LEVEL, levels);
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_XP)) experience = nbt.getInteger(NBT_XP);
-        if (nbt.hasKey(NBT_LEVEL)) levels = nbt.getInteger(NBT_LEVEL);
+        if (nbt.contains(NBT_XP)) experience = nbt.getInt(NBT_XP);
+        if (nbt.contains(NBT_LEVEL)) levels = nbt.getInt(NBT_LEVEL);
     }
 }

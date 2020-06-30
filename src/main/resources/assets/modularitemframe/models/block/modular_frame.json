@@ -1,11 +1,11 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"frame": "minecraft:blocks/planks_birch",
-		"inner": "modularitemframe:blocks/default_inner",
-		"back": "modularitemframe:blocks/default_back",
-		"front": "modularitemframe:blocks/default_front",
-		"particle": "minecraft:blocks/planks_birch"
+		"frame": "minecraft:block/birch_planks",
+		"inner": "modularitemframe:block/default_inner",
+		"back": "modularitemframe:block/default_back",
+		"front": "modularitemframe:block/default_front",
+		"particle": "minecraft:block/birch_planks"
 	},
 	"elements": [
 		{

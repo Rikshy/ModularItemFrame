@@ -1,93 +1,130 @@
 buildscript {
     repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
-//Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'net.minecraftforge.gradle'
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'idea'
 
+version = major_version + '.' + minor_version
+group = 'de.shyrik'
+archivesBaseName = mod_id + "_" + minecraft_version
 
-version = "$mod_version.$patch_version"
-group = "de.shyrik"
-archivesBaseName = "modularitemframe-$mc_version"
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
+sourceSets {
+    api {
+        compileClasspath += sourceSets.main.compileClasspath
+    }
+    main {
+        compileClasspath += sourceSets.api.output
+        runtimeClasspath += sourceSets.api.output
+    }
 }
 
 minecraft {
-    version = "$mc_version-$forge_version"
-    runDir = "run"
+    mappings channel: mappings_channel, version: mappings_version
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    
+    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
-    mappings = "$mcp_version"
-    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
 
-    replace '@GRADLE:VERSION@', "$mod_version"
+            mods {
+                modularitemframe {
+                    source sourceSets.main
+                    source sourceSets.api
+                }
+            }
+        }
 
-    replaceIn 'ModularItemFrame.java'
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                modularitemframe {
+                    source sourceSets.main
+                    source sourceSets.api
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+
+            args '--mod', 'modularitemframe', '--all', '--output', file('src/generated/resources/')
+
+            mods {
+                modularitemframe {
+                    source sourceSets.main
+                    source sourceSets.api
+                }
+            }
+        }
+    }
 }
 
 repositories {
-    mavenCentral()
-    maven { url = "http://dvs1.progwml6.com/files/maven" }
-    maven { url = "http://maven.tterrag.com/" }
-    //maven { url = "http://maven.blamejared.com" }
-    //maven { url = 'http://maven.mcmoddev.com' }
-    maven { url = "http://tehnut.info/maven" }
-    maven { url = "http://maven.amadornes.com/" }
+    maven {
+        url "https://minecraft.curseforge.com/api/maven/"
+    }
+    maven {
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+    flatDir {
+        dirs "run/obfmods"
+    }
 }
 
 dependencies {
-    deobfCompile "mezz.jei:jei_1.12.2:$jei_version:api"
-    deobfCompile "mcjty.theoneprobe:TheOneProbe-1.12:1.12-$top_version"
-    deobfCompile "mcp.mobius.waila:Hwyla:$hwyla_version" + "_1.12.2:api"
-    deobfCompile "MCMultiPart2:MCMultiPart:$mcmp_version"
-    //compile "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-$ct_version"
-    //compile "net.darkhax.tesla:Tesla-1.12.2:$tesla_version"
+    minecraft([
+            group  : "${forge_group}",
+            name   : "forge",
+            version: "${minecraft_version}-${forge_version}"
+    ])
 
-    runtime "mezz.jei:jei_1.12.2:$jei_version"
-}
+    compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
 
-processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    // copy everything else except the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+    def obfModsDir = new File("run/obfmods")
+    obfModsDir.eachFile { file ->
+        def parts = file.name.split('-', 2)
+        def dep = "ignored:" + parts[0] + ":" + parts[1].replace(".jar", "")
+        runtimeOnly fg.deobf(dep)
     }
 }
 
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-    classifier = 'deobf'
-}
+jar {
+    from sourceSets.main.output.classesDirs
+    from sourceSets.api.output.classesDirs
+    from sourceSets.main.output.resourcesDir
+    from sourceSets.api.output.resourcesDir
 
-tasks.build.dependsOn('sourceJar', 'deobfJar')
-
-artifacts {
-    archives deobfJar
-    archives sourceJar
-}
-
-idea {
-    module {
-        inheritOutputDirs = false
-        outputDir = compileJava.destinationDir
-        testOutputDir = compileTestJava.destinationDir
+    manifest {
+        attributes([
+            "Specification-Title": mod_id,
+            "Specification-Vendor": "shyrik",
+            "Specification-Version": "1", // We are version 1 of ourselves
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" :"shyrik",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
     }
 }

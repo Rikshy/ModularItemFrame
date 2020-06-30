@@ -1,92 +1,94 @@
 package de.shyrik.modularitemframe.client.render;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.common.tile.TileModularFrame;
+import de.shyrik.modularitemframe.common.block.TileModularFrame;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Quaternion;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.model.*;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
+import net.minecraftforge.client.model.ModelLoader;
 
-@SideOnly(Side.CLIENT)
-public class FrameRenderer extends TileEntitySpecialRenderer<TileModularFrame> {
+import javax.annotation.Nonnull;
 
-    private IModel model = null;
+public class FrameRenderer extends TileEntityRenderer<TileModularFrame> {
 
-    private IBakedModel getBakedModels(TileModularFrame te) {
+    private IUnbakedModel model = null;
+
+    public FrameRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+        super(rendererDispatcherIn);
+    }
+
+    public TileEntityRendererDispatcher getDispatcher() { return renderDispatcher; }
+
+    private IBakedModel getBakedModel(TileModularFrame te) {
         if (model == null) {
             try {
-                model = ModelLoaderRegistry.getModel(new ResourceLocation(ModularItemFrame.MOD_ID, "block/modular_frame"));
+                model = ModelLoader.instance().getUnbakedModel(new ResourceLocation(ModularItemFrame.MOD_ID,"block/modular_frame"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return te.module.bakeModel(model);
+        return te.module.bakeModel(ModelLoader.instance(), model);
     }
 
     @Override
-    public void render(TileModularFrame te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        GlStateManager.pushMatrix();
-        GlStateManager.disableCull();
-        GlStateManager.enableBlend();
-        GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        IBakedModel modelFrame = getBakedModels(te);
+    public void render(@Nonnull TileModularFrame te, float partialTicks, @Nonnull MatrixStack matrixStack, @Nonnull IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+        matrixStack.push();
+        IBakedModel modelFrame = getBakedModel(te);
 
-        bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        if (Minecraft.isAmbientOcclusionEnabled()) GlStateManager.shadeModel(GL11.GL_SMOOTH);
-        else GlStateManager.shadeModel(GL11.GL_FLAT);
+        rotateFrameOnFacing(te.blockFacing(), matrixStack);
 
+        Minecraft.getInstance()
+                .getBlockRendererDispatcher()
+                .getBlockModelRenderer()
+                .renderModel(
+                        matrixStack.getLast(),
+                        buffer.getBuffer(RenderType.getTranslucentNoCrumbling()),
+                        te.getBlockState(),
+                        modelFrame,
+                        1,
+                        1,
+                        1,
+                        combinedLight,
+                        combinedOverlay,
+                        te.getModelData()
+                );
 
-        GlStateManager.translate(x, y, z); // Translate pad to coords here
-        GlStateManager.disableRescaleNormal();
-        rotateFrameOnFacing(te.blockFacing(), 0);
+        matrixStack.pop();
 
-        Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelRenderer().renderModelBrightnessColor(modelFrame, 1.0F, 1, 1, 1);
-
-        GlStateManager.disableBlend();
-        GlStateManager.enableCull();
-        GlStateManager.popMatrix();
-
-        te.module.specialRendering(this, x, y, z, partialTicks, destroyStage, alpha);
+        te.module.specialRendering(this, matrixStack, partialTicks, buffer, combinedLight, combinedOverlay);
     }
 
-    public void bindTex(ResourceLocation location) {
-        bindTexture(location);
-    }
-
-    private void rotateFrameOnFacing(EnumFacing facing, int rotation) {
-        int r = Math.abs(rotation);
+    private void rotateFrameOnFacing(Direction facing, @Nonnull MatrixStack matrixStack) {
         switch (facing) {
             case NORTH:
+                matrixStack.translate(1.0F, 0.0F, 1.0F);
+                matrixStack.rotate(new Quaternion( 0.0F, 180.0F, 0.0F, true));
                 break;
             case SOUTH:
-                GlStateManager.translate(1.0F, 0.0F, 1.0F);
-                GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
                 break;
             case WEST:
-                GlStateManager.translate(0.0F, 0F, 1.0F);
-                GlStateManager.rotate(90.0F, 0.0F, 1.0F, 0.0F);
+                matrixStack.rotate(new Quaternion(90.0F, -90.0F, 90.0F, true));
+                matrixStack.translate(0.0F, 0.0F, -1.0F);
                 break;
             case EAST:
-                GlStateManager.translate(1.0F, 0.0F, 0.0F);
-                GlStateManager.rotate(-90.0F, 0.0F, 1.0F, 0.0F);
+                matrixStack.rotate(new Quaternion(-90.0F, 90.0F, 90.0F, true));
+                matrixStack.translate(-1.0F, 0.0F, 0.0F);
                 break;
             case DOWN:
-                GlStateManager.translate(0.0F, 0.0F, 1.0F);
-                GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
+                matrixStack.translate(0.0F, 1.0F, 0.0F);
+                matrixStack.rotate(new Quaternion(90.0F, 0.0F, 0.0F, true));
                 break;
             case UP:
-                GlStateManager.translate(0.0F, 1.0F, 0.0F);
-                GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
+                matrixStack.translate(0.0F, 0.0F, 1.0F);
+                matrixStack.rotate(new Quaternion(-90.0F, 0.0F, 0.0F, true));
+                break;
         }
-        GlStateManager.rotate(rotation * 90.0F, 0.0F, 0.0F, 1.0F);
-        GlStateManager.translate((r == 1 || r == 2) ? -1 : 0, (r == 3 || r == 2) ? -1 : 0, 0);
     }
 }

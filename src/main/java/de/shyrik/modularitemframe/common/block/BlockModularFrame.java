@@ -1,83 +1,112 @@
 package de.shyrik.modularitemframe.common.block;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ConfigValues;
-import de.shyrik.modularitemframe.common.compat.CompatHelper;
-import de.shyrik.modularitemframe.common.item.ItemModule;
-import de.shyrik.modularitemframe.common.item.ItemUpgrade;
+import de.shyrik.modularitemframe.api.ItemModule;
+import de.shyrik.modularitemframe.api.ItemUpgrade;
+import de.shyrik.modularitemframe.api.UpgradeBase;
 import de.shyrik.modularitemframe.common.item.ItemScrewdriver;
-import de.shyrik.modularitemframe.common.tile.TileModularFrame;
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.IProbeInfoAccessor;
-import mcjty.theoneprobe.api.ProbeMode;
+import de.shyrik.modularitemframe.common.module.ModuleEmpty;
+import de.shyrik.modularitemframe.init.ConfigValues;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRedstoneDiode;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.RedstoneDiodeBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.state.BlockStateContainer;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Mod.EventBusSubscriber
-@Optional.Interface(iface = "mcjty.theoneprobe.api.IProbeInfoAccessor", modid = "theoneprobe")
-public class BlockModularFrame extends Block implements IProbeInfoAccessor {
+public class BlockModularFrame extends Block {
 
-    public static final PropertyDirection FACING = PropertyDirection.create("facing");
+    public static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.values());
+    public static final Block.Properties DEFAULT_PROPERTIES = Block.Properties
+            .create(Material.WOOD)
+            .hardnessAndResistance(4F)
+            .sound(SoundType.WOOD);
 
-    private static final AxisAlignedBB UP_AABB = new AxisAlignedBB(0.125D, 1.0D, 0.125D, 0.875D, 0.895D, 0.875D);
-    private static final AxisAlignedBB DOWN_AABB = new AxisAlignedBB(0.125D, 0.0D, 0.125D, 0.875D, 0.11D, 0.875D);
-    private static final AxisAlignedBB NORTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 0.0D, 0.875D, 0.875D, 0.11D);
-    private static final AxisAlignedBB SOUTH_AABB = new AxisAlignedBB(0.125D, 0.125D, 1.0D, 0.875D, 0.875D, 0.895D);
-    private static final AxisAlignedBB EAST_AABB = new AxisAlignedBB(0.895D, 0.125D, 0.125D, 1.0D, 0.875D, 0.875D);
-    private static final AxisAlignedBB WEST_AABB = new AxisAlignedBB(0.0D, 0.125D, 0.125D, 0.11D, 0.875D, 0.875D);
+    private static final VoxelShape UP_SHAPE = Block.makeCuboidShape(2, 0, 2, 14, 1.75, 14);
+    private static final VoxelShape DOWN_SHAPE = Block.makeCuboidShape(2, 14.25, 2, 14, 16, 14);
+    private static final VoxelShape NORTH_SHAPE = Block.makeCuboidShape(14, 2, 16, 2, 14, 14.25);
+    private static final VoxelShape SOUTH_SHAPE = Block.makeCuboidShape(2, 2, 0, 14, 14, 1.75);
+    private static final VoxelShape EAST_SHAPE = Block.makeCuboidShape(0, 2, 2, 1.75, 14, 14);
+    private static final VoxelShape WEST_SHAPE = Block.makeCuboidShape(16, 2, 2, 14.25, 14, 14);
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "modular_frame");
-    public static final ResourceLocation INNER_DEF_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
-    public static final ResourceLocation INNER_HARD_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hard_inner");
-    public static final ResourceLocation INNER_HARDEST_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/hardest_inner");
+    public static final ResourceLocation INNER_DEF_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "block/hard_inner");
+    public static final ResourceLocation INNER_HARD_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "block/hard_inner");
+    public static final ResourceLocation INNER_HARDEST_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "block/hardest_inner");
 
-    public BlockModularFrame() {
-        super(Material.WOOD);
-        setHardness(2.0F);
-        setResistance(4.0F);
-        setSoundType(SoundType.WOOD);
+    //region <initialize>
+    public BlockModularFrame(Block.Properties props) {
+        super(props);
 
-        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+        setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
     }
 
-    //region <tileentity>
     @Override
-    public boolean hasTileEntity(IBlockState state) {
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
+    }
+
+    @Nonnull
+    @Override
+    @SuppressWarnings("deprecation")
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        switch (state.get(FACING)) {
+            case UP:
+                return UP_SHAPE;
+            case DOWN:
+                return DOWN_SHAPE;
+            case NORTH:
+                return NORTH_SHAPE;
+            case SOUTH:
+                return SOUTH_SHAPE;
+            case EAST:
+                return EAST_SHAPE;
+            case WEST:
+                return WEST_SHAPE;
+        }
+
+        return super.getShape(state, worldIn, pos, context);
+    }
+    //endregion
+
+    //region <tile-entity>
+    @Override
+    public boolean hasTileEntity(BlockState state) {
         return true;
     }
 
-    @Nullable
     @Override
-    public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state) {
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new TileModularFrame();
     }
 
@@ -88,49 +117,57 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
 
     //region <interaction>
     @Override
-    public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
+    @SuppressWarnings("deprecation")
+    public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity playerIn) {
         getTE(worldIn, pos).module.onBlockClicked(worldIn, pos, playerIn);
     }
 
+    @Nonnull
     @Override
-    public boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        boolean moveHand = false;
-        if (!(playerIn instanceof FakePlayer) || ConfigValues.AllowFakePlayers) {
+    @SuppressWarnings("deprecation")
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ActionResultType result = ActionResultType.PASS;
+        if (!(player instanceof FakePlayer) || ConfigValues.AllowFakePlayers) {
             TileModularFrame tile = getTE(worldIn, pos);
-            ItemStack handItem = playerIn.getHeldItem(hand);
+            ItemStack handItem = player.getHeldItem(hand);
+            Direction side = hit.getFace();
             if (handItem.getItem() instanceof ItemScrewdriver) {
                 if (!worldIn.isRemote) {
-                    if (facing.getOpposite() == state.getValue(FACING)) {
-                        if (hitModule(facing.getOpposite(), hitX, hitY, hitZ)) {
+                    if (side == state.get(FACING)) {
+                        if (hitModule(side, pos, hit.getHitVec())) {
                             if (ItemScrewdriver.getMode(handItem) == ItemScrewdriver.EnumMode.INTERACT) {
-                                tile.module.screw(worldIn, pos, playerIn, handItem);
-                            } else tile.dropModule(facing, playerIn);
-                        } else tile.dropUpgrades(playerIn, facing);
+                                tile.module.screw(worldIn, pos, player, handItem);
+                            } else tile.dropModule(side, player);
+                        } else tile.dropUpgrades(player, side);
                         tile.markDirty();
                     }
                 }
-                moveHand = true;
+                result = ActionResultType.SUCCESS;
             } else if (handItem.getItem() instanceof ItemModule && tile.acceptsModule()) {
                 if (!worldIn.isRemote) {
-                    tile.setModule(((ItemModule) handItem.getItem()).getModuleId(handItem));
-                    if (!playerIn.isCreative()) playerIn.getHeldItem(hand).shrink(1);
+                    tile.setModule(handItem.getItem().getRegistryName());
+                    if (!player.isCreative()) player.getHeldItem(hand).shrink(1);
                     tile.markDirty();
                 }
-                moveHand = true;
+                result = ActionResultType.SUCCESS;
             } else if (handItem.getItem() instanceof ItemUpgrade && tile.acceptsUpgrade()) {
                 if (!worldIn.isRemote) {
-                    if (tile.tryAddUpgrade(((ItemUpgrade) handItem.getItem()).getUpgradeId(handItem))) {
-                        if (!playerIn.isCreative()) playerIn.getHeldItem(hand).shrink(1);
+                    if (tile.tryAddUpgrade(handItem.getItem().getRegistryName())) {
+                        if (!player.isCreative()) player.getHeldItem(hand).shrink(1);
                         tile.markDirty();
                     }
                 }
-                moveHand = true;
-            } else moveHand = tile.module.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ);
+                result = ActionResultType.SUCCESS;
+            } else result = tile.module.onBlockActivated(worldIn, pos, state, player, hand, side, hit);
         }
-        return moveHand;
+        return result;
     }
 
-    public static boolean hitModule(EnumFacing side, float x, float y, float z) {
+    public static boolean hitModule(Direction side, BlockPos pos, Vec3d hitVec) {
+        double x = Math.abs(Math.abs(hitVec.x) - Math.abs(pos.getX()));
+        double y = Math.abs(Math.abs(hitVec.y) - Math.abs(pos.getY()));
+        double z = Math.abs(Math.abs(hitVec.z) - Math.abs(pos.getZ()));
+
         switch (side) {
             case DOWN:
             case UP:
@@ -145,71 +182,78 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
         return false;
     }
 
+    @SuppressWarnings("deprecation")
+    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
+        return getTE(worldIn, pos).module.getContainer(state, worldIn, pos);
+    }
+
     @SubscribeEvent
     public static void onPlayerInteracted(PlayerInteractEvent.RightClickBlock event) {
         if (event.getWorld().getBlockState(event.getPos()).getBlock() instanceof BlockModularFrame) {
             event.setUseBlock(Event.Result.ALLOW);
+            event.setUseItem(Event.Result.DENY);
         }
-    }
-
-    @Override
-    @Optional.Method(modid = "theoneprobe")
-    public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-        getTE(world, data.getPos()).module.addProbeInfo(mode, probeInfo, player, world, blockState, data);
-    }
-
-    @Nonnull
-    @Override
-    @SuppressWarnings("deprecation")
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        switch (state.getValue(FACING)) {
-            case UP:
-                return UP_AABB;
-            case DOWN:
-                return DOWN_AABB;
-            case NORTH:
-                return NORTH_AABB;
-            case SOUTH:
-                return SOUTH_AABB;
-            case EAST:
-                return EAST_AABB;
-            case WEST:
-                return WEST_AABB;
-        }
-        return FULL_BLOCK_AABB;
     }
     //endregion
 
     //region <placing/breaking>
     @Override
-    public boolean canPlaceBlockOnSide(@Nonnull World worldIn, @Nonnull BlockPos pos, EnumFacing side) {
-        BlockPos adjacent = pos.offset(side.getOpposite());
-        IBlockState state = worldIn.getBlockState(adjacent);
-        return (state.isSideSolid(worldIn, adjacent, side) || state.getMaterial().isSolid()) && !BlockRedstoneDiode.isDiode(state) && CompatHelper.canPlace(worldIn, adjacent, side);
+    public BlockState getStateForPlacement(BlockItemUseContext ctx) {
+        return getDefaultState().with(FACING, ctx.getNearestLookingDirection().getOpposite());
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        if (!worldIn.isRemote) {
-            if (!canPlaceBlockOnSide(worldIn, pos, state.getValue(FACING).getOpposite())) {
-                dropBlockAsItem(worldIn, pos, state, 0);
-                worldIn.setBlockToAir(pos);
+    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        Direction side = state.get(FACING);
+        return canAttachTo(worldIn, pos.offset(side.getOpposite()), side);
+    }
+
+    public boolean canAttachTo(@Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, Direction side) {
+        BlockState state = worldIn.getBlockState(pos);
+        return (state.isSolidSide(worldIn, pos, side) || state.getMaterial().isSolid()) && !RedstoneDiodeBlock.isDiode(state);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        if (!world.isRemote) {
+            Direction side = state.get(FACING);
+            if (!canAttachTo(world, pos.offset(side.getOpposite()), side)) {
+                world.destroyBlock(pos, true);
             }
         }
     }
 
+    @Nonnull
+    @Override
+    @SuppressWarnings("deprecation")
+    public List<ItemStack> getDrops(@Nonnull BlockState state, @Nonnull LootContext.Builder builder) {
+        List<ItemStack> drops = super.getDrops(state, builder);
+        drops.add(new ItemStack(asItem()));
+
+        TileModularFrame tile = (TileModularFrame)builder.get(LootParameters.BLOCK_ENTITY);
+        if (tile != null) {
+            if (!(tile.module instanceof ModuleEmpty)) {
+                drops.add(new ItemStack(tile.module.getParent()));
+                tile.module.onRemove(builder.getWorld(), tile.getPos(), state.get(FACING), null);
+            }
+            for (UpgradeBase upgrade : tile.upgrades)
+                drops.add(new ItemStack(upgrade.getParent()));
+        }
+        return drops;
+    }
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void onExplosion(ExplosionEvent.Detonate event) {
+    public static void onExplosionDestroy(ExplosionEvent.Detonate event) {
         List<BlockPos> toRemove = new ArrayList<>();
         for (BlockPos pos : event.getAffectedBlocks()) {
-            for (TileEntity tmp : CompatHelper.getTiles(event.getWorld(), pos)) {
-                if (tmp instanceof TileModularFrame) {
-                    TileModularFrame tile = (TileModularFrame) tmp;
-                    if (tile.isBlastResist()) {
-                        toRemove.add(tile.getAttachedPos());
-                        toRemove.add(tile.getPos());
-                    }
+            TileEntity tmp = event.getWorld().getTileEntity(pos);
+            if (tmp instanceof TileModularFrame) {
+                TileModularFrame tile = (TileModularFrame) tmp;
+                if (tile.isBlastResist()) {
+                    toRemove.add(tile.getAttachedPos());
+                    toRemove.add(tile.getPos());
                 }
             }
         }
@@ -217,86 +261,12 @@ public class BlockModularFrame extends Block implements IProbeInfoAccessor {
             event.getAffectedBlocks().remove(pos);
         }
     }
-
-    @Override
-    public void breakBlock(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
-        getTE(worldIn, pos).module.onRemove(worldIn, pos, state.getValue(FACING), null);
-        getTE(worldIn, pos).dropUpgrades(null, state.getValue(FACING));
-        super.breakBlock(worldIn, pos, state);
-    }
-    //endregion
-
-    //region <state>
-    @Nonnull
-    @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, FACING);
-    }
-
-    @Nonnull
-    @Override
-    @SuppressWarnings("deprecation")
-    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return this.getStateFromMeta(meta).withProperty(FACING, facing.getOpposite());
-    }
-
-    @Nonnull
-    @Override
-    @SuppressWarnings("deprecation")
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(FACING, EnumFacing.byIndex(meta & 7));
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(FACING).getIndex();
-    }
-    //endregion
-
-    //region <rendering>
-    @Override
-    public boolean canRenderInLayer(IBlockState state, BlockRenderLayer layer) {
-        return layer == BlockRenderLayer.TRANSLUCENT || layer == BlockRenderLayer.CUTOUT;
-    }
-
-    @Nonnull
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean shouldSideBeRendered(IBlockState blockState, @Nonnull IBlockAccess blockAccess, @Nonnull BlockPos pos, EnumFacing side) {
-        return true;
-    }
     //endregion
 
     //region <other>
     @Override
     @SuppressWarnings("deprecation")
-    public boolean isFullCube(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean isOpaqueCube(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    public boolean isPassable(IBlockAccess worldIn, BlockPos pos) {
-        return true;
-    }
-
-    @Override
-    public boolean canCreatureSpawn(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, EntityLiving.SpawnPlacementType type) {
-        return false;
-    }
-
-    @Override
-    public boolean canPlaceTorchOnTop(IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
+    public boolean canEntitySpawn(BlockState state, @Nonnull IBlockReader worldIn, @Nonnull BlockPos pos, EntityType<?> type) {
         return false;
     }
     //endregion

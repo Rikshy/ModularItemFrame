@@ -1,13 +1,13 @@
 package de.shyrik.modularitemframe.common.container;
 
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nonnull;
 
-public class FrameCrafting extends InventoryCrafting {
+public class FrameCrafting extends CraftingInventory {
 
     private final int length;
     private final Container eventHandler;
@@ -38,11 +38,6 @@ public class FrameCrafting extends InventoryCrafting {
     }
 
     @Override
-    public boolean hasCustomName() {
-        return false;
-    }
-
-    @Override
     public void setInventorySlotContents(int index, @Nonnull ItemStack stack) {
         parent.setStackInSlot(index, stack);
         onCraftMatrixChanged();
@@ -50,7 +45,6 @@ public class FrameCrafting extends InventoryCrafting {
 
     @Override
     public void markDirty() {
-        //this.parent.markDirty();
         onCraftMatrixChanged();
     }
 

@@ -1,19 +1,18 @@
 package de.shyrik.modularitemframe.common.module.t2;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.client.gui.GuiHandler;
 import de.shyrik.modularitemframe.common.block.BlockModularFrame;
 import de.shyrik.modularitemframe.common.module.t1.ModuleCrafting;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 
@@ -22,10 +21,15 @@ import javax.annotation.Nonnull;
 public class ModuleCraftingPlus extends ModuleCrafting {
 
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "module_t2_craft_plus");
-    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "blocks/module_t2_craft_plus");
+    public static final ResourceLocation BG_LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "block/module_t2_craft_plus");
     private static final String NBT_MODE = "cpmode";
 
     public EnumMode mode = EnumMode.PLAYER;
+
+    @Override
+    public ResourceLocation getId() {
+        return LOC;
+    }
 
     @Override
     public String getModuleName() {
@@ -34,29 +38,29 @@ public class ModuleCraftingPlus extends ModuleCrafting {
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation frontTexture() {
         return BG_LOC;
     }
 
     @Nonnull
     @Override
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public ResourceLocation innerTexture() {
         return BlockModularFrame.INNER_HARD_LOC;
     }
 
     @Override
-    public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
+    public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull PlayerEntity playerIn, ItemStack driver) {
         if (!world.isRemote) {
             if (playerIn.isSneaking()) {
                 int modeIdx = mode.getIndex() + 1;
                 if (modeIdx == EnumMode.values().length) modeIdx = 0;
                 mode = EnumMode.values()[modeIdx];
-                mode = EnumMode.values()[mode.getIndex() + 1 >= EnumMode.values().length ? 0 : mode.getIndex() + 1];
-                playerIn.sendMessage(new TextComponentTranslation(mode.getName()));
+                playerIn.sendMessage(new TranslationTextComponent(mode.getName()));
+                tile.markDirty();
             } else {
-                playerIn.openGui(ModularItemFrame.instance, GuiHandler.CRAFTING_FRAME, world, pos.getX(), pos.getY(), pos.getZ());
+                playerIn.openContainer(getContainer(tile.getBlockState(), world, pos));
                 tile.markDirty();
             }
         }
@@ -75,16 +79,16 @@ public class ModuleCraftingPlus extends ModuleCrafting {
 
     @Nonnull
     @Override
-    public NBTTagCompound serializeNBT() {
-        NBTTagCompound nbt = super.serializeNBT();
-        nbt.setInteger(NBT_MODE, mode.getIndex());
+    public CompoundNBT serializeNBT() {
+        CompoundNBT nbt = super.serializeNBT();
+        nbt.putInt(NBT_MODE, mode.getIndex());
         return nbt;
     }
 
     @Override
-    public void deserializeNBT(NBTTagCompound nbt) {
+    public void deserializeNBT(CompoundNBT nbt) {
         super.deserializeNBT(nbt);
-        if (nbt.hasKey(NBT_MODE)) mode = EnumMode.values()[nbt.getInteger(NBT_MODE)];
+        if (nbt.contains(NBT_MODE)) mode = EnumMode.values()[nbt.getInt(NBT_MODE)];
     }
 
     public enum EnumMode {

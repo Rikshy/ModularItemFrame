@@ -3,12 +3,20 @@ package de.shyrik.modularitemframe.common.item;
 import de.shyrik.modularitemframe.ModularItemFrame;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTool;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.item.ItemTier;
+import net.minecraft.item.ToolItem;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -16,34 +24,39 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
 
-public class ItemScrewdriver extends ItemTool {
+public class ItemScrewdriver extends ToolItem {
     private static final String NBT_MODE = "mode";
     public static final ResourceLocation LOC = new ResourceLocation(ModularItemFrame.MOD_ID, "screwdriver");
 
-    public ItemScrewdriver() {
-        super(ToolMaterial.IRON, new HashSet<>());
+    public ItemScrewdriver(Item.Properties props) {
+        super(3F,3F, ItemTier.IRON, new HashSet<>(), props);
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         super.addInformation(stack, worldIn, tooltip, flagIn);
-        tooltip.add("Mode: " + readModeFromNBT(stack).getName());
+        tooltip.add(new TranslationTextComponent("Mode: " + readModeFromNBT(stack).getName()));
     }
 
     @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, @Nonnull EnumHand handIn) {
-        EnumActionResult result = EnumActionResult.PASS;
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, @Nonnull Hand handIn) {
+        ActionResultType result = ActionResultType.PASS;
         if (!worldIn.isRemote && playerIn.isSneaking()) {
             ItemStack driver = playerIn.getHeldItem(handIn);
             EnumMode mode = readModeFromNBT(driver);
             mode = EnumMode.VALUES[mode.getIndex() + 1 >= EnumMode.values().length ? 0 : mode.getIndex() + 1];
             writeModeToNbt(driver, mode);
-            playerIn.sendMessage(new TextComponentTranslation("modularitemframe.message.screw_mode_change", mode.getName()));
+            playerIn.sendMessage(new TranslationTextComponent("modularitemframe.message.screw_mode_change", mode.getName()));
 
-            result = EnumActionResult.SUCCESS;
+            result = ActionResultType.SUCCESS;
         }
         return new ActionResult<>(result, playerIn.getHeldItem(handIn));
+    }
+
+    @Override
+    public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
+        return true;
     }
 
     public static EnumMode getMode(ItemStack driver) {
@@ -51,17 +64,17 @@ public class ItemScrewdriver extends ItemTool {
     }
 
     private static void writeModeToNbt(ItemStack stack, EnumMode mode) {
-        NBTTagCompound nbt = stack.getTagCompound();
-        if (nbt == null) nbt = new NBTTagCompound();
-        nbt.setInteger(NBT_MODE, mode.getIndex());
-        stack.setTagCompound(nbt);
+        CompoundNBT nbt = stack.getTag();
+        if (nbt == null) nbt = new CompoundNBT();
+        nbt.putInt(NBT_MODE, mode.getIndex());
+        stack.setTag(nbt);
     }
 
     private static EnumMode readModeFromNBT(ItemStack stack) {
-        NBTTagCompound nbt = stack.getTagCompound();
+        CompoundNBT nbt = stack.getTag();
         EnumMode mode = EnumMode.REMOVE;
         if (nbt == null) writeModeToNbt(stack, mode);
-        else if (nbt.hasKey(NBT_MODE)) mode = EnumMode.VALUES[nbt.getInteger(NBT_MODE)];
+        else if (nbt.contains(NBT_MODE)) mode = EnumMode.VALUES[nbt.getInt(NBT_MODE)];
         return mode;
     }
 

@@ -1,50 +1,41 @@
 package de.shyrik.modularitemframe.common.network.packet;
 
-import de.shyrik.modularitemframe.common.network.NetworkHandler;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.client.audio.SimpleSound;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.network.NetworkEvent;
 
-public class TeleportEffectPacket implements IMessage, IMessageHandler<TeleportEffectPacket, IMessage> {
+import java.util.function.Supplier;
+
+public class TeleportEffectPacket {
     private BlockPos pos;
-
-    public TeleportEffectPacket() {
-    }
 
     public TeleportEffectPacket(BlockPos pos) {
         this.pos = pos;
     }
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        pos = BlockPos.fromLong(buf.readLong());
+    public static void encode(TeleportEffectPacket msg, PacketBuffer buf) {
+        buf.writeLong(msg.pos.toLong());
     }
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        buf.writeLong(pos.toLong());
+    public static TeleportEffectPacket decode(PacketBuffer buf) {
+        return new TeleportEffectPacket(
+                BlockPos.fromLong(buf.readLong())
+        );
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public IMessage onMessage(TeleportEffectPacket message, MessageContext ctx) {
-        NetworkHandler.getThreadListener(ctx).addScheduledTask(() -> {
-            Minecraft mc = Minecraft.getMinecraft();
+    public static void handle(TeleportEffectPacket msg, Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> {
+            Minecraft mc = Minecraft.getInstance();
             mc.ingameGUI.getBossOverlay().clearBossInfos();
-            mc.getSoundHandler().playSound(new PositionedSoundRecord(SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.AMBIENT, 0.4F, 1F, message.pos));
+            mc.getSoundHandler().play(new SimpleSound(SoundEvents.BLOCK_PORTAL_TRAVEL, SoundCategory.AMBIENT, 0.4F, 1F, msg.pos));
             for (int i = 0; i < 128; i++) {
-                mc.world.spawnParticle(EnumParticleTypes.PORTAL, message.pos.getX() + (mc.world.rand.nextDouble() - 0.5) * 3, message.pos.getY() + mc.world.rand.nextDouble() * 3, message.pos.getZ() + (mc.world.rand.nextDouble() - 0.5) * 3, (mc.world.rand.nextDouble() - 0.5) * 2, -mc.world.rand.nextDouble(), (mc.world.rand.nextDouble() - 0.5) * 2);
+                mc.world.addParticle(ParticleTypes.PORTAL, msg.pos.getX() + (mc.world.rand.nextDouble() - 0.5) * 3, msg.pos.getY() + mc.world.rand.nextDouble() * 3, msg.pos.getZ() + (mc.world.rand.nextDouble() - 0.5) * 3, (mc.world.rand.nextDouble() - 0.5) * 2, -mc.world.rand.nextDouble(), (mc.world.rand.nextDouble() - 0.5) * 2);
             }
         });
-        return null;
     }
 }
