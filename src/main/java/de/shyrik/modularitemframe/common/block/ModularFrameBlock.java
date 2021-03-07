@@ -1,12 +1,15 @@
 package de.shyrik.modularitemframe.common.block;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ModuleItem;
-import de.shyrik.modularitemframe.api.UpgradeBase;
-import de.shyrik.modularitemframe.api.UpgradeItem;
 import de.shyrik.modularitemframe.common.item.ScrewdriverItem;
 import de.shyrik.modularitemframe.common.module.EmptyModule;
-import mcjty.theoneprobe.api.*;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.IProbeInfoAccessor;
+import mcjty.theoneprobe.api.ProbeMode;
+import modularitemframe.api.ModuleItem;
+import modularitemframe.api.UpgradeBase;
+import modularitemframe.api.UpgradeItem;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,7 +21,10 @@ import net.minecraft.loot.LootParameters;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -56,7 +62,7 @@ public class ModularFrameBlock extends Block implements IProbeInfoAccessor {
     private static final VoxelShape EAST_SHAPE = Block.makeCuboidShape(0, 2, 2, 2, 14, 14);
     private static final VoxelShape WEST_SHAPE = Block.makeCuboidShape(16, 2, 2, 14, 14, 14);
 
-    public static final ResourceLocation INNER_DEF = new ResourceLocation(ModularItemFrame.MOD_ID, "block/hard_inner");
+    public static final ResourceLocation INNER_DEF = new ResourceLocation(ModularItemFrame.MOD_ID, "block/default_inner");
     public static final ResourceLocation INNER_HARD = new ResourceLocation(ModularItemFrame.MOD_ID, "block/hard_inner");
     public static final ResourceLocation INNER_HARDEST = new ResourceLocation(ModularItemFrame.MOD_ID, "block/hardest_inner");
 

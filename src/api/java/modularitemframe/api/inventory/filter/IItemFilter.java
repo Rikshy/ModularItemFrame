@@ -1,4 +1,4 @@
-package de.shyrik.modularitemframe.api.Inventory.filter;
+package modularitemframe.api.inventory.filter;
 
 import net.minecraft.item.ItemStack;
 

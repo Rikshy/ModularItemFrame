@@ -2,12 +2,13 @@ package de.shyrik.modularitemframe.common.module.t3;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ModuleBase;
-import de.shyrik.modularitemframe.client.FrameRenderer;
 import de.shyrik.modularitemframe.common.block.ModularFrameBlock;
-import de.shyrik.modularitemframe.api.Inventory.ItemStackHandlerWrapper;
-import de.shyrik.modularitemframe.api.Inventory.OpenItemStackHandler;
 import de.shyrik.modularitemframe.util.ItemHelper;
+import modularitemframe.api.ModuleTier;
+import modularitemframe.api.accessors.IFrameRenderer;
+import modularitemframe.api.inventory.ItemStackHandlerWrapper;
+import modularitemframe.api.inventory.OpenItemStackHandler;
+import modularitemframe.api.ModuleBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -49,26 +50,26 @@ public class JukeboxModule  extends ModuleBase {
 
     @NotNull
     @Override
-    public ResourceLocation frontTexture() {
-        return BG;
-    }
-
-    @NotNull
-    @Override
-    public ResourceLocation innerTexture() {
-        return ModularFrameBlock.INNER_HARDEST;
-    }
-
-    @NotNull
-    @Override
     public TextComponent getName() {
         return NAME;
     }
 
+    @NotNull
     @Override
-    public void specialRendering(@NotNull FrameRenderer renderer, float ticks, @NotNull MatrixStack matrixStack, @NotNull IRenderTypeBuffer buffer, int light, int overlay) {
+    public ModuleTier moduleTier() {
+        return ModuleTier.T3;
+    }
+
+    @NotNull
+    @Override
+    public ResourceLocation frontTexture() {
+        return BG;
+    }
+
+    @Override
+    public void specialRendering(@NotNull IFrameRenderer renderer, float ticks, @NotNull MatrixStack matrixStack, @NotNull IRenderTypeBuffer buffer, int light, int overlay) {
         if (currentSong >= 0 && currentSong < jukebox.getSlots()) {
-            renderer.renderInside(jukebox.getStackInSlot(currentSong), -rotation, matrixStack, buffer, light, overlay);
+            renderer.renderItem(jukebox.getStackInSlot(currentSong), -rotation, matrixStack, buffer, light, overlay);
         }
     }
 

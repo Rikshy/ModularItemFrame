@@ -4,12 +4,13 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ModuleBase;
-import de.shyrik.modularitemframe.api.ModuleItem;
-import de.shyrik.modularitemframe.api.UpgradeBase;
 import de.shyrik.modularitemframe.common.block.ModularFrameTile;
 import de.shyrik.modularitemframe.common.module.EmptyModule;
 import de.shyrik.modularitemframe.init.Blocks;
+import modularitemframe.api.accessors.IFrameRenderer;
+import modularitemframe.api.ModuleBase;
+import modularitemframe.api.ModuleItem;
+import modularitemframe.api.UpgradeBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -25,7 +26,6 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Matrix4f;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
@@ -43,7 +43,7 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 @OnlyIn(Dist.CLIENT)
-public class FrameRenderer extends TileEntityRenderer<ModularFrameTile> {
+public class FrameRenderer extends TileEntityRenderer<ModularFrameTile> implements IFrameRenderer {
 
     private IBakedModel model = null;
     private ResourceLocation currentFront = null;
@@ -75,7 +75,7 @@ public class FrameRenderer extends TileEntityRenderer<ModularFrameTile> {
                     if (mat.getTextureLocation().toString().contains("default_back"))
                         return modelMan.getAtlasTexture(mat.getAtlasLocation()).getSprite(module.backTexture());
                     if (mat.getTextureLocation().toString().contains("default_inner"))
-                        return modelMan.getAtlasTexture(mat.getAtlasLocation()).getSprite(module.innerTexture());
+                        return modelMan.getAtlasTexture(mat.getAtlasLocation()).getSprite(module.moduleTier().innerTex);
                     return modelMan.getAtlasTexture(mat.getAtlasLocation()).getSprite(mat.getTextureLocation());
                 }, ModelRotation.X0_Y0, modelId);
 
@@ -183,18 +183,7 @@ public class FrameRenderer extends TileEntityRenderer<ModularFrameTile> {
     }
 
     //region <itemRender>
-    public void renderInside(ItemStack stack, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay) {
-        renderInside(stack, 0F, 0.5F, ItemCameraTransforms.TransformType.FIXED, matrixStack, buffer, light, overlay);
-    }
-    public void renderInside(ItemStack stack, float zRotation, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay) {
-        renderInside(stack, zRotation, 0.5F, ItemCameraTransforms.TransformType.FIXED, matrixStack, buffer, light, overlay);
-    }
-
-    public void renderInside(ItemStack stack, float zRotation, float scale, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay) {
-        renderInside(stack, 0F, zRotation, scale, transformType, matrixStack, buffer, light, overlay);
-    }
-
-    public void renderInside(ItemStack stack, float xRotation, float zRotation, float scale, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay) {
+    public void renderItem(ItemStack stack, float xRotation, float zRotation, float scale, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int overlay) {
         if (stack.isEmpty())
             return;
 
@@ -250,66 +239,11 @@ public class FrameRenderer extends TileEntityRenderer<ModularFrameTile> {
         vc.normal(matrices.getLast().getNormal(), 0, 0, 1);
         vc.endVertex();
     }
-
-    public static class FluidRenderFace {
-
-        public final double x0, y0, z0, u0, v0;
-        public final double x1, y1, z1, u1, v1;
-        public final double x2, y2, z2, u2, v2;
-        public final double x3, y3, z3, u3, v3;
-
-        public FluidRenderFace(
-                double _x0, double _y0, double _z0, double _u0, double _v0, //
-                double _x1, double _y1, double _z1, double _u1, double _v1, //
-                double _x2, double _y2, double _z2, double _u2, double _v2, //
-                double _x3, double _y3, double _z3, double _u3, double _v3 ) {
-            x0 = _x0;
-            y0 = _y0;
-            z0 = _z0;
-            u0 = _u0;
-            v0 = _v0;
-
-            x1 = _x1;
-            y1 = _y1;
-            z1 = _z1;
-            u1 = _u1;
-            v1 = _v1;
-
-            x2 = _x2;
-            y2 = _y2;
-            z2 = _z2;
-            u2 = _u2;
-            v2 = _v2;
-
-            x3 = _x3;
-            y3 = _y3;
-            z3 = _z3;
-            u3 = _u3;
-            v3 = _v3;
-        }
-
-        public static FluidRenderFace create(double x0, double y0, double z0, double x1, double y1, double z1) {
-            return new FluidRenderFace(
-                    x0, y0, z1, x0, y0, //
-                    x1, y0, z1, x1, y0, //
-                    x1, y1, z1, x1, y1, //
-                    x0, y1, z1, x0, y1
-            );
-        }
-
-        public float getU(TextureAtlasSprite still, double u) {
-            return MathHelper.lerp((float) u, still.getMinU(), still.getMaxU());
-        }
-
-        public float getV(TextureAtlasSprite still, double v) {
-            return MathHelper.lerp((float) v, still.getMinV(), still.getMaxV());
-        }
-    }
     //endregion <fluid>
 
     //region <ender>
-    public void renderEnder(ModularFrameTile frame, MatrixStack matrixStack, IRenderTypeBuffer bufferBuilder, float offset1, float offset2, float offset3) {
-        double distance = frame.getPos().distanceSq(renderDispatcher.cameraHitResult.getHitVec(), true);
+    public void renderEnder(MatrixStack matrixStack, IRenderTypeBuffer bufferBuilder, float offset1, float offset2, float offset3) {
+        double distance = renderDispatcher.renderInfo.getBlockPos().distanceSq(renderDispatcher.cameraHitResult.getHitVec(), true);
         int val = getPasses(distance);
         Matrix4f matrix4f = matrixStack.getLast().getMatrix();
 

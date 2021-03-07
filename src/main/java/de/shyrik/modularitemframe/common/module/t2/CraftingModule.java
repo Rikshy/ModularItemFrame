@@ -2,13 +2,14 @@ package de.shyrik.modularitemframe.common.module.t2;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ModuleBase;
-import de.shyrik.modularitemframe.client.FrameRenderer;
 import de.shyrik.modularitemframe.common.container.crafting.CraftingFrameContainer;
 import de.shyrik.modularitemframe.common.container.crafting.IContainerCallbacks;
-import de.shyrik.modularitemframe.api.Inventory.ItemHandlerWrapper;
 import de.shyrik.modularitemframe.util.InventoryHelper;
 import de.shyrik.modularitemframe.util.ItemHelper;
+import modularitemframe.api.ModuleTier;
+import modularitemframe.api.accessors.IFrameRenderer;
+import modularitemframe.api.inventory.ItemHandlerWrapper;
+import modularitemframe.api.ModuleBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -53,20 +54,26 @@ public class CraftingModule extends ModuleBase implements IContainerCallbacks {
 
     @NotNull
     @Override
-    public ResourceLocation frontTexture() {
-        return BG;
-    }
-
-    @NotNull
-    @Override
     public TextComponent getName() {
         return NAME;
     }
 
+    @NotNull
+    @Override
+    public ModuleTier moduleTier() {
+        return ModuleTier.T2;
+    }
+
+    @NotNull
+    @Override
+    public ResourceLocation frontTexture() {
+        return BG;
+    }
+
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void specialRendering(@NotNull FrameRenderer renderer, float partialTicks, @NotNull MatrixStack matrixStack, @NotNull IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
-        renderer.renderInside(displayItem, matrixStack, buffer, combinedLight, combinedOverlay);
+    public void specialRendering(@NotNull IFrameRenderer renderer, float partialTicks, @NotNull MatrixStack matrixStack, @NotNull IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+        renderer.renderItem(displayItem, matrixStack, buffer, combinedLight, combinedOverlay);
     }
 
     @Override

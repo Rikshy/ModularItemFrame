@@ -1,4 +1,4 @@
-package de.shyrik.modularitemframe.api;
+package modularitemframe.api;
 
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;

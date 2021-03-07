@@ -6,7 +6,8 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.*;
+import net.minecraft.item.crafting.ICraftingRecipe;
+import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
@@ -14,30 +15,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.Objects;
-
 public class ItemHelper {
-
-    public static boolean areItemsEqualIgnoreDurability(ItemStack[] toCheck, ItemStack itemStack) {
-        for (ItemStack checkStack : toCheck) {
-            if (ItemStack.areItemsEqualIgnoreDurability(checkStack, itemStack)) return true;
-        }
-        return false;
-    }
 
     public static boolean areItemsEqual(ItemStack stack, ItemStack stack2) {
         return stack.getItem() == stack2.getItem();
-    }
-
-    public static boolean areStacksEqualIgnoreAmount(ItemStack stack, ItemStack stack2) {
-        if (stack.isEmpty()) {
-            return stack2.isEmpty();
-        }
-        if (stack2.isEmpty()) {
-            return false;
-        }
-        return stack.getItem() == stack2.getItem() && Objects.equals(stack.getTag(), stack2.getTag());
     }
 
     public static boolean simpleAreStacksEqual(ItemStack stack, ItemStack stack2) {
@@ -79,22 +60,6 @@ public class ItemHelper {
         world.addEntity(item);
     }
 
-    public static boolean increaseStackInList(List<ItemStack> list, ItemStack stack) {
-        int idx = listContainsItemStackEqual(list, stack);
-        if (idx >= 0) {
-            ItemStack listStack = list.get(idx);
-            listStack.grow(stack.getCount());
-            return true;
-        }
-        return false;
-    }
-
-    public static int listContainsItemStackEqual(List<ItemStack> list, ItemStack stack) {
-        for (int i = 0; i < list.size(); ++i) {
-            if (areItemsEqual(stack, list.get(i))) return i;
-        }
-        return -1;
-    }
 
     public static ICraftingRecipe getRecipe(IItemHandler itemHandler, World world) {
         CraftingInventory craft = new CraftingInventory(new Container(ContainerType.CRAFTING, world.rand.nextInt()) {

@@ -2,7 +2,10 @@ package de.shyrik.modularitemframe.init;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
 import de.shyrik.modularitemframe.common.block.ModularFrameBlock;
-import de.shyrik.modularitemframe.common.module.t1.*;
+import de.shyrik.modularitemframe.common.module.t1.IOModule;
+import de.shyrik.modularitemframe.common.module.t1.ItemModule;
+import de.shyrik.modularitemframe.common.module.t1.StorageModule;
+import de.shyrik.modularitemframe.common.module.t1.TankModule;
 import de.shyrik.modularitemframe.common.module.t2.*;
 import de.shyrik.modularitemframe.common.module.t3.*;
 import net.minecraft.inventory.container.ContainerType;

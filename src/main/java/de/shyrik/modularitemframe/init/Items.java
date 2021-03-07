@@ -1,10 +1,6 @@
 package de.shyrik.modularitemframe.init;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ModuleBase;
-import de.shyrik.modularitemframe.api.ModuleItem;
-import de.shyrik.modularitemframe.api.UpgradeBase;
-import de.shyrik.modularitemframe.api.UpgradeItem;
 import de.shyrik.modularitemframe.common.item.FilterUpgradeItem;
 import de.shyrik.modularitemframe.common.item.ScrewdriverItem;
 import de.shyrik.modularitemframe.common.module.t1.IOModule;
@@ -14,7 +10,10 @@ import de.shyrik.modularitemframe.common.module.t1.TankModule;
 import de.shyrik.modularitemframe.common.module.t2.*;
 import de.shyrik.modularitemframe.common.module.t3.*;
 import de.shyrik.modularitemframe.common.upgrade.*;
-import net.minecraft.item.BlockItem;
+import modularitemframe.api.ModuleBase;
+import modularitemframe.api.ModuleItem;
+import modularitemframe.api.UpgradeBase;
+import modularitemframe.api.UpgradeItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;

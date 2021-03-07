@@ -2,8 +2,9 @@ package de.shyrik.modularitemframe.common.module.t2;
 
 import com.google.common.collect.ImmutableList;
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.common.block.ModularFrameBlock;
+import modularitemframe.api.ModuleBase;
+import modularitemframe.api.ModuleTier;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -15,6 +16,7 @@ import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class FanModule extends ModuleBase {
@@ -39,6 +41,18 @@ public class FanModule extends ModuleBase {
 
     @NotNull
     @Override
+    public TextComponent getName() {
+        return NAME;
+    }
+
+    @NotNull
+    @Override
+    public ModuleTier moduleTier() {
+        return ModuleTier.T2;
+    }
+
+    @NotNull
+    @Override
     public ResourceLocation frontTexture() {
         return frontTex.get(texIndex);
     }
@@ -47,17 +61,6 @@ public class FanModule extends ModuleBase {
     @Override
     public List<ResourceLocation> getVariantFronts() {
         return frontTex;
-    }
-
-    @NotNull
-    @Override
-    public ResourceLocation innerTexture() {
-        return ModularFrameBlock.INNER_HARD;
-    }
-
-    @Override
-    public TextComponent getName() {
-        return NAME;
     }
 
     @Override
@@ -81,7 +84,7 @@ public class FanModule extends ModuleBase {
 
     private AxisAlignedBB getFanBox() {
         BlockPos pos = frame.getPos();
-        int range = frame.getRangeUpCount() + ModularItemFrame.config.scanZoneRadius.get();
+        int range = frame.getRangeUpCount() + ModularItemFrame.config.getBaseScanRadius();
         switch (frame.getFacing()) {
             case DOWN:
                 return new AxisAlignedBB(pos.add(0, 1, 0), pos.add(1, -range + 1, 1));

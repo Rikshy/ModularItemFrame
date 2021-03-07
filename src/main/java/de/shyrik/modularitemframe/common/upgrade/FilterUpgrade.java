@@ -1,10 +1,10 @@
 package de.shyrik.modularitemframe.common.upgrade;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.UpgradeBase;
 import de.shyrik.modularitemframe.common.item.FilterUpgradeItem;
-import de.shyrik.modularitemframe.api.Inventory.filter.AggregatedItemFilter;
-import de.shyrik.modularitemframe.api.Inventory.filter.IItemFilter;
+import modularitemframe.api.inventory.filter.AggregatedItemFilter;
+import modularitemframe.api.inventory.filter.IItemFilter;
+import modularitemframe.api.UpgradeBase;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;

@@ -2,11 +2,12 @@ package de.shyrik.modularitemframe.common.module.t1;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ModuleBase;
-import de.shyrik.modularitemframe.api.Inventory.ItemHandlerWrapper;
 import de.shyrik.modularitemframe.util.InventoryHelper;
 import de.shyrik.modularitemframe.util.ItemHelper;
-import de.shyrik.modularitemframe.client.FrameRenderer;
+import modularitemframe.api.ModuleTier;
+import modularitemframe.api.accessors.IFrameRenderer;
+import modularitemframe.api.inventory.ItemHandlerWrapper;
+import modularitemframe.api.ModuleBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -54,6 +55,12 @@ public class IOModule extends ModuleBase {
 
     @NotNull
     @Override
+    public ModuleTier moduleTier() {
+        return ModuleTier.T1;
+    }
+
+    @NotNull
+    @Override
     @OnlyIn(Dist.CLIENT)
     public ResourceLocation frontTexture() {
         return BG;
@@ -61,8 +68,8 @@ public class IOModule extends ModuleBase {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void specialRendering(@NotNull FrameRenderer renderer, float partialTicks, @NotNull MatrixStack matrixStack, @NotNull IRenderTypeBuffer buffer, int light, int overlay) {
-        renderer.renderInside(displayItem, matrixStack, buffer, light, overlay);
+    public void specialRendering(@NotNull IFrameRenderer renderer, float partialTicks, @NotNull MatrixStack matrixStack, @NotNull IRenderTypeBuffer buffer, int light, int overlay) {
+        renderer.renderItem(displayItem, matrixStack, buffer, light, overlay);
     }
 
     @Override

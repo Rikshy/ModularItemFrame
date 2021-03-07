@@ -1,12 +1,9 @@
-package de.shyrik.modularitemframe.api;
+package modularitemframe.api;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.client.FrameRenderer;
-import de.shyrik.modularitemframe.common.block.ModularFrameBlock;
-import de.shyrik.modularitemframe.common.item.ScrewdriverItem;
-import de.shyrik.modularitemframe.common.block.ModularFrameTile;
+import modularitemframe.api.accessors.IFrameRenderer;
+import modularitemframe.api.accessors.IFrameTile;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,10 +27,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public abstract class ModuleBase implements INBTSerializable<CompoundNBT> {
-	protected ModularFrameTile frame;
+	protected IFrameTile frame;
 	ModuleItem item;
 
-	public void setFrame(ModularFrameTile te) {
+	public void setFrame(IFrameTile te) {
 		frame = te;
 	}
 
@@ -46,7 +43,23 @@ public abstract class ModuleBase implements INBTSerializable<CompoundNBT> {
 	public abstract ResourceLocation getId();
 
 	/**
-	 * Is called when the {@link FrameRenderer} wants to render the module for the first time.
+	 * TOP and WAILA are using this for display
+	 *
+	 * @return the name of the module :O
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public abstract TextComponent getName();
+
+	/**
+	 * Represents the module tier. Defines the inner texture of the frame.
+	 *
+	 * @return [Nonnull] {@link ModuleTier} to the Texture
+	 */
+	@NotNull
+	public abstract ModuleTier moduleTier();
+
+	/**
+	 * Is called when the {@link IFrameRenderer} wants to render the module for the first time.
 	 *
 	 * @return [Nonnull] {@link ResourceLocation} to the Texture
 	 */
@@ -55,18 +68,7 @@ public abstract class ModuleBase implements INBTSerializable<CompoundNBT> {
 	public abstract ResourceLocation frontTexture();
 
     /**
-     * Is called when the {@link FrameRenderer} wants to render the module for the first time.
-     *
-     * @return [Nonnull] {@link ResourceLocation} to the Texture
-     */
-    @NotNull
-	@OnlyIn(Dist.CLIENT)
-    public ResourceLocation innerTexture() {
-        return ModularFrameBlock.INNER_DEF;
-    }
-
-    /**
-     * Is called when the {@link FrameRenderer} wants to render the module for the first time.
+     * Is called when the {@link IFrameRenderer} wants to render the module for the first time.
      *
      * @return [Nonnull] {@link ResourceLocation} to the Texture
      */
@@ -75,14 +77,6 @@ public abstract class ModuleBase implements INBTSerializable<CompoundNBT> {
     public ResourceLocation backTexture() {
         return new ResourceLocation("minecraft", "block/stripped_birch_log_top");
     }
-
-	/**
-	 * TOP and WAILA are using this for display
-	 *
-	 * @return the name of the module :O
-	 */
-	@OnlyIn(Dist.CLIENT)
-	public abstract TextComponent getName();
 
 	/**
 	 * Append tooltip information for waila
@@ -101,14 +95,14 @@ public abstract class ModuleBase implements INBTSerializable<CompoundNBT> {
 	}
 
 	/**
-	 * Called by the {@link FrameRenderer} after rendering the frame.
+	 * Called by the {@link IFrameRenderer} after rendering the frame.
 	 * Extra rendering can be don here
 	 * like the {@link ModuleItem ModuleItem} does the item thing)
 	 *
-	 * @param renderer instance of the current {@link FrameRenderer}
+	 * @param renderer instance of the current {@link IFrameRenderer}
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public void specialRendering(@NotNull FrameRenderer renderer, float partialTicks, @NotNull MatrixStack matrixStack, @NotNull IRenderTypeBuffer buffer, int light, int overlay) {
+	public void specialRendering(@NotNull IFrameRenderer renderer, float partialTicks, @NotNull MatrixStack matrixStack, @NotNull IRenderTypeBuffer buffer, int light, int overlay) {
 	}
 
 	/**
@@ -118,8 +112,8 @@ public abstract class ModuleBase implements INBTSerializable<CompoundNBT> {
 	}
 
 	/**
-	 * Called when a {@link ScrewdriverItem screwdriver} in interaction mode clicks a frame
-	 * Implement behavior for {@link ScrewdriverItem screwdriver} interaction here
+	 * Called when a Screwdriver in interaction mode clicks a frame
+	 * Implement behavior for Screwdriver interaction here
 	 *
 	 * @param driver the driver who was used
 	 */
@@ -154,7 +148,7 @@ public abstract class ModuleBase implements INBTSerializable<CompoundNBT> {
 	}
 
 	/**
-	 * Called when module is removed with the {@link ScrewdriverItem screwdriver}
+	 * Called when module is removed with the Screwdriver
 	 * or destroyed.
 	 */
 	public void onRemove(@NotNull World world, @NotNull BlockPos pos, @NotNull Direction facing, @Nullable PlayerEntity player, @NotNull ItemStack moduleStack) {
@@ -197,7 +191,7 @@ public abstract class ModuleBase implements INBTSerializable<CompoundNBT> {
 	 */
 	protected AxisAlignedBB getScanBox() {
 		BlockPos pos = frame.getPos();
-		int range = frame.getRangeUpCount() + ModularItemFrame.config.scanZoneRadius.get();
+		int range = frame.getRangeUpCount() + frame.getConfig().getBaseScanRadius();
 		switch (frame.getFacing()) {
 			case DOWN:
 				return new AxisAlignedBB(pos.add(-range + 1, 1, -range + 1), pos.add(range, -range + 1, range));

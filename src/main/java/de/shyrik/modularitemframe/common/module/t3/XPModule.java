@@ -1,9 +1,10 @@
 package de.shyrik.modularitemframe.common.module.t3;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.common.block.ModularFrameBlock;
 import de.shyrik.modularitemframe.util.ExperienceHelper;
+import modularitemframe.api.ModuleBase;
+import modularitemframe.api.ModuleTier;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -42,20 +43,20 @@ public class XPModule extends ModuleBase {
 
     @NotNull
     @Override
-    public ResourceLocation frontTexture() {
-        return BG;
-    }
-
-    @NotNull
-    @Override
-    public ResourceLocation innerTexture() {
-        return ModularFrameBlock.INNER_HARDEST;
-    }
-
-    @NotNull
-    @Override
     public TextComponent getName() {
         return NAME;
+    }
+
+    @NotNull
+    @Override
+    public ModuleTier moduleTier() {
+        return ModuleTier.T3;
+    }
+
+    @NotNull
+    @Override
+    public ResourceLocation frontTexture() {
+        return BG;
     }
 
     @Override

@@ -1,10 +1,11 @@
 package de.shyrik.modularitemframe.init;
 
+import modularitemframe.api.accessors.IFrameConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.config.ModConfig;
 
-public class Config {
+public class Config implements IFrameConfig {
 
     public final ForgeConfigSpec.ConfigValue<Integer> maxFrameUpgrades;
     public final ForgeConfigSpec.ConfigValue<Integer> tankFrameCapacity;
@@ -46,9 +47,39 @@ public class Config {
         spec = builder.build();
     }
 
-    public static Config build(ModContainer container) {
+    public static IFrameConfig build(ModContainer container) {
         Config cfg = new Config();
         container.addConfig(new ModConfig(ModConfig.Type.COMMON, cfg.spec, container));
         return cfg;
+    }
+
+    @Override
+    public int getMaxUpgrades() {
+        return maxFrameUpgrades.get();
+    }
+
+    @Override
+    public int getBaseTankCapacity() {
+        return tankFrameCapacity.get();
+    }
+
+    @Override
+    public int getBaseTankTransferRate() {
+        return tankTransferRate.get();
+    }
+
+    @Override
+    public boolean dropFluidOnTankRemoval() {
+        return dropFluidOnTankRemove.get();
+    }
+
+    @Override
+    public int getBaseTeleportRange() {
+        return teleportRange.get();
+    }
+
+    @Override
+    public int getBaseScanRadius() {
+        return scanZoneRadius.get();
     }
 }

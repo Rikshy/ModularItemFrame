@@ -1,7 +1,8 @@
 package de.shyrik.modularitemframe.common.module;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ModuleBase;
+import modularitemframe.api.ModuleBase;
+import modularitemframe.api.ModuleTier;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -23,6 +24,18 @@ public class EmptyModule extends ModuleBase {
 
     @NotNull
     @Override
+    public TextComponent getName() {
+        return NAME;
+    }
+
+    @NotNull
+    @Override
+    public ModuleTier moduleTier() {
+        return ModuleTier.T1;
+    }
+
+    @NotNull
+    @Override
     @OnlyIn(Dist.CLIENT)
     public ResourceLocation frontTexture() {
         return FG;
@@ -33,11 +46,5 @@ public class EmptyModule extends ModuleBase {
     @OnlyIn(Dist.CLIENT)
     public ResourceLocation backTexture() {
         return BG;
-    }
-
-    @NotNull
-    @Override
-    public TextComponent getName() {
-        return NAME;
     }
 }

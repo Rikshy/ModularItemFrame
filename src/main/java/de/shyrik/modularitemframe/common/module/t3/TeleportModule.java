@@ -2,10 +2,11 @@ package de.shyrik.modularitemframe.common.module.t3;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ModuleBase;
-import de.shyrik.modularitemframe.client.FrameRenderer;
 import de.shyrik.modularitemframe.common.block.ModularFrameBlock;
 import de.shyrik.modularitemframe.common.block.ModularFrameTile;
+import modularitemframe.api.ModuleTier;
+import modularitemframe.api.accessors.IFrameRenderer;
+import modularitemframe.api.ModuleBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -44,20 +45,26 @@ public class TeleportModule extends ModuleBase {
 
     @NotNull
     @Override
-    public ResourceLocation frontTexture() {
-        return BG;
-    }
-
-    @NotNull
-    @Override
     public TextComponent getName() {
         return NAME;
     }
 
+    @NotNull
     @Override
-    public void specialRendering(@NotNull FrameRenderer renderer, float partialTicks, @NotNull MatrixStack matrixStack, @NotNull IRenderTypeBuffer buffer, int light, int overlay) {
+    public ModuleTier moduleTier() {
+        return ModuleTier.T3;
+    }
+
+    @NotNull
+    @Override
+    public ResourceLocation frontTexture() {
+        return BG;
+    }
+
+    @Override
+    public void specialRendering(@NotNull IFrameRenderer renderer, float partialTicks, @NotNull MatrixStack matrixStack, @NotNull IRenderTypeBuffer buffer, int light, int overlay) {
         if (linkedLoc != null) {
-            renderer.renderEnder(frame, matrixStack, buffer, 0.85F, 0.08F, 0.14F);
+            renderer.renderEnder(matrixStack, buffer, 0.85F, 0.08F, 0.14F);
         }
     }
 
@@ -224,8 +231,8 @@ public class TeleportModule extends ModuleBase {
         if (targetFrame.hasInfinity() && frame.hasInfinity()) {
             return true;
         } else if (!isCrossDim) {
-            int sourceRange = ModularItemFrame.config.teleportRange.get() + (frame.getRangeUpCount() * 10);
-            int targetRange = ModularItemFrame.config.teleportRange.get() + (targetFrame.getRangeUpCount() * 10);
+            int sourceRange = ModularItemFrame.config.getBaseTeleportRange() + (frame.getRangeUpCount() * 10);
+            int targetRange = ModularItemFrame.config.getBaseTeleportRange() + (targetFrame.getRangeUpCount() * 10);
             return (frame.hasInfinity() || frame.getPos().withinDistance(targetFrame.getPos(), sourceRange)) &&
                     (targetFrame.hasInfinity() || targetFrame.getPos().withinDistance(frame.getPos(), targetRange));
         }

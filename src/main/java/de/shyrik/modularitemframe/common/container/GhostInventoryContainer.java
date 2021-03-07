@@ -11,8 +11,6 @@ import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-
 public abstract class GhostInventoryContainer extends BaseContainer {
 
     protected static final int SLOTS_PER_ROW = 9;

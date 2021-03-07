@@ -2,8 +2,10 @@ package de.shyrik.modularitemframe.common.module.t1;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ModuleBase;
 import de.shyrik.modularitemframe.client.FrameRenderer;
+import modularitemframe.api.ModuleTier;
+import modularitemframe.api.accessors.IFrameRenderer;
+import modularitemframe.api.ModuleBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -32,12 +34,25 @@ public class TankModule extends ModuleBase {
     private static final String NBT_TANK = "tank";
 
     public EnumMode mode = EnumMode.NONE;
-    private final FluidTank tank = new FluidTank(ModularItemFrame.config.tankFrameCapacity.get() * FluidAttributes.BUCKET_VOLUME);
+    private final FluidTank tank = new FluidTank(ModularItemFrame.config.getBaseTankCapacity() * FluidAttributes.BUCKET_VOLUME);
+
 
     @NotNull
     @Override
     public ResourceLocation getId() {
         return ID;
+    }
+
+    @NotNull
+    @Override
+    public TextComponent getName() {
+        return NAME;
+    }
+
+    @NotNull
+    @Override
+    public ModuleTier moduleTier() {
+        return ModuleTier.T1;
     }
 
     @NotNull
@@ -52,14 +67,8 @@ public class TankModule extends ModuleBase {
         return BG;
     }
 
-    @NotNull
     @Override
-    public TextComponent getName() {
-        return NAME;
-    }
-
-    @Override
-    public void specialRendering(@NotNull FrameRenderer renderer, float partialTicks, @NotNull MatrixStack matrixStack, @NotNull IRenderTypeBuffer buffer, int light, int overlay) {
+    public void specialRendering(@NotNull IFrameRenderer renderer, float partialTicks, @NotNull MatrixStack matrixStack, @NotNull IRenderTypeBuffer buffer, int light, int overlay) {
         if (tank.getFluidAmount() > 0) {
             double amount = (float) tank.getFluidAmount() / (float) tank.getCapacity();
 
@@ -74,7 +83,7 @@ public class TankModule extends ModuleBase {
     @Override
     public void screw(@NotNull World world, @NotNull BlockPos pos, @NotNull PlayerEntity player, ItemStack driver) {
         if (!world.isRemote) {
-            if (ModularItemFrame.config.tankTransferRate.get() > 0) {
+            if (ModularItemFrame.config.getBaseTankTransferRate() > 0) {
                 int modeIdx = mode.getIndex() + 1;
                 if (modeIdx == EnumMode.values().length) modeIdx = 0;
                 mode = EnumMode.values()[modeIdx];
@@ -94,20 +103,20 @@ public class TankModule extends ModuleBase {
     @Override
     public void tick(@NotNull World world, @NotNull BlockPos pos) {
         if (world.isRemote || frame.isPowered() || !canTick(world,60, 10)) return;
-        if (mode == EnumMode.NONE && ModularItemFrame.config.tankTransferRate.get() <= 0) return;
+        if (mode == EnumMode.NONE && ModularItemFrame.config.getBaseTankTransferRate() <= 0) return;
 
         IFluidHandler handler = frame.getAttachedTank();
         if (handler != null) {
             if (mode == EnumMode.DRAIN)
-                FluidUtil.tryFluidTransfer(tank, handler, ModularItemFrame.config.tankTransferRate.get(), true);
-            else FluidUtil.tryFluidTransfer(handler, tank, ModularItemFrame.config.tankTransferRate.get(), true);
+                FluidUtil.tryFluidTransfer(tank, handler, ModularItemFrame.config.getBaseTankTransferRate(), true);
+            else FluidUtil.tryFluidTransfer(handler, tank, ModularItemFrame.config.getBaseTankTransferRate(), true);
             markDirty();
         }
     }
 
     @Override
     public void onFrameUpgradesChanged(World world, BlockPos pos, Direction facing) {
-        int newCapacity = (int) Math.pow(ModularItemFrame.config.tankFrameCapacity.get() / (float) 1000, frame.getCapacityUpCount() + 1) * 1000;
+        int newCapacity = (int) Math.pow(ModularItemFrame.config.getBaseTankCapacity() / (float) 1000, frame.getCapacityUpCount() + 1) * 1000;
         tank.setCapacity(newCapacity);
         markDirty();
     }
@@ -134,13 +143,13 @@ public class TankModule extends ModuleBase {
     @Override
     public void deserializeNBT(@NotNull CompoundNBT nbt) {
         super.deserializeNBT(nbt);
-        int newCapacity = (int) Math.pow(ModularItemFrame.config.tankFrameCapacity.get(), frame.getCapacityUpCount() + 1) * FluidAttributes.BUCKET_VOLUME;
+        int newCapacity = (int) Math.pow(ModularItemFrame.config.getBaseTankCapacity(), frame.getCapacityUpCount() + 1) * FluidAttributes.BUCKET_VOLUME;
         if (newCapacity != tank.getCapacity())
             tank.setCapacity(newCapacity);
 
         if (nbt.contains(NBT_TANK)) tank.readFromNBT(nbt.getCompound(NBT_TANK));
         if (nbt.contains(NBT_MODE))
-            mode = ModularItemFrame.config.tankTransferRate.get() > 0 ? EnumMode.values()[nbt.getInt(NBT_MODE)] : EnumMode.NONE;
+            mode = ModularItemFrame.config.getBaseTankTransferRate() > 0 ? EnumMode.values()[nbt.getInt(NBT_MODE)] : EnumMode.NONE;
     }
 
     public enum EnumMode {

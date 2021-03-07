@@ -2,8 +2,9 @@ package de.shyrik.modularitemframe.common.module.t1;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.ModuleBase;
-import de.shyrik.modularitemframe.client.FrameRenderer;
+import modularitemframe.api.ModuleTier;
+import modularitemframe.api.accessors.IFrameRenderer;
+import modularitemframe.api.ModuleBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,8 +22,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
 
 public class ItemModule extends ModuleBase {
 
@@ -43,15 +42,21 @@ public class ItemModule extends ModuleBase {
     }
 
     @NotNull
-    @OnlyIn(Dist.CLIENT)
-    public ResourceLocation frontTexture() {
-        return BG;
+    @Override
+    public TextComponent getName() {
+        return NAME;
     }
 
     @NotNull
     @Override
-    public TextComponent getName() {
-        return NAME;
+    public ModuleTier moduleTier() {
+        return ModuleTier.T1;
+    }
+
+    @NotNull
+    @OnlyIn(Dist.CLIENT)
+    public ResourceLocation frontTexture() {
+        return BG;
     }
 
     private void rotate(PlayerEntity player) {
@@ -65,8 +70,8 @@ public class ItemModule extends ModuleBase {
     }
 
     @Override
-    public void specialRendering(@NotNull FrameRenderer renderer, float ticks, @NotNull MatrixStack matrixStack, @NotNull IRenderTypeBuffer buffer, int light, int overlay) {
-        renderer.renderInside(displayItem, rotation, matrixStack, buffer, light, overlay);
+    public void specialRendering(@NotNull IFrameRenderer renderer, float ticks, @NotNull MatrixStack matrixStack, @NotNull IRenderTypeBuffer buffer, int light, int overlay) {
+        renderer.renderItem(displayItem, rotation, matrixStack, buffer, light, overlay);
     }
 
     public void screw(@NotNull World world, @NotNull BlockPos pos, @NotNull PlayerEntity player, ItemStack driver) {

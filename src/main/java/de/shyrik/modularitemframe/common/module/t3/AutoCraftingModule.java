@@ -1,11 +1,12 @@
 package de.shyrik.modularitemframe.common.module.t3;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.common.module.t2.CraftingModule;
 import de.shyrik.modularitemframe.common.block.ModularFrameBlock;
-import de.shyrik.modularitemframe.api.Inventory.ItemHandlerWrapper;
+import de.shyrik.modularitemframe.common.module.t2.CraftingModule;
 import de.shyrik.modularitemframe.util.InventoryHelper;
 import de.shyrik.modularitemframe.util.ItemHelper;
+import modularitemframe.api.ModuleTier;
+import modularitemframe.api.inventory.ItemHandlerWrapper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -31,20 +32,20 @@ public class AutoCraftingModule extends CraftingModule {
 
     @NotNull
     @Override
-    public ResourceLocation frontTexture() {
-        return BG;
-    }
-
-    @NotNull
-    @Override
-    public ResourceLocation innerTexture() {
-        return ModularFrameBlock.INNER_HARDEST;
-    }
-
-    @NotNull
-    @Override
     public TextComponent getName() {
         return NAME;
+    }
+
+    @NotNull
+    @Override
+    public ModuleTier moduleTier() {
+        return ModuleTier.T3;
+    }
+
+    @NotNull
+    @Override
+    public ResourceLocation frontTexture() {
+        return BG;
     }
 
     @Override

@@ -1,7 +1,7 @@
-package de.shyrik.modularitemframe.api.Inventory;
+package modularitemframe.api.inventory;
 
-import de.shyrik.modularitemframe.api.Inventory.filter.DefaultFilter;
-import de.shyrik.modularitemframe.api.Inventory.filter.IItemFilter;
+import modularitemframe.api.inventory.filter.DefaultFilter;
+import modularitemframe.api.inventory.filter.IItemFilter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.items.IItemHandler;

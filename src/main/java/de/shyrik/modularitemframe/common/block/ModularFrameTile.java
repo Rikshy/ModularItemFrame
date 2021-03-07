@@ -1,16 +1,18 @@
 package de.shyrik.modularitemframe.common.block;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.*;
 import de.shyrik.modularitemframe.common.module.EmptyModule;
 import de.shyrik.modularitemframe.common.upgrade.*;
 import de.shyrik.modularitemframe.init.Blocks;
-import de.shyrik.modularitemframe.api.Inventory.filter.AggregatedItemFilter;
-import de.shyrik.modularitemframe.api.Inventory.filter.DefaultFilter;
-import de.shyrik.modularitemframe.api.Inventory.filter.IItemFilter;
-import de.shyrik.modularitemframe.api.Inventory.ItemHandlerWrapper;
 import de.shyrik.modularitemframe.util.InventoryHelper;
 import de.shyrik.modularitemframe.util.ItemHelper;
+import modularitemframe.api.*;
+import modularitemframe.api.accessors.IFrameConfig;
+import modularitemframe.api.accessors.IFrameTile;
+import modularitemframe.api.inventory.ItemHandlerWrapper;
+import modularitemframe.api.inventory.filter.AggregatedItemFilter;
+import modularitemframe.api.inventory.filter.DefaultFilter;
+import modularitemframe.api.inventory.filter.IItemFilter;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -40,7 +42,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class ModularFrameTile extends TileEntity implements ITickableTileEntity {
+public class ModularFrameTile extends TileEntity implements ITickableTileEntity, IFrameTile {
 
     private static final String NBT_MODULE = "frame_module";
     private static final String NBT_MODULE_DATA = "frame_module_data";
@@ -54,6 +56,10 @@ public class ModularFrameTile extends TileEntity implements ITickableTileEntity 
     public ModularFrameTile() {
         super(Blocks.MODULAR_FRAME_TILE_TYPE.get());
         setModule(new EmptyModule(), null, ItemStack.EMPTY);
+    }
+
+    public IFrameConfig getConfig() {
+        return ModularItemFrame.config;
     }
 
     //region <upgrade>
@@ -87,7 +93,7 @@ public class ModularFrameTile extends TileEntity implements ITickableTileEntity 
     }
 
     public boolean acceptsUpgrade() {
-        return upgrades.size() <= ModularItemFrame.config.maxFrameUpgrades.get();
+        return upgrades.size() <= ModularItemFrame.config.getMaxUpgrades();
     }
 
     public void dropUpgrades(@Nullable PlayerEntity player, @NotNull Direction facing) {
@@ -149,6 +155,7 @@ public class ModularFrameTile extends TileEntity implements ITickableTileEntity 
 
         return upgrades.stream().anyMatch(up -> up instanceof SecurityUpgrade && ((SecurityUpgrade) up).hasAccess(player));
     }
+
     public IItemFilter getItemFilter() {
         IItemFilter[] filters = upgrades
                 .stream()

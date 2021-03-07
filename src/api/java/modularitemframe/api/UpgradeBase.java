@@ -1,4 +1,4 @@
-package de.shyrik.modularitemframe.api;
+package modularitemframe.api;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;

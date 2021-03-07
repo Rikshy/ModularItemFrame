@@ -1,7 +1,7 @@
 package de.shyrik.modularitemframe.common.upgrade;
 
 import de.shyrik.modularitemframe.ModularItemFrame;
-import de.shyrik.modularitemframe.api.UpgradeBase;
+import modularitemframe.api.UpgradeBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;

@@ -1,9 +1,9 @@
 package de.shyrik.modularitemframe.common.item;
 
-import de.shyrik.modularitemframe.api.UpgradeBase;
-import de.shyrik.modularitemframe.api.UpgradeItem;
 import de.shyrik.modularitemframe.common.container.filter.FilterUpgradeContainer;
-import de.shyrik.modularitemframe.api.Inventory.OpenItemStackHandler;
+import modularitemframe.api.inventory.OpenItemStackHandler;
+import modularitemframe.api.UpgradeBase;
+import modularitemframe.api.UpgradeItem;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;

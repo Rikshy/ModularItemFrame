@@ -6,6 +6,7 @@ import de.shyrik.modularitemframe.init.Blocks;
 import de.shyrik.modularitemframe.init.Client;
 import de.shyrik.modularitemframe.init.Config;
 import de.shyrik.modularitemframe.init.Items;
+import modularitemframe.api.accessors.IFrameConfig;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -23,7 +24,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 public class ModularItemFrame {
 
     public static final String MOD_ID = "modularitemframe";
-    public static Config config;
+    public static IFrameConfig config;
 
     public ModularItemFrame() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();

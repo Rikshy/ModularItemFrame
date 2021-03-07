@@ -1,6 +1,5 @@
-package de.shyrik.modularitemframe.api.Inventory.filter;
+package modularitemframe.api.inventory.filter;
 
-import de.shyrik.modularitemframe.util.ItemHelper;
 import net.minecraft.item.ItemStack;
 
 public class StackItemFilter implements IItemFilter {
@@ -12,6 +11,6 @@ public class StackItemFilter implements IItemFilter {
 
     @Override
     public boolean test(ItemStack stack) {
-        return ItemHelper.areStacksEqualIgnoreAmount(this.stack, stack);
+        return ItemStack.areItemsEqualIgnoreDurability(this.stack, stack) && ItemStack.areItemStackTagsEqual(this.stack, stack);
     }
 }
