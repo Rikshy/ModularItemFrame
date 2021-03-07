@@ -1,115 +1,103 @@
 package de.shyrik.modularitemframe.api;
 
-import de.shyrik.modularitemframe.client.render.FrameRenderer;
-import de.shyrik.modularitemframe.common.block.BlockModularFrame;
-import de.shyrik.modularitemframe.common.module.t1.ModuleItem;
-import de.shyrik.modularitemframe.common.tile.TileModularFrame;
-import mcjty.theoneprobe.api.IProbeHitData;
-import mcjty.theoneprobe.api.IProbeInfo;
-import mcjty.theoneprobe.api.ProbeMode;
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
+import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import de.shyrik.modularitemframe.ModularItemFrame;
+import de.shyrik.modularitemframe.client.FrameRenderer;
+import de.shyrik.modularitemframe.common.block.ModularFrameBlock;
+import de.shyrik.modularitemframe.common.item.ScrewdriverItem;
+import de.shyrik.modularitemframe.common.block.ModularFrameTile;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.TextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
+public abstract class ModuleBase implements INBTSerializable<CompoundNBT> {
+	protected ModularFrameTile frame;
+	ModuleItem item;
 
-	protected TileModularFrame tile;
-
-	public void setTile(TileModularFrame te) {
-		tile = te;
+	public void setFrame(ModularFrameTile te) {
+		frame = te;
 	}
+
+	public ModuleItem getItem() { return item; }
+
+	/**
+	 * @return unique ID the module gets registered with.
+	 */
+	@NotNull
+	public abstract ResourceLocation getId();
 
 	/**
 	 * Is called when the {@link FrameRenderer} wants to render the module for the first time.
-	 * @see #bakeModel(IModel)
 	 *
 	 * @return [Nonnull] {@link ResourceLocation} to the Texture
 	 */
-	@Nonnull
-	@SideOnly(Side.CLIENT)
+	@NotNull
+	@OnlyIn(Dist.CLIENT)
 	public abstract ResourceLocation frontTexture();
 
     /**
      * Is called when the {@link FrameRenderer} wants to render the module for the first time.
-     * @see #bakeModel(IModel)
      *
      * @return [Nonnull] {@link ResourceLocation} to the Texture
      */
-    @Nonnull
-	@SideOnly(Side.CLIENT)
+    @NotNull
+	@OnlyIn(Dist.CLIENT)
     public ResourceLocation innerTexture() {
-        return BlockModularFrame.INNER_DEF_LOC;
+        return ModularFrameBlock.INNER_DEF;
     }
 
     /**
      * Is called when the {@link FrameRenderer} wants to render the module for the first time.
-     * @see #bakeModel(IModel)
      *
      * @return [Nonnull] {@link ResourceLocation} to the Texture
      */
-    @Nonnull
-	@SideOnly(Side.CLIENT)
+    @NotNull
+	@OnlyIn(Dist.CLIENT)
     public ResourceLocation backTexture() {
-        return new ResourceLocation("minecraft", "blocks/log_birch_top");
+        return new ResourceLocation("minecraft", "block/stripped_birch_log_top");
     }
 
 	/**
 	 * TOP and WAILA are using this for display
-	 * Please use translation holders - raw strings are bad!
 	 *
 	 * @return the name of the module :O
 	 */
-	public abstract String getModuleName();
-
-	public boolean reloadModel = false;
-	private IBakedModel bakedModel = null;
+	@OnlyIn(Dist.CLIENT)
+	public abstract TextComponent getName();
 
 	/**
-	 * Called by the {@link FrameRenderer} to bake the Frame model
-	 * by default {@link #frontTexture()} and {@link #backTexture()} will be asked to be replaced
-	 * override this with caution.
-	 *
-	 * @param model Contains the model of the frame
-	 * @return baked model ofc
+	 * Append tooltip information for waila
 	 */
-	@SideOnly(Side.CLIENT)
-	public IBakedModel bakeModel(IModel model) {
-		if (bakedModel == null || reloadModel) {
-			bakedModel = model.bake(model.getDefaultState(), DefaultVertexFormats.ITEM, location -> {
-				if (location.getPath().contains("default_front"))
-					return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(frontTexture().toString());
-				if (location.getPath().contains("default_back"))
-					return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(backTexture().toString());
-				if (location.getPath().contains("default_inner"))
-				    return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(innerTexture().toString());
-				return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
-			});
-			reloadModel = false;
-		}
-		return bakedModel;
+	@OnlyIn(Dist.CLIENT)
+	public void appendTooltips(List<TextComponent> tooltips) {
+	}
+
+	/**
+	 * Override this if you want to register multiple backgrounds for the module.
+	 *
+	 * @return list of resource locations as module backgrounds
+	 */
+	public List<ResourceLocation> getVariantFronts() {
+		return ImmutableList.of(frontTexture());
 	}
 
 	/**
@@ -117,102 +105,114 @@ public abstract class ModuleBase implements INBTSerializable<NBTTagCompound> {
 	 * Extra rendering can be don here
 	 * like the {@link ModuleItem ModuleItem} does the item thing)
 	 *
-	 * @param tesr instance of the current {@link FrameRenderer}
+	 * @param renderer instance of the current {@link FrameRenderer}
 	 */
-	@SideOnly(Side.CLIENT)
-	public void specialRendering(FrameRenderer tesr, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+	@OnlyIn(Dist.CLIENT)
+	public void specialRendering(@NotNull FrameRenderer renderer, float partialTicks, @NotNull MatrixStack matrixStack, @NotNull IRenderTypeBuffer buffer, int light, int overlay) {
 	}
 
 	/**
 	 * Called when the frame got left clicked
 	 */
-	public void onBlockClicked(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn) {
+	public void onBlockClicked(@NotNull World worldIn, @NotNull BlockPos pos, @NotNull PlayerEntity playerIn) {
 	}
 
 	/**
-	 * Called when a {@link de.shyrik.modularitemframe.common.item.ItemScrewdriver screwdriver} in interaction mode clicks a frame
-	 * Implement behavior for {@link de.shyrik.modularitemframe.common.item.ItemScrewdriver screwdriver} interaction here
+	 * Called when a {@link ScrewdriverItem screwdriver} in interaction mode clicks a frame
+	 * Implement behavior for {@link ScrewdriverItem screwdriver} interaction here
 	 *
 	 * @param driver the driver who was used
 	 */
-	public void screw(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull EntityPlayer playerIn, ItemStack driver) {
+	public void screw(@NotNull World world, @NotNull BlockPos pos, @NotNull PlayerEntity playerIn, ItemStack driver) {
 
 	}
 
-	public void onFrameUpgradesChanged() {
+	/**
+	 * Called when the frames upgrades change.
+	 */
+	public void onFrameUpgradesChanged(World world, BlockPos pos, Direction facing) {
 
 	}
 
 	/**
 	 * Called when a frame is simply right clicked
 	 */
-	public abstract boolean onBlockActivated(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer playerIn, @Nonnull EnumHand hand, @Nonnull EnumFacing facing, float hitX, float hitY, float hitZ);
-
-	/**
-	 * in case your module has a gui
-	 */
-	public Container createContainer(final EntityPlayer player) {
-		return null;
+	public ActionResultType onUse(@NotNull World world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull PlayerEntity player, @NotNull Hand hand, @NotNull Direction facing, BlockRayTraceResult hit) {
+		return ActionResultType.FAIL;
 	}
 
 	/**
 	 * called when the tile entity ticks
 	 */
-	public void tick(@Nonnull World world, @Nonnull BlockPos pos) {
+	public void tick(@NotNull World world, @NotNull BlockPos pos) {
 	}
 
 	/**
-	 * Called when module is removed with the {@link de.shyrik.modularitemframe.common.item.ItemScrewdriver screwdriver}
+	 * Called when module is added to a frame.
+	 */
+	public void onInsert(@NotNull World world, @NotNull BlockPos pos, @NotNull Direction facing, @NotNull PlayerEntity player, @NotNull ItemStack moduleStack) {
+	}
+
+	/**
+	 * Called when module is removed with the {@link ScrewdriverItem screwdriver}
 	 * or destroyed.
 	 */
-	public void onRemove(@Nonnull World worldIn, @Nonnull BlockPos pos, @Nonnull EnumFacing facing, @Nullable EntityPlayer playerIn) {
+	public void onRemove(@NotNull World world, @NotNull BlockPos pos, @NotNull Direction facing, @Nullable PlayerEntity player, @NotNull ItemStack moduleStack) {
 	}
-
-	/**
-	 * The One Probe information handling
-	 */
-	@SideOnly(Side.CLIENT)
-	@Optional.Method(modid = "theoneprobe")
-	public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
-		probeInfo.horizontal().text(I18n.format("modularitemframe.tooltip.module", getModuleName()));
-	}
-
-	/**
-	 * Waila/Hwyla information handling
-	 */
-	@Nonnull
-	@SideOnly(Side.CLIENT)
-	@Optional.Method(modid = "waila")
-	public List<String> getWailaBody(ItemStack itemStack, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-		List<String> tips = new ArrayList<>();
-		tips.add(I18n.format("modularitemframe.tooltip.module", getModuleName()));
-		return tips;
-	}
-
-	@Nonnull
-	public NBTTagCompound writeUpdateNBT(@Nonnull NBTTagCompound cmp) {
-	    return cmp;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void readUpdateNBT(@Nonnull NBTTagCompound cmp) {
-
-    }
 
 	/**
 	 * NBT serialization in case there are some data to be saved!
 	 * this gets synced automatically
 	 */
-	@Nonnull
+	@NotNull
 	@Override
-	public NBTTagCompound serializeNBT() {
-		return new NBTTagCompound();
+	public CompoundNBT serializeNBT() {
+		return new CompoundNBT();
 	}
 
 	/**
 	 * NBT deserialization in case there are some data to be saved!
 	 */
 	@Override
-	public void deserializeNBT(NBTTagCompound nbtTagCompound) {
+	public void deserializeNBT(CompoundNBT nbtTagCompound) {
 	}
+
+	//region <helper>
+	/**
+	 * Helper method which safe checks ticks.
+	 */
+	public boolean canTick(World world, int base, int mod) {
+		return world.getGameTime() % Math.max(base - mod * frame.getSpeedUpCount(), 10) == 0;
+	}
+
+	/**
+	 * Forwarded from blockEntity. initiates data sync.
+	 */
+	public void markDirty() {
+		frame.markDirty();
+	}
+
+	/**
+	 * helper method for default world interaction range.
+	 */
+	protected AxisAlignedBB getScanBox() {
+		BlockPos pos = frame.getPos();
+		int range = frame.getRangeUpCount() + ModularItemFrame.config.scanZoneRadius.get();
+		switch (frame.getFacing()) {
+			case DOWN:
+				return new AxisAlignedBB(pos.add(-range + 1, 1, -range + 1), pos.add(range, -range + 1, range));
+			case UP:
+				return new AxisAlignedBB(pos.add(-range + 1, 0, -range + 1), pos.add(range, range, range));
+			case NORTH:
+				return new AxisAlignedBB(pos.add(-range + 1, -range + 1, 1), pos.add(range, range, -range + 1));
+			case SOUTH:
+				return new AxisAlignedBB(pos.add(-range + 1, -range + 1, 0), pos.add(range, range, range));
+			case WEST:
+				return new AxisAlignedBB(pos.add(1, -range + 1, -range + 1), pos.add(-range + 1, range, range));
+			case EAST:
+				return new AxisAlignedBB(pos.add(0, -range + 1, -range + 1), pos.add(range, range, range));
+		}
+		return new AxisAlignedBB(pos, pos.add(1, 1, 1));
+	}
+	//endregion
 }

@@ -1,74 +1,58 @@
 package de.shyrik.modularitemframe;
 
-import de.shyrik.modularitemframe.api.ModuleRegistry;
-import de.shyrik.modularitemframe.api.UpgradeRegistry;
-import de.shyrik.modularitemframe.client.gui.GuiHandler;
-import de.shyrik.modularitemframe.common.module.t1.*;
-import de.shyrik.modularitemframe.common.module.t2.*;
-import de.shyrik.modularitemframe.common.module.t3.*;
-import de.shyrik.modularitemframe.common.network.NetworkHandler;
-import de.shyrik.modularitemframe.common.upgrade.UpgradeBlastResist;
-import de.shyrik.modularitemframe.common.upgrade.UpgradeCapacity;
-import de.shyrik.modularitemframe.common.upgrade.UpgradeRange;
-import de.shyrik.modularitemframe.common.upgrade.UpgradeSpeed;
+import de.shyrik.modularitemframe.client.FrameRenderer;
+import de.shyrik.modularitemframe.common.block.ModularFrameBlock;
+import de.shyrik.modularitemframe.init.Blocks;
+import de.shyrik.modularitemframe.init.Client;
+import de.shyrik.modularitemframe.init.Config;
 import de.shyrik.modularitemframe.init.Items;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod(
-        modid = ModularItemFrame.MOD_ID,
-        name = ModularItemFrame.MOD_NAME,
-        version = ModularItemFrame.VERSION,
-        dependencies = ModularItemFrame.DEPENDENCIES)
+
+@Mod(ModularItemFrame.MOD_ID)
 public class ModularItemFrame {
 
     public static final String MOD_ID = "modularitemframe";
-    public static final String MOD_NAME = "Modular Item Frame";
-    public static final String VERSION = "@GRADLE:VERSION@";
-    public static final String DEPENDENCIES = "after:mcmultipart;";
-    public static final String CHANNEL = MOD_ID;
+    public static Config config;
 
-    public static final CreativeTabs TAB = new CreativeTabs("modularitemframe") {
+    public ModularItemFrame() {
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+        config = Config.build(ModLoadingContext.get().getActiveContainer());
+
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+            // Client setup
+            modBus.addListener(this::setupClient);
+            modBus.addListener(Client::onStitch);
+            modBus.addListener(FrameRenderer::onModelBake);
+        });
+
+        Blocks.BLOCKS.register(modBus);
+        Items.ITEMS.register(modBus);
+        Blocks.TILE_ENTITIES.register(modBus);
+
+        modBus.addListener(ModularFrameBlock::onExplosion);
+    }
+
+    public static final ItemGroup TAB = new ItemGroup("modularitemframe") {
         @Override
+        @OnlyIn(Dist.CLIENT)
         public ItemStack createIcon() {
-            return new ItemStack(Items.SCREWDRIVER);
+            return new ItemStack(Items.SCREWDRIVER.get());
         }
     };
 
-    @Mod.Instance
-    public static ModularItemFrame instance;
-
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        NetworkRegistry.INSTANCE.registerGuiHandler(this, new GuiHandler());
-        NetworkHandler.registerPackets();
-
-        ModuleRegistry.register(ModuleCrafting.LOC, ModuleCrafting.class);
-        ModuleRegistry.register(ModuleIO.LOC, ModuleIO.class);
-        ModuleRegistry.register(ModuleItem.LOC, ModuleItem.class);
-        ModuleRegistry.register(ModuleNullify.LOC, ModuleNullify.class);
-        ModuleRegistry.register(ModuleTank.LOC, ModuleTank.class);
-        ModuleRegistry.register(ModuleStorage.LOC, ModuleStorage.class);
-
-        ModuleRegistry.register(ModuleCraftingPlus.LOC, ModuleCraftingPlus.class);
-        ModuleRegistry.register(ModuleDispense.LOC, ModuleDispense.class);
-        ModuleRegistry.register(ModuleVacuum.LOC, ModuleVacuum.class);
-        ModuleRegistry.register(ModuleTrashCan.LOC, ModuleTrashCan.class);
-        ModuleRegistry.register(ModuleUse.LOC, ModuleUse.class);
-
-        ModuleRegistry.register(ModuleAutoCrafting.LOC, ModuleAutoCrafting.class);
-        ModuleRegistry.register(ModuleTeleport.LOC, ModuleTeleport.class);
-        ModuleRegistry.register(ModuleItemTeleporter.LOC, ModuleItemTeleporter.class);
-        ModuleRegistry.register(ModuleXP.LOC, ModuleXP.class);
-        ModuleRegistry.register(ModuleFluidDispenser.LOC, ModuleFluidDispenser.class);
-
-        //Upgrades
-        UpgradeRegistry.register(UpgradeSpeed.LOC, UpgradeSpeed.class);
-        UpgradeRegistry.register(UpgradeRange.LOC, UpgradeRange.class);
-        UpgradeRegistry.register(UpgradeCapacity.LOC, UpgradeCapacity.class);
-        UpgradeRegistry.register(UpgradeBlastResist.LOC, UpgradeBlastResist.class);
+    @OnlyIn(Dist.CLIENT)
+    private void setupClient(final FMLClientSetupEvent event) {
+        ClientRegistry.bindTileEntityRenderer(Blocks.MODULAR_FRAME_TILE_TYPE.get(), FrameRenderer::new);
     }
 }

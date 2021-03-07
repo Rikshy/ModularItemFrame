@@ -1,0 +1,27 @@
+{
+	"variants": {
+		"facing=down": {
+			"model": "modularitemframe:modular_dummy",
+			"x": 90
+		},
+		"facing=up": {
+			"model": "modularitemframe:modular_dummy",
+			"x": 270
+		},
+		"facing=north": {
+			"model": "modularitemframe:modular_dummy"
+		},
+		"facing=south": {
+			"model": "modularitemframe:modular_dummy",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "modularitemframe:modular_dummy",
+			"y": 270
+		},
+		"facing=east": {
+			"model": "modularitemframe:modular_dummy",
+			"y": 90
+		}
+	}
+}

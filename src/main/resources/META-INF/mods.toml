@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+issueTrackerURL="https://github.com/Rikshy/ModularItemFrame/issues"
+license="GPL-3.0"
+
+[[mods]]
+    modId="modularitemframe"
+    version="${version}"
+    displayName="ModularItemFrame"
+    displayURL="https://github.com/Rikshy/ModularItemFrame"
+    authors="Rikshy"
+    credits="Siphalor"
+    description='''One frame to rule them all.'''
+
+[[dependencies.modularitemframe]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.5,)"
+    side="BOTH"
+[[dependencies.modularitemframe]]
+    modId="forge"
+    mandatory=true
+    versionRange="[36.0.42,)"
+    side="BOTH"

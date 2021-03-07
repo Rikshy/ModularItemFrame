@@ -1,30 +1,28 @@
 package de.shyrik.modularitemframe.common.container;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.IItemHandler;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+public class GhostSlot extends SlotEx {
 
-public class GhostSlot extends Slot {
-
-    public GhostSlot(IInventory inventoryIn, int index, int xPosition, int yPosition) {
-        super(inventoryIn, index, xPosition, yPosition);
+    public GhostSlot(BaseContainer parent, IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+        super(parent, itemHandler, index, xPosition, yPosition);
     }
 
     @Override
-    public boolean canTakeStack(EntityPlayer playerIn) {
+    public boolean canTakeStack(PlayerEntity playerIn) {
         return false;
     }
 
     @Override
-    public boolean isItemValid(@Nonnull ItemStack stack) {
+    public boolean isItemValid(@NotNull ItemStack stack) {
         return true;
     }
 
     @Override
-    public int getItemStackLimit(@Nonnull ItemStack stack) {
+    public int getSlotStackLimit() {
         return 1;
     }
 }
